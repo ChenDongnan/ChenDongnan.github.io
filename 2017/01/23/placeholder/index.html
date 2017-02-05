@@ -132,7 +132,13 @@
 
 
 
-  <title> 空数据占位图 | 陈栋楠的Blog </title>
+  <title>
+  
+
+  
+    空数据占位图 | 陈栋楠的Blog
+  
+</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
@@ -153,7 +159,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-left  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -266,102 +272,17 @@
             
 
   <div id="posts" class="posts-expand">
-    
+  <header class="post-header">
 
-  
+	<h2 class="post-title" itemprop="name headline">空数据占位图</h2>
 
-  
-  
-  
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com">
 
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Roy Chen">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="../../../../uploads/avatar.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="陈栋楠的Blog">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="陈栋楠的Blog" src="">
-    </span>
-  </span>
+</header>
 
     
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                空数据占位图
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-23T19:02:21+08:00">
-                2017-01-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-             <span id="" class="leancloud_visitors" data-flag-title="空数据占位图">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
     
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>在项目开发中经常会碰到页面没有数据展示的情况，如果使用纯白的background给用户的感觉很不好，所以需要有一些占位图来起到提示的作用。比如像下面这样：<img src="/2017/01/23/placeholder/placeholder.png" alt="placeholder">之前我们在项目里使用的是<a href="https://github.com/dzenbot/DZNEmptyDataSet" target="_blank" rel="external"><strong>DZNEmptyDataSet</strong></a>，很好用的三方。不过还是想要自己实现一下这个功能，下面就是一些思路和实现方式。(以下以tebleview为例，collectionview同理)</p>
+      <p>在项目开发中经常会碰到页面没有数据展示的情况，如果使用纯白的background给用户的感觉很不好，所以需要有一些占位图来起到提示的作用。比如像下面这样：<img src="/2017/01/23/placeholder/placeholder.png" alt="placeholder">之前我们在项目里使用的是<a href="https://github.com/dzenbot/DZNEmptyDataSet" target="_blank" rel="external"><strong>DZNEmptyDataSet</strong></a>，很好用的三方。不过还是想要自己实现一下这个功能，下面就是一些思路和实现方式。(以下以tebleview为例，collectionview同理)</p>
 <p>核心思路就是：当tableView调用reloadData刷新时，检查tableView行数，如果为零，说明无数据，显示占位图。这里可以使用addSubView或者tableView的backgroundViewl来添加占位图。</p>
 <p>要监测tableView行数是否为0，只需要利用dataSource，用isEmpty来标示是否为空数据，下面是核心代码</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">-(void)checkData &#123;</div><div class="line">    BOOL isEmpty = YES;</div><div class="line">    id&lt;UITableViewDataSource&gt; dataSource = self.tableView.dataSource;</div><div class="line">    NSInteger sections = 1;</div><div class="line">    if ([dataSource respondsToSelector:@selector(numberOfSectionsInTableView:)]) &#123;</div><div class="line">        sections = [dataSource numberOfSectionsInTableView:self.tableView] - 1;//获取当前TableView组数</div><div class="line">    &#125;</div><div class="line">    for (NSInteger i = 0; i &lt;= sections; i++) &#123;</div><div class="line">        NSInteger rows = [dataSource tableView:self.tableView numberOfRowsInSection:sections];//获取当前TableView各组行数</div><div class="line">        if (rows) &#123;</div><div class="line">            isEmpty = NO;//若行数存在，不为空</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    if (isEmpty) &#123;//若为空，加载占位图</div><div class="line">        if (!self.placeholderView) &#123;//若未自定义，展示默认占位图</div><div class="line">            [self makeDefaultPlaceholderView];</div><div class="line">        &#125;</div><div class="line">        self.placeholderView.hidden = NO;</div><div class="line">        [self.tableView addSubview:self.placeholderView];</div><div class="line">    &#125; else &#123;//不为空，隐藏占位图</div><div class="line">        self.placeholderView.hidden = YES;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -371,65 +292,7 @@
 <figure class="highlight plain"><figcaption><span>Swizzling</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">+ (void)load &#123;</div><div class="line">    static dispatch_once_t onceToken;</div><div class="line">    dispatch_once(&amp;onceToken, ^&#123;</div><div class="line">        //方法交换，将reloadData实现交换为sure_reloadData</div><div class="line">        [self methodSwizzlingWithOriginalSelector:@selector(reloadData) bySwizzledSelector:@selector(checkEmpty_reloadData)];</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line"> </div><div class="line">- (void)checkEmpty_reloadData &#123;</div><div class="line">    [self checkEmpty];</div><div class="line">    [self checkEmpty_reloadData];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>这样就实现了reloadData的同时检测行数从而判断是否显示占位图的功能。</p>
 
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="../../../../tags/iOS/" rel="tag"># iOS</a>
-          
-        </div>
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="../../09/markdown/" rel="next" title="Markdown基本语法">
-                <i class="fa fa-chevron-left"></i> Markdown基本语法
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="../../25/regex/" rel="prev" title="regex">
-                regex <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
+    
   </div>
 
           
@@ -617,10 +480,6 @@
   
 
   
-  <script type="text/javascript" src="../../../../js/src/scrollspy.js?v=5.1.0"></script>
-<script type="text/javascript" src="../../../../js/src/post-details.js?v=5.1.0"></script>
-
-
 
   
 
