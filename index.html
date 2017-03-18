@@ -563,7 +563,7 @@
               
                 
                 <a class="post-title-link" href="2017/01/25/regex/" itemprop="url">
-                  regex
+                  关于正则表达式
                 </a>
               
             
@@ -605,110 +605,12 @@
 
       
         
-          
-            <h2 id="iOS正则表达式的运用"><a href="#iOS正则表达式的运用" class="headerlink" title="iOS正则表达式的运用"></a>iOS正则表达式的运用</h2><p>前言：在大部分app表单填写场景中，都会去校验用户输入的合法性，如果输入有误就提示错误信息并组织上传到服务器。而这种功能就是由强大的正则表达式来实现的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">正则表达式，又称正规表示式、正规表示法、正规表达式、规则表达式、常规表示法（英语：Regular Expression，在代码中常简写为regex、regexp或RE），计算机科学的一个概念。正则表达式使用单个字符串来描述、匹配一系列匹配某个句法规则的字符串。在很多文本编辑器里，正则表达式通常被用来检索、替换那些匹配某个模式的文本。</div></pre></td></tr></table></figure>
-<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><p>正则表达式是由两种基本字符组成：普通字符（例如字符 a 到 z）以及特殊字符（称为”元字符” — metacharacter）所组成的<strong>描述文本规则的代码</strong>。规则用来描述在搜索文本时要匹配的一个或多个字符串。正则表达式作为文本规则，将某个文本规则与所搜索的字符串进行匹配。</p>
-<blockquote>
-<p><strong>元字符</strong><br>元字符就是指那些在正则表达式中具有特殊意义的专用字符，用来规定其前导字符（位于元字符前面的字符）在目标对象中的出现规则，一个元字符可以用来匹配一个或者多个字符。</p>
-</blockquote>
-<p><strong>总结</strong>：元字符就是<strong>正则表达式</strong>中用来描述一个文本规则的专用字符。<br><strong>举例</strong>：精确查找“ab”在未使用正则表达式之前，查找ab，我们可能会得到以下结果</p>
-<p>表一：常用的元字符</p>
-<table>
-<thead>
-<tr>
-<th>元字符</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>.</td>
-<td>匹配除换行符以外的任意字符</td>
-</tr>
-<tr>
-<td>\w</td>
-<td>匹配字母或数字或下划线或汉字</td>
-</tr>
-<tr>
-<td>\s</td>
-<td>任意的空白符，包括空格，制表符(Tab)，换行符，中文全角空格等</td>
-</tr>
-<tr>
-<td>\d</td>
-<td>匹配数字(0-9)</td>
-</tr>
-<tr>
-<td>\b</td>
-<td>匹配单词的开始或结束</td>
-</tr>
-<tr>
-<td>^</td>
-<td>匹配字符串的开始</td>
-</tr>
-<tr>
-<td>$</td>
-<td>匹配字符串的结束</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<h3 id="限定符"><a href="#限定符" class="headerlink" title="限定符"></a>限定符</h3><p><strong>正则表达式</strong>中提供了有一类用于<strong>限定字符数量</strong>的符号，称为 <strong>限定符</strong>。并且限定符分为两种 ：</p>
-<ul>
-<li>贪婪的：尝试尽可能多的匹配元素</li>
-<li>惰性（非贪婪）的：尽可能的少的匹配元素</li>
-</ul>
-<p>通过添加问号即 ？可以将贪婪限定符转为惰性限定符。<br>从前面的综合例子中，大概已经知道了限定字符数量的字符 例如 ：* ，+，{2}…</p>
-</blockquote>
-<p>表2 常用的限定符</p>
-<table>
-<thead>
-<tr>
-<th>贪婪限定符</th>
-<th>惰性限定符</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>*</td>
-<td>*?</td>
-<td>重复零次或更多次</td>
-</tr>
-<tr>
-<td>+</td>
-<td>*+</td>
-<td>重复一次或更多次</td>
-</tr>
-<tr>
-<td>?</td>
-<td>??</td>
-<td>重复零次或一次</td>
-</tr>
-<tr>
-<td>{n}</td>
-<td>{n}?</td>
-<td>重复n次</td>
-</tr>
-<tr>
-<td>{n,}</td>
-<td>{n,}?</td>
-<td>重复n次或更多次</td>
-</tr>
-<tr>
-<td>{n,m}</td>
-<td>{n,m}?</td>
-<td>重复n到m次</td>
-</tr>
-</tbody>
-</table>
-<h3 id="正则表达式在iOS中的应用"><a href="#正则表达式在iOS中的应用" class="headerlink" title="正则表达式在iOS中的应用"></a>正则表达式在iOS中的应用</h3><p><strong>1.NSString的方法</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">- (NSRange)rangeOfString:(NSString *)aString options:(NSStringCompareOptions)mask&#123;</div><div class="line">NSString *searchText = @&quot;rangeOfString&quot;;</div><div class="line">NSRange range = [searchText rangeOfString:@&quot;^[0-9]+$&quot; options:NSRegularExpressionSearch];</div><div class="line">if (range.location != NSNotFound) &#123; </div><div class="line">NSLog(@&quot;range ：%@&quot;, [searchText substringWithRange:range]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>2.NSPredicate</strong><br>Cocoa框架中的<strong>NSPredicate</strong>用于查询，原理和用法都类似于SQL中的where，作用相当于数据库的过滤取。 我们可以编写简单的谓词语句，就可以从数组中过滤出我们想要的数据。 代码示例:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (BOOL)validateEmail:(NSString *)email&#123; </div><div class="line">NSString *emailRegex = @&quot;[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]&#123;2,4&#125;&quot;;</div><div class="line"> NSPredicate *emailTest = [NSPredicate predicateWithFormat:@&quot;SELF MATCHES %@&quot;, emailRegex]; </div><div class="line">return [emailTest evaluateWithObject:email];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>3.NSRegularExpression</strong><br><strong>NSRegularExpression</strong>这个类是苹果专门封装的一个用来处理<strong>正则表达式</strong>的类。<br>代码示例:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">objectivecNSString *searchText = @&quot;you want to match&quot;; </div><div class="line">NSError *error = NULL;</div><div class="line">NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@&quot;^[0-9]+$&quot; options:NSRegularExpressionCaseInsensitive error:&amp;error];</div><div class="line">NSTextCheckingResult *result = [regex firstMatchInString:searchText options:0 range:NSMakeRange(0, [searchText length])];</div><div class="line">if (result) &#123;</div><div class="line"> NSLog(@&quot;%@&quot;, [searchText substringWithRange:result.range]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-          
+          <h2 id="iOS正则表达式的运用"><a href="#iOS正则表达式的运用" class="headerlink" title="iOS正则表达式的运用"></a>iOS正则表达式的运用</h2><p>前言：在大部分app表单填写场景中，都会去校验用户输入的合法性，如果输入有误就提示错误信息并组织上传到服务器。而这种功能就是由强大的正则表达式来实现的。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="2017/01/25/regex/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -757,7 +659,7 @@
               
                 
                 <a class="post-title-link" href="2017/01/23/placeholder/" itemprop="url">
-                  空数据占位图
+                  DZNEmptyDataSet实现空数据占位图
                 </a>
               
             
@@ -799,18 +701,12 @@
 
       
         
-          
-            <p>在项目开发中经常会碰到页面没有数据展示的情况，如果使用纯白的background给用户的感觉很不好，所以需要有一些占位图来起到提示的作用。比如像下面这样：<img src="/2017/01/23/placeholder/placeholder.png" alt="placeholder">之前我们在项目里使用的是<a href="https://github.com/dzenbot/DZNEmptyDataSet" target="_blank" rel="external"><strong>DZNEmptyDataSet</strong></a>，很好用的三方。不过还是想要自己实现一下这个功能，下面就是一些思路和实现方式。(以下以tebleview为例，collectionview同理)</p>
-<p>核心思路就是：当tableView调用reloadData刷新时，检查tableView行数，如果为零，说明无数据，显示占位图。这里可以使用addSubView或者tableView的backgroundViewl来添加占位图。</p>
-<p>要监测tableView行数是否为0，只需要利用dataSource，用isEmpty来标示是否为空数据，下面是核心代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">-(void)checkData &#123;</div><div class="line">    BOOL isEmpty = YES;</div><div class="line">    id&lt;UITableViewDataSource&gt; dataSource = self.tableView.dataSource;</div><div class="line">    NSInteger sections = 1;</div><div class="line">    if ([dataSource respondsToSelector:@selector(numberOfSectionsInTableView:)]) &#123;</div><div class="line">        sections = [dataSource numberOfSectionsInTableView:self.tableView] - 1;//获取当前TableView组数</div><div class="line">    &#125;</div><div class="line">    for (NSInteger i = 0; i &lt;= sections; i++) &#123;</div><div class="line">        NSInteger rows = [dataSource tableView:self.tableView numberOfRowsInSection:sections];//获取当前TableView各组行数</div><div class="line">        if (rows) &#123;</div><div class="line">            isEmpty = NO;//若行数存在，不为空</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    if (isEmpty) &#123;//若为空，加载占位图</div><div class="line">        if (!self.placeholderView) &#123;//若未自定义，展示默认占位图</div><div class="line">            [self makeDefaultPlaceholderView];</div><div class="line">        &#125;</div><div class="line">        self.placeholderView.hidden = NO;</div><div class="line">        [self.tableView addSubview:self.placeholderView];</div><div class="line">    &#125; else &#123;//不为空，隐藏占位图</div><div class="line">        self.placeholderView.hidden = YES;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上面这段代码就可以实现当dataSource为空时，为tableView添加占位图的功能。</p>
-<p>不过每次都要在控制器里这么写，未免太冗余了，所以还是拿出我们的黑魔法<strong>Runtime Method Swizzling</strong></p>
-<p>通过<strong>Method Swizzling</strong>替换<strong>reloadData</strong>方法，给予它新的实现。核心代码如下：</p>
-<figure class="highlight plain"><figcaption><span>Swizzling</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">+ (void)load &#123;</div><div class="line">    static dispatch_once_t onceToken;</div><div class="line">    dispatch_once(&amp;onceToken, ^&#123;</div><div class="line">        //方法交换，将reloadData实现交换为sure_reloadData</div><div class="line">        [self methodSwizzlingWithOriginalSelector:@selector(reloadData) bySwizzledSelector:@selector(checkEmpty_reloadData)];</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line"> </div><div class="line">- (void)checkEmpty_reloadData &#123;</div><div class="line">    [self checkEmpty];</div><div class="line">    [self checkEmpty_reloadData];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这样就实现了reloadData的同时检测行数从而判断是否显示占位图的功能。</p>
-
-          
+          <p>在项目开发中经常会碰到页面没有数据展示的情况，如果使用纯白的background给用户的感觉很不好，所以需要有一些占位图来起到提示的作用。比如像下面这样：</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="2017/01/23/placeholder/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -920,69 +816,12 @@
 
       
         
-          
-            <p>既然是用Markdown写作，必然要了解一下它的语法规则。一开始用会不太习惯，不过相信多加练习用起来应该会比Word顺手很多。下面整理了一些最常用，最基本的Markdown语法。顺便说一下，我用的Markdown编辑器是Typora，非常简洁的一款编辑器，推荐给大家。</p>
-<ol>
-<li>标题设置</li>
-</ol>
-<p>通过在文字两边加上<code>#</code>，就可以实现标题的效果，两边#号的多少就代表了是几级标题，非常简洁明了，最多可设置六级标题。下面是效果</p>
-<h1 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h1><ol>
-<li><p>块注释 </p>
-<p>通过在文字开头添加<code>&gt;</code>表示块注释。效果如下</p>
-<blockquote>
-<p>​</p>
-</blockquote>
-</li>
-<li><p>斜体</p>
-<p>通过在文字两边加上<code>*</code>  或者<code>_</code>  ， 即可实现斜体效果，如下</p>
-<p><em>斜体</em></p>
-</li>
-<li><p>粗体</p>
-<p>在文字两边加上<code>**</code>或者<code>__</code>，即可实现粗体效果，如下</p>
-<p><strong>加粗</strong></p>
-</li>
-<li><p>删除线</p>
-<p>在文字两边加上<code>~~</code>或者，即可实现删除线效果，如下</p>
-<p><del>删除</del></p>
-</li>
-<li><p>行内代码，在文字两边加上”`”，即可实现行内代码效果</p>
-<p><code>code</code></p>
-</li>
-<li><p>代码块</p>
-<p>“<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">```代码块</div></pre></td></tr></table></figure></p>
-</li>
-<li><p>链接:</p>
-<p>网址链接：[网址名称]:(具体网址)</p>
-<p>图片链接：![图片名称]（具体网址）</p>
-<p>效果如下：</p>
-<p><a href="www.baidu.com">Baidu</a></p>
-<p><img src="/2017/01/09/markdown/imageTest/test.jpg" alt="AragakiYui"></p>
-</li>
-<li><p>分割线</p>
-<p>使用 <code>---</code> 或者 <code>***</code> 或者 <code>* * *</code> 表示水平分割线。</p>
-<hr>
-</li>
-<li><p>表格</p>
-<p>使用|…|….|可以显示出表格，效果如下</p>
-<p>| …..  | ….   |<br>| —- | —- |<br>|      |      |</p>
-<p>​</p>
-</li>
-<li><p>有序列表</p>
-<p>阿拉伯数字后面跟上.和空格，效果就如这篇文章的列表</p>
-</li>
-<li><p>无序列表</p>
-<p>在文字开头添加(<code>*</code>, <code>+</code>,  <code>-</code>)实现无序列表。但是要注意在(<code>*</code>, <code>+</code>, and <code>-</code>)和文字之间需要添加空格。效果如下</p>
-<ul>
-<li><p>第一条</p>
-</li>
-<li><p>第二条</p>
-<p>​</p>
-</li>
-</ul>
-</li>
-</ol>
-
-          
+          <p>既然是用Markdown写作，必然要了解一下它的语法规则。一开始用会不太习惯，不过相信多加练习用起来应该会比Word顺手很多。下面整理了一些最常用，最基本的Markdown语法。顺便说一下，我用的Markdown编辑器是Typora，非常简洁的一款编辑器，推荐给大家。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="2017/01/09/markdown/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
