@@ -84,22 +84,16 @@
 
 
 
-<meta name="description" content="iOS runtime特性真的是十分强大，虽然项目中直接使用的不多，但很多三方里面都有用到相关内容，所以也是在此记录一下runtime的相关知识点，因为确实很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。 
-在object/runtime.h文件中，找到相关API
-123456789101112131415161718192021222324">
+<meta name="description" content="iOS runtime特性真的是十分强大，虽然项目中直接使用的不多，但很多三方里面都有用到相关内容，所以也是在此记录一下runtime的相关知识点，因为确实很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="runtime之AssosiatedObject">
 <meta property="og:url" content="http://yoursite.com/2017/02/23/runtime之associatedObject/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="iOS runtime特性真的是十分强大，虽然项目中直接使用的不多，但很多三方里面都有用到相关内容，所以也是在此记录一下runtime的相关知识点，因为确实很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。 
-在object/runtime.h文件中，找到相关API
-123456789101112131415161718192021222324">
-<meta property="og:updated_time" content="2017-03-18T08:59:21.000Z">
+<meta property="og:description" content="iOS runtime特性真的是十分强大，虽然项目中直接使用的不多，但很多三方里面都有用到相关内容，所以也是在此记录一下runtime的相关知识点，因为确实很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。">
+<meta property="og:updated_time" content="2017-03-18T09:07:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="runtime之AssosiatedObject">
-<meta name="twitter:description" content="iOS runtime特性真的是十分强大，虽然项目中直接使用的不多，但很多三方里面都有用到相关内容，所以也是在此记录一下runtime的相关知识点，因为确实很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。 
-在object/runtime.h文件中，找到相关API
-123456789101112131415161718192021222324">
+<meta name="twitter:description" content="iOS runtime特性真的是十分强大，虽然项目中直接使用的不多，但很多三方里面都有用到相关内容，所以也是在此记录一下runtime的相关知识点，因为确实很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。">
 
 
 
@@ -308,6 +302,7 @@
 
       
         <p>iOS runtime特性真的是十分强大，虽然项目中直接使用的不多，但很多三方里面都有用到相关内容，所以也是在此记录一下runtime的相关知识点，因为确实很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。 </p>
+<a id="more"></a>
 <p>在<code>object/runtime.h</code>文件中，找到相关API</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">/** </div><div class="line"> * Sets an associated value for a given object using a given key and association policy.</div><div class="line"> * </div><div class="line"> * @param object The source object for the association.</div><div class="line"> * @param key The key for the association.</div><div class="line"> * @param value The value to associate with the key key for object. Pass nil to clear an existing association.</div><div class="line"> * @param policy The policy for the association. For possible values, see “Associative Object Behaviors.”</div><div class="line"> * </div><div class="line"> * @see objc_setAssociatedObject</div><div class="line"> * @see objc_removeAssociatedObjects</div><div class="line"> */</div><div class="line">OBJC_EXPORT void objc_setAssociatedObject(id object, const void *key, id value, objc_AssociationPolicy policy)</div><div class="line">    OBJC_AVAILABLE(10.6, 3.1, 9.0, 1.0);</div><div class="line"></div><div class="line">/** </div><div class="line"> * Returns the value associated with a given object for a given key.</div><div class="line"> * </div><div class="line"> * @param object The source object for the association.</div><div class="line"> * @param key The key for the association.</div><div class="line"> * </div><div class="line"> * @return The value associated with the key \e key for \e object.</div><div class="line"> * </div><div class="line"> * @see objc_setAssociatedObject</div><div class="line"> */</div><div class="line">OBJC_EXPORT id objc_getAssociatedObject(id object, const void *key)</div><div class="line">    OBJC_AVAILABLE(10.6, 3.1, 9.0, 1.0);</div><div class="line"></div><div class="line">/** </div><div class="line"> * Removes all associations for a given object.</div><div class="line"> * </div><div class="line"> * @param object An object that maintains associated objects.</div><div class="line"> * </div><div class="line"> * @note The main purpose of this function is to make it easy to return an object </div><div class="line"> *  to a &quot;pristine state”. You should not use this function for general removal of</div><div class="line"> *  associations from objects, since it also removes associations that other clients</div><div class="line"> *  may have added to the object. Typically you should use \c objc_setAssociatedObject </div><div class="line"> *  with a nil value to clear an association.</div><div class="line"> * </div><div class="line"> * @see objc_setAssociatedObject</div><div class="line"> * @see objc_getAssociatedObject</div><div class="line"> */</div><div class="line">OBJC_EXPORT void objc_removeAssociatedObjects(id object)</div><div class="line">    OBJC_AVAILABLE(10.6, 3.1, 9.0, 1.0);</div></pre></td></tr></table></figure>
 <p>以及枚举类型的引用策略：</p>
