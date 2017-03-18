@@ -68,7 +68,7 @@
 <link href="../../../../css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="瞎话," />
+  <meta name="keywords" content="iOS," />
 
 
 
@@ -84,16 +84,34 @@
 
 
 
-<meta name="description" content="最近被同事带着玩了王者荣耀。 玩的过程中突然想到一点。 一个英雄，你看再多的介绍、攻略、视频，都不如上手实战几把熟悉得快。 编程也是，看再多的技术文章都不如实际上手敲几行代码来的有用。当然理论学习还是很必要的，不过在学习之前，先实战，遇到坑，再去深入学习，我觉得这样可能效果会更佳。">
+<meta name="description" content="iOS runtime特性真的是十分强大，虽然项目中直接使用的不多，但很多三方里面都有用到相关内容，所以也是在此记录一下runtime的相关知识点，因为确实很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。 
+在object/runtime.h文件中，找到相关API
+12
+以及枚举类型的引用策略：
+12
+API解析
+objc_setAssoci">
 <meta property="og:type" content="article">
-<meta property="og:title" content="编程与王者荣耀">
-<meta property="og:url" content="http://yoursite.com/2017/02/16/编程与王者荣耀/index.html">
+<meta property="og:title" content="runtime之AssosiatedObject">
+<meta property="og:url" content="http://yoursite.com/2017/02/23/runtime之associatedObject/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="最近被同事带着玩了王者荣耀。 玩的过程中突然想到一点。 一个英雄，你看再多的介绍、攻略、视频，都不如上手实战几把熟悉得快。 编程也是，看再多的技术文章都不如实际上手敲几行代码来的有用。当然理论学习还是很必要的，不过在学习之前，先实战，遇到坑，再去深入学习，我觉得这样可能效果会更佳。">
-<meta property="og:updated_time" content="2017-02-16T01:50:11.000Z">
+<meta property="og:description" content="iOS runtime特性真的是十分强大，虽然项目中直接使用的不多，但很多三方里面都有用到相关内容，所以也是在此记录一下runtime的相关知识点，因为确实很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。 
+在object/runtime.h文件中，找到相关API
+12
+以及枚举类型的引用策略：
+12
+API解析
+objc_setAssoci">
+<meta property="og:updated_time" content="2017-03-18T08:41:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="编程与王者荣耀">
-<meta name="twitter:description" content="最近被同事带着玩了王者荣耀。 玩的过程中突然想到一点。 一个英雄，你看再多的介绍、攻略、视频，都不如上手实战几把熟悉得快。 编程也是，看再多的技术文章都不如实际上手敲几行代码来的有用。当然理论学习还是很必要的，不过在学习之前，先实战，遇到坑，再去深入学习，我觉得这样可能效果会更佳。">
+<meta name="twitter:title" content="runtime之AssosiatedObject">
+<meta name="twitter:description" content="iOS runtime特性真的是十分强大，虽然项目中直接使用的不多，但很多三方里面都有用到相关内容，所以也是在此记录一下runtime的相关知识点，因为确实很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。 
+在object/runtime.h文件中，找到相关API
+12
+以及枚举类型的引用策略：
+12
+API解析
+objc_setAssoci">
 
 
 
@@ -111,7 +129,7 @@
   };
 </script>
 
-  <title> 编程与王者荣耀 | 陈栋楠的Blog </title>
+  <title> runtime之AssosiatedObject | 陈栋楠的Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -261,7 +279,7 @@
             
             
               
-                编程与王者荣耀
+                runtime之AssosiatedObject
               
             
           </h1>
@@ -273,8 +291,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-16T09:43:19+08:00" content="2017-02-16">
-              2017-02-16
+            <time itemprop="dateCreated" datetime="2017-02-23T14:58:38+08:00" content="2017-02-23">
+              2017-02-23
             </time>
           </span>
 
@@ -301,7 +319,26 @@
       
 
       
-        <p>最近被同事带着玩了王者荣耀。 玩的过程中突然想到一点。 一个英雄，你看再多的介绍、攻略、视频，都不如上手实战几把熟悉得快。 编程也是，看再多的技术文章都不如实际上手敲几行代码来的有用。当然理论学习还是很必要的，不过在学习之前，先实战，遇到坑，再去深入学习，我觉得这样可能效果会更佳。</p>
+        <p>iOS runtime特性真的是十分强大，虽然项目中直接使用的不多，但很多三方里面都有用到相关内容，所以也是在此记录一下runtime的相关知识点，因为确实很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。 </p>
+<p>在<code>object/runtime.h</code>文件中，找到相关API</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
+<p>以及枚举类型的引用策略：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
+<p><strong>API解析</strong></p>
+<figure class="highlight plain"><figcaption><span>objc_setAssociatedObject(id object, const void *key, id value, objc_AssociationPolicy policy)``` API可以为两个对象建立起关联</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">+ **id object** ：关联者</div><div class="line">+ **id value** :    被关联者</div><div class="line">+ **const void *key** : 被关联者的key，可以通过该key获取该关联者</div><div class="line">+ **objc_AssociationPolicy policy** ：表示被关联者的引用策略，也就是内存管理，通过上面的枚举来设置。</div><div class="line"></div><div class="line">```id objc_getAssociatedObject(id object, const void *key) ``` API可以通过事先设置的Key获取被关联对象</div><div class="line"></div><div class="line">+ **id object** ：关联者</div><div class="line">+ **const void *key** : 被关联者的key</div><div class="line"></div><div class="line">`void objc_removeAssociatedObjects(id object)` 该 API 可以移除一个 `关联者` 对象所有的 `被关联者`。当需要移除特定的对象时，我们可以使用 `objc_setAssociatedObject` 方法并指定 `id value` 参数对象为空即可。</div><div class="line"></div><div class="line">**AssosiatedObject的使用**</div><div class="line"></div><div class="line">明白了API的意思后，就需要深入到我们实际的应用了。</div><div class="line"></div><div class="line">1. 为category添加变量</div><div class="line"></div><div class="line">category可以为已经存在的类添加方法，但是无法添加属性。不过通过AssoiatedObejct，我们可以实现这一点。</div><div class="line"></div><div class="line">#### NSObject+AssociatedObject.h</div></pre></td></tr></table></figure>
+<p>@interface NSObject (AssociatedObject)<br>@property (nonatomic, strong) id associatedObject;<br>@end<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">#### NSObject+AssociatedObject.m</div></pre></td></tr></table></figure></p>
+<p>@implementation NSObject (AssociatedObject)<br>@dynamic associatedObject;<br>static char kAssociatedObjectKey;</p>
+<ul>
+<li><p>(void)setAssociatedObject:(id)object {<br>   objc_setAssociatedObject(self, &amp;kAssociatedObjectKey, object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);<br>}</p>
+</li>
+<li><p>(id)associatedObject {<br>  return objc_getAssociatedObject(self, &amp;kAssociatedObjectKey));<br>}<br>```</p>
+</li>
+</ul>
+<p>使用了<code>objc_getAssociatedObject</code> 以及 <code>objc_setAssociatedObject</code> 来模拟『属性』的存取方法，而使用关联对象模拟实例变量，从而达到为category添加属性的效果。</p>
+<ol>
+<li>在一些特殊场景下，比如想知道一个系统内部对象或者第三方对象是何时被释放时，我们可以为该对象关联一个自定义的对象，并且使用 <code>OBJC_ASSOCIATION_RETAIN_NONATOMIC</code> 来指定内存管理策略，当关联者被释放是，被关联者也会跟着被释放，这样可以在我们自定义的对象中，知道感兴趣的对象何时被释放的。在调试一些内存问题时，该方法还是蛮有用的。</li>
+</ol>
+<p><strong>关联对象应该被当做最后的手段来使用（不得不用时才用），要在完全理解其的基础上再进行使用，否则可能会造成意想不到的后果。</strong></p>
 
       
     </div>
@@ -323,7 +360,7 @@
       
         <div class="post-tags">
           
-            <a href="../../../../tags/瞎话/" rel="tag">#瞎话</a>
+            <a href="../../../../tags/iOS/" rel="tag">#iOS</a>
           
         </div>
       
@@ -332,17 +369,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="../../05/UI-Test/" rel="next" title="UI Test">
-                <i class="fa fa-chevron-left"></i> UI Test
+              <a href="../../16/编程与王者荣耀/" rel="next" title="编程与王者荣耀">
+                <i class="fa fa-chevron-left"></i> 编程与王者荣耀
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="../../23/runtime之associatedObject/" rel="prev" title="runtime之AssosiatedObject">
-                runtime之AssosiatedObject <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
