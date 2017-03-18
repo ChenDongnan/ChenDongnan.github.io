@@ -260,6 +260,99 @@
             
               
                 
+                <a class="post-title-link" href="2017/03/18/runtime之methodSwizzing/" itemprop="url">
+                  runtime之methodSwizzing
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-18T17:48:06+08:00" content="2017-03-18">
+              2017-03-18
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="2017/02/23/runtime之associatedObject/" itemprop="url">
                   runtime之AssosiatedObject
                 </a>
@@ -493,28 +586,14 @@
 
       
         
-          
-            <h3 id="UI-Tests是什么？"><a href="#UI-Tests是什么？" class="headerlink" title="UI Tests是什么？"></a>UI Tests是什么？</h3><p>UI Tests是一个自动测试UI与交互的Testing组件</p>
+          <h3 id="UI-Tests是什么？"><a href="#UI-Tests是什么？" class="headerlink" title="UI Tests是什么？"></a>UI Tests是什么？</h3><p>UI Tests是一个自动测试UI与交互的Testing组件</p>
 <h3 id="UI-Tests有什么用？"><a href="#UI-Tests有什么用？" class="headerlink" title="UI Tests有什么用？"></a>UI Tests有什么用？</h3><p>它可以通过编写代码、或者是记录开发者的操作过程并代码化，来实现自动点击某个按钮、视图，或者自动输入文字等功能。</p>
 <h3 id="UI-Tests的重要性"><a href="#UI-Tests的重要性" class="headerlink" title="UI Tests的重要性"></a>UI Tests的重要性</h3><p>在实际的开发过程中，随着项目越做越大，功能越来越多，仅仅靠人工操作的方式来覆盖所有测试用例是非常困难的，尤其是加入新功能以后，旧的功能也要重新测试一遍，这导致了测试需要花非常多的时间来进行回归测试，这里产生了大量重复的工作，而这些重复的工作有些是可以自动完成的，这时候UI Tests就可以帮助解决这个问题了</p>
-<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><h5 id="第一步：添加UI-Tests"><a href="#第一步：添加UI-Tests" class="headerlink" title="第一步：添加UI Tests"></a>第一步：添加UI Tests</h5><p>如果是新项目，则创建工程的时候可以直接勾选选项，如下图</p>
-<p><img src="/2017/02/05/UI-Test/Users/chendongnan/Documents/Blog/source/_posts/UI-Test/新建工程.png" alt="新建工程"></p>
-<p>如果是已有项目，可以通过添加target的方法添加一个UI Test</p>
-<p><img src="/2017/02/05/UI-Test/Users/chendongnan/Documents/Blog/source/_posts/UI-Test/添加target.png" alt="添加target"></p>
-<h5 id="第二步：创建测试代码"><a href="#第二步：创建测试代码" class="headerlink" title="第二步：创建测试代码"></a>第二步：创建测试代码</h5><p><strong>手动创建测试代码</strong><br>打开测试文件，在testExample()方法中添加测试代码<img src="/2017/02/05/UI-Test/Users/chendongnan/Documents/Blog/source/_posts/UI-Test/testExample.png" alt="testExample"></p>
-<p>如果不知道如何写测试代码，则可以参考自动生成的代码样式</p>
-<p><strong>自动生成测试步骤</strong></p>
-<p>选择测试文件后，点击录制按钮<img src="/2017/02/05/UI-Test/Users/chendongnan/Documents/Blog/source/_posts/UI-Test/录制.png" alt="录制"></p>
-<p>这时候开始进行操作，它会记录你的操作步骤，并生成测试代码<br>下图就是在一些操作后自动生成的测试代码<img src="/2017/02/05/UI-Test/Users/chendongnan/Documents/Blog/source/_posts/UI-Test/测试.png" alt="测试"></p>
-<p>时候可以分析测试代码的语法，以便你自己手动修改或者手写测试代码</p>
-<p><strong>开始测试</strong><br>点击testExample方法旁边的播放按钮，它就开始进行自动测试了，这时候你会看到app在自动操作</p>
-<p><img src="/2017/02/05/UI-Test/Users/chendongnan/Documents/Blog/source/_posts/UI-Test/测试播放.png" alt="测试播放"></p>
-<h5 id="下面介绍一下测试元素的语法"><a href="#下面介绍一下测试元素的语法" class="headerlink" title="下面介绍一下测试元素的语法"></a>下面介绍一下测试元素的语法</h5><p><strong>XCUIApplication：</strong><br>继承XCUIElement，这个类掌管应用程序的生命周期，里面包含两个主要方法<br><code>launch():</code><br>启动程序<br><code>terminate():</code><br>终止程序</p>
-<p><strong>XCUIElement: </strong><br>继承NSObject，实现协议XCUIElementAttributes, XCUIElementTypeQueryProvider<br>可以表示系统的各种UI元素<br><code>exist:</code><br>可以让你判断当前的UI元素是否存在，如果对一个不存在的元素进行操作，会导致测试组件抛出异常并中断测试<br><code>descendantsMatchingType(type:XCUIElementType)-&gt;XCUIElementQuery:</code><br>取某种类型的元素以及它的子类集合<br><code>childrenMatchingType(type:XCUIElementType)-&gt;XCUIElementQuery:</code><br>取某种类型的元素集合，不包含它的子类</p>
-<p>这两个方法的区别在于，你仅使用系统的UIButton时，用childrenMatchingType就可以了，如果你还希望查询自己定义的子Button，就要用descendantsMatchingType</p>
-<p>另外UI元素还有一些交互方法<br><code>tap():</code><br>点击<br><code>doubleTap():</code><br>双击<br><code>pressForDuration(duration: NSTimeInterval):</code><br>长按一段时间，在你需要进行延时操作时，这个就派上用场了<br><code>swipeUp():</code><br>这个响应不了pan手势，暂时没发现能用在什么地方，也可能是beta版的bug，先不解释<br><code>typeText(text: String):</code><br>用于textField和textView输入文本时使用，使用前要确保文本框获得输入焦点，可以使用tap()函数使其获得焦点</p>
-
-          
+          <div class="post-more-link text-center">
+            <a class="btn" href="2017/02/05/UI-Test/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -889,7 +968,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
