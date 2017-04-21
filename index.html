@@ -260,8 +260,288 @@
             
               
                 
-                <a class="post-title-link" href="2017/03/18/runtime之methodSwizzing/" itemprop="url">
-                  runtime之methodSwizzing
+                <a class="post-title-link" href="2017/04/21/Linux-Command/" itemprop="url">
+                  Linux 常用命令
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-21T11:23:26+08:00" content="2017-04-21">
+              2017-04-21
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div><div class="line">305</div><div class="line">306</div><div class="line">307</div><div class="line">308</div><div class="line">309</div><div class="line">310</div><div class="line">311</div><div class="line">312</div><div class="line">313</div><div class="line">314</div><div class="line">315</div><div class="line">316</div><div class="line">317</div><div class="line">318</div><div class="line">319</div><div class="line">320</div><div class="line">321</div><div class="line">322</div><div class="line">323</div><div class="line">324</div><div class="line">325</div><div class="line">326</div><div class="line">327</div><div class="line">328</div><div class="line">329</div><div class="line">330</div><div class="line">331</div><div class="line">332</div><div class="line">333</div><div class="line">334</div><div class="line">335</div><div class="line">336</div><div class="line">337</div><div class="line">338</div><div class="line">339</div><div class="line">340</div><div class="line">341</div><div class="line">342</div><div class="line">343</div><div class="line">344</div><div class="line">345</div><div class="line">346</div><div class="line">347</div><div class="line">348</div><div class="line">349</div><div class="line">350</div><div class="line">351</div><div class="line">352</div><div class="line">353</div><div class="line">354</div><div class="line">355</div><div class="line">356</div><div class="line">357</div><div class="line">358</div><div class="line">359</div><div class="line">360</div><div class="line">361</div><div class="line">362</div><div class="line">363</div><div class="line">364</div><div class="line">365</div><div class="line">366</div><div class="line">367</div><div class="line">368</div><div class="line">369</div><div class="line">370</div><div class="line">371</div><div class="line">372</div><div class="line">373</div><div class="line">374</div><div class="line">375</div><div class="line">376</div><div class="line">377</div><div class="line">378</div><div class="line">379</div><div class="line">380</div><div class="line">381</div><div class="line">382</div><div class="line">383</div><div class="line">384</div><div class="line">385</div><div class="line">386</div><div class="line">387</div><div class="line">388</div><div class="line">389</div><div class="line">390</div><div class="line">391</div><div class="line">392</div><div class="line">393</div><div class="line">394</div><div class="line">395</div><div class="line">396</div><div class="line">397</div><div class="line">398</div><div class="line">399</div><div class="line">400</div><div class="line">401</div><div class="line">402</div><div class="line">403</div><div class="line">404</div><div class="line">405</div><div class="line">406</div><div class="line">407</div><div class="line">408</div><div class="line">409</div><div class="line">410</div><div class="line">411</div><div class="line">412</div><div class="line">413</div><div class="line">414</div><div class="line">415</div><div class="line">416</div><div class="line">417</div><div class="line">418</div><div class="line">419</div><div class="line">420</div><div class="line">421</div><div class="line">422</div><div class="line">423</div><div class="line">424</div><div class="line">425</div><div class="line">426</div><div class="line">427</div><div class="line">428</div><div class="line">429</div><div class="line">430</div><div class="line">431</div><div class="line">432</div><div class="line">433</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">1. linux目录操作命令</div><div class="line">------目录的增、删、改、查------</div><div class="line">cd, pwd, ls, mkdir, mv, ls(du, df, tree)</div><div class="line">切换目录,跟window的使用类似</div><div class="line">cd </div><div class="line"></div><div class="line">显示目录的详细信息</div><div class="line">ls -ld</div><div class="line"></div><div class="line">直接切换到根目录</div><div class="line">cd /</div><div class="line"></div><div class="line">在根目录下创建oracle目录</div><div class="line">mkdir /oracle</div><div class="line"></div><div class="line">ls -ld /oracle</div><div class="line">drwxr-xr-x 2 root root 4096 Jun 21 15:00 /oracle</div><div class="line"></div><div class="line"> 一次创建多个目录</div><div class="line">mkdir -p /u01/app/oracle</div><div class="line"></div><div class="line">显示当前文件夹的路径</div><div class="line">pwd </div><div class="line"></div><div class="line">删除oracle目录时显示确认</div><div class="line">rm -r /oracle</div><div class="line"></div><div class="line">删除oracle目录时不显示确认</div><div class="line">rm -rf /oracle</div><div class="line"></div><div class="line">把oracle目录名修改成oracle1</div><div class="line">mv /oracle oracle1</div><div class="line"></div><div class="line">把oracle目录移动到/tmp目录下</div><div class="line">mv /oracle /tmp</div><div class="line"></div><div class="line">显示某个目录的详细信息</div><div class="line">ls oracle -ld</div><div class="line"></div><div class="line">相看磁盘空间</div><div class="line">df -h </div><div class="line">df /tmp</div><div class="line"></div><div class="line">以树形式显示tmp目录的结构</div><div class="line">tree /tmp</div><div class="line"></div><div class="line">查看tmp文件夹下所有文件的路径</div><div class="line">du /tmp</div><div class="line"></div><div class="line">拷贝文件到某个目录</div><div class="line">cp source dest</div><div class="line"></div><div class="line">2. linux文件操作命令</div><div class="line">------文件增，删，改，查------</div><div class="line">touch, cat, more, less, tail, head, rm -f, mv, cp, vi</div><div class="line">创建test文本文档</div><div class="line">touch test</div><div class="line"></div><div class="line">vi打开文件模式下，显示行号命令</div><div class="line">:set number</div><div class="line"></div><div class="line">查看test文档的内容</div><div class="line">cat test</div><div class="line"></div><div class="line">查看test文档的内容前10行</div><div class="line">head -10 test</div><div class="line"></div><div class="line">查看test文档的内容最后10行</div><div class="line">tail -10 test</div><div class="line"></div><div class="line">网络登录本地机器</div><div class="line">ssh localhost</div><div class="line"></div><div class="line">实时监控登录信息</div><div class="line">tail -f /var/log/messages</div><div class="line">tail -f /var/log/secure</div><div class="line"></div><div class="line">分页显示test文本内容，按空格键显示下一页，按q退出</div><div class="line">more test</div><div class="line"></div><div class="line">分页显示test文本内容，按空格键显示下一页，按q退出，按上下键进行上翻和下翻</div><div class="line">less test</div><div class="line"></div><div class="line">test文件重命名为test1</div><div class="line">mv test test1</div><div class="line"></div><div class="line">把test文件移动到上一级目录下</div><div class="line">mv test ../</div><div class="line"></div><div class="line">把上一级文件test移动到当前目录</div><div class="line">mv ../test .</div><div class="line"></div><div class="line">把test1拷贝成test2</div><div class="line">cp test1 test2</div><div class="line"></div><div class="line">把一个目录拷贝成另一个目录</div><div class="line">cp -r hh dd</div><div class="line"></div><div class="line">删除test1文件并提示是否删除</div><div class="line">rm test1</div><div class="line"></div><div class="line">强制删除test1文件</div><div class="line">rm -f test1</div><div class="line"></div><div class="line">删除当前目录下所有文件</div><div class="line">rm -rf *</div><div class="line"></div><div class="line">备份某个文件</div><div class="line">cp test test.bak</div><div class="line"></div><div class="line"></div><div class="line">3. vi操作文件常用方式</div><div class="line">查看模式：</div><div class="line">G(shift+g)　　 跳到文件尾部</div><div class="line">gg　　　　　　  跳到文件首部</div><div class="line">/             从文本尾部开始查找某个文本</div><div class="line">?             从文本首部开始查找某个文本</div><div class="line">dd            删除一行</div><div class="line">ndd           删除多行</div><div class="line">yy            复制一行</div><div class="line">nyy           复制多行</div><div class="line">p             粘贴一行或多行</div><div class="line">u             撤消上一个操作</div><div class="line"></div><div class="line">冒号模式 </div><div class="line">:w            保存</div><div class="line">:wq　　　      保存并退出</div><div class="line">:x            保存并退出</div><div class="line">:q!           不保存退出 </div><div class="line">:wq!          强制保存并退出 </div><div class="line">:set number   显示行号</div><div class="line"></div><div class="line">编辑模式：</div><div class="line">a             当前字符的后面插入 </div><div class="line">i             当前位置插入 </div><div class="line">o             当前行后面追加一个新行后插入 </div><div class="line"></div><div class="line">不同模式之间切换ESC</div><div class="line"></div><div class="line"></div><div class="line">4. linux用户和组操作</div><div class="line">id oracle                 查看用户信息</div><div class="line">cd /home </div><div class="line">ls -a</div><div class="line">cat /etc/passwd</div><div class="line">cat /etc/shodaw</div><div class="line"></div><div class="line">useradd oracle            创建oracle用户</div><div class="line">useradd -u 501 oracle </div><div class="line">useradd -u 501 -g root oracle</div><div class="line">useradd -h                查看useradd命令简略帮助</div><div class="line">man useradd               查看useradd命令详细帮助，</div><div class="line">                          直接打开帮助文件，q退出</div><div class="line"></div><div class="line">usermod -u 502 oracle     修改用户信息</div><div class="line">usermod -g root oracle</div><div class="line"></div><div class="line">userdel -r oracle         删除oracle用户</div><div class="line"></div><div class="line">passwd oracle             修改用户密码</div><div class="line"></div><div class="line">cat /etc/group            查看组信息</div><div class="line"></div><div class="line">groupadd -g 501 dba       添加组信息</div><div class="line"></div><div class="line">groupdel dba              删除组，如果组下面有用户，要先删除用户</div><div class="line"></div><div class="line">groupmod -g 502 dba       修改组的gid</div><div class="line"></div><div class="line">useradd -u 501  -g oinstall -G dba oracle      给用户添加多个组</div><div class="line"></div><div class="line">su - oracle         切换用户并切换用户的配置文件              </div><div class="line"></div><div class="line">su oracle           切换用户但不切换用户配置文件</div><div class="line"></div><div class="line">权限设置</div><div class="line">r     w     x</div><div class="line">4     2     1</div><div class="line">rwx   r-x   r-x</div><div class="line">user　group others </div><div class="line">7     5     5</div><div class="line">root  root  others</div><div class="line"></div><div class="line">chown oracle:oinstall /oracle     修改某个目录权限</div><div class="line">chown -R oracle:oinstall /oracle  修改某个目录及其子目录权限</div><div class="line"></div><div class="line">ls -ld /oracle                    查看目录权限</div><div class="line"></div><div class="line">chmod -R 777 /oracle              设置目录为最大权限</div><div class="line">chmod -R 755 /oracle              修改oracle目录及其子目录权限为755</div><div class="line"></div><div class="line"></div><div class="line">5. linux软件的安装、解压缩，yum </div><div class="line">file a.tar.gz</div><div class="line"></div><div class="line">*.tar</div><div class="line">tar -xvf a.tar</div><div class="line">tar cvf a.tar a/</div><div class="line"></div><div class="line">*.tar.gz</div><div class="line">tar -zcvf a.tar.gz a</div><div class="line">tar -zxvf a.tar.gz</div><div class="line"></div><div class="line">*.gz</div><div class="line">gunzip a.gz</div><div class="line">gzip -6 a a.gz</div><div class="line"></div><div class="line">*.bz2</div><div class="line">tar -jxvf a.bz2</div><div class="line">tar -cjvf a a.bz2 </div><div class="line"></div><div class="line">*.cpio</div><div class="line">cpio -idmv &lt; a.cpio</div><div class="line"></div><div class="line">*.cpio.gz</div><div class="line">zcat a.cpio.gz | cpio -idmv</div><div class="line"></div><div class="line">*.zip</div><div class="line">unzip a.zip</div><div class="line"></div><div class="line"></div><div class="line">安装软件</div><div class="line">rpm -ivh file.rpm</div><div class="line"></div><div class="line">过滤安装好的带有zsh字符的软件</div><div class="line">rpm -qa|grep zsh</div><div class="line"></div><div class="line">卸载软件</div><div class="line">rpm -e file.el5</div><div class="line"></div><div class="line">查看所以已安装软件</div><div class="line">rpm -ga</div><div class="line"></div><div class="line"></div><div class="line">使用yum安装软件</div><div class="line">mount /dev/hdc /mnt</div><div class="line"></div><div class="line">cp rhel-debuginfo.repo rhel5.repo</div><div class="line"></div><div class="line">vi rhel5.repo</div><div class="line"></div><div class="line">6. linux主机名、网络配置、网络的查看</div><div class="line"></div><div class="line">设置网卡向导</div><div class="line">setup</div><div class="line">####################################</div><div class="line">Name                 eth0</div><div class="line">Device               eth0</div><div class="line">Use DHCP             []</div><div class="line">Static IP            192.168.12.100</div><div class="line">Netmask              255.255.255.0</div><div class="line">Default gateway IP   192.168.12.1</div><div class="line">###################################</div><div class="line"></div><div class="line">重启网卡</div><div class="line">/etc/init.d/network restart</div><div class="line"></div><div class="line">查看网络配置信息</div><div class="line">ifconfig etho</div><div class="line">ifconfig -a</div><div class="line">ip a</div><div class="line">ip add</div><div class="line"></div><div class="line">手动修改网络配置文件</div><div class="line">vi /etc/sysconfig/network-scripts</div><div class="line">###############################################################</div><div class="line">#Inter Corporation 82545EM Gigabit Ethernet Controller (Copper)</div><div class="line">DEVICE=eth0</div><div class="line">BOOTPROTO=none</div><div class="line">HWADDR=00:0c:29:9e:72:f4</div><div class="line">ONBOOT=yes</div><div class="line">TYPE=Ethernet</div><div class="line">NETMASK=255.255.255.0</div><div class="line">IPADDR=192.168.12.100</div><div class="line">GATEWAY=192.168.12.1</div><div class="line">###############################################################</div><div class="line"></div><div class="line">修改主机域名</div><div class="line">vi /etc/hosts</div><div class="line">##################################################</div><div class="line">127.0.0.1       localhost.localdomain localhost</div><div class="line">::1             localhost6.localdomain6 localhost6</div><div class="line">192.168.91.10   RHL5</div><div class="line">##################################################</div><div class="line"></div><div class="line">vi /etc/sysconfig/network</div><div class="line">########################</div><div class="line">NETWORKING=yes</div><div class="line">NETWORKING_IPV6=no</div><div class="line">HOSTNAME=RHL5</div><div class="line">GATEWAY=192.168.91.1</div><div class="line">#######################</div><div class="line"></div><div class="line">立即刷新系统设置</div><div class="line">su -</div><div class="line"></div><div class="line">手工修改域名</div><div class="line">hostname RHL5</div><div class="line">退出终端，重新打开</div><div class="line"></div><div class="line">检查IP是否设置成功</div><div class="line">ping 192.168.12.100</div><div class="line"></div><div class="line">检查域名是否设置成功</div><div class="line">ping RHL5</div><div class="line"></div><div class="line"></div><div class="line">7.linux磁盘管理、存储配置命令（raw配置），多路径软件配置</div><div class="line"></div><div class="line">查看各个分区的信息</div><div class="line">fdisk -l    </div><div class="line"></div><div class="line">进入分区模式</div><div class="line">fdisk /dev/sda</div><div class="line"></div><div class="line">让分区操作立即生效</div><div class="line">partprobe</div><div class="line"></div><div class="line">格式化某个分区</div><div class="line">mkfs.ext3 /dev/sda5</div><div class="line"></div><div class="line">把分区mount到某个目录才能使用分区</div><div class="line">mount /dev/sda5 /mnt</div><div class="line"></div><div class="line">取消分区的mount操作</div><div class="line">umount /dev/sda5</div><div class="line"></div><div class="line">把分区映射到某个裸设备, 并增加dba权限</div><div class="line">cd /etc/udev/rules.d</div><div class="line"></div><div class="line">vi 60-raw.rules</div><div class="line">########################################################</div><div class="line">ACTION==&quot;add&quot;, KERNEL==&quot;sda5&quot;,RUN+=&quot;/bin/raw/raw1 %N&quot;</div><div class="line">KERNEL==&quot;raw*&quot;, OWNER=&quot;oracle&quot; GROUP=&quot;dba&quot;, MODE=&quot;0660&quot;</div><div class="line">########################################################</div><div class="line"></div><div class="line">start_udev</div><div class="line"></div><div class="line">raw -qa</div><div class="line"></div><div class="line">cat 60-raw.rules</div><div class="line"></div><div class="line"></div><div class="line">8.oracle需要的参数配置 </div><div class="line"></div><div class="line">全局进程，线程配置</div><div class="line">/etc/profile</div><div class="line">###########################</div><div class="line">if [$USER = &apos;oracle&apos;]; then</div><div class="line">    ulimit -u 16384</div><div class="line">    ulimit -n 65536</div><div class="line">fi</div><div class="line">##########################</div><div class="line"></div><div class="line">su - oracle 切换到oracle用户</div><div class="line">cd /oracle  切换到oracle目录</div><div class="line"></div><div class="line">修改oracle用户环境变量</div><div class="line">.bash_profile                </div><div class="line">#################################################</div><div class="line">export ORACLE_BASE=/oracle/app/oracle</div><div class="line">export ORACLE_HOME=$ORACLE_BASE/product/10.2.0/db</div><div class="line">export PATH=$ORACLE_HOME/bin;$PATH</div><div class="line">#################################################</div><div class="line"></div><div class="line">网络参数配置</div><div class="line">/etc/sysctl.conf             </div><div class="line">#####################################################################</div><div class="line"># Kernel sysctl configuration file for Red Hat Linux</div><div class="line">#</div><div class="line"># For binary values, 0 is disabled, 1 is enabled.  See sysctl(8) and</div><div class="line"># sysctl.conf(5) for more details.</div><div class="line"></div><div class="line"># Controls IP packet forwarding</div><div class="line">net.ipv4.ip_forward = 0</div><div class="line"></div><div class="line"># Controls source route verification</div><div class="line">net.ipv4.conf.default.rp_filter = 1</div><div class="line"></div><div class="line"># Do not accept source routing</div><div class="line">net.ipv4.conf.default.accept_source_route = 0</div><div class="line"></div><div class="line"># Controls the System Request debugging functionality of the kernel</div><div class="line">kernel.sysrq = 0</div><div class="line"></div><div class="line"># Controls whether core dumps will append the PID to the core filename</div><div class="line"># Useful for debugging multi-threaded applications</div><div class="line">kernel.core_uses_pid = 1</div><div class="line">#######################################################################</div><div class="line"></div><div class="line">进程、线程配置</div><div class="line">/etc/security/limits.conf    </div><div class="line">###################################</div><div class="line">oracle     soft    nproc    2047</div><div class="line">oracle     hard    nproc    16384</div><div class="line">oracle     soft    nofile   1024</div><div class="line">oracle     hard    nofile   65536</div><div class="line">###################################</div><div class="line"></div><div class="line">9.oracle安装需要的图形化支持</div><div class="line">xManager</div><div class="line">VNC</div><div class="line">xShell</div><div class="line">putty</div><div class="line"></div><div class="line">10.ssh基本操作</div><div class="line">ssh重启</div><div class="line">/etc/init.d/sshd restart</div><div class="line"></div><div class="line">ssh登录到远程机器</div><div class="line">ssh 192.168.21.100</div><div class="line"></div><div class="line">拷贝文件到远程主机某个目录</div><div class="line">scp -r /oracle 192.168.12.100:/tmp</div><div class="line"></div><div class="line">11.linux优化的命令</div><div class="line">终止指定进程</div><div class="line">kill -9 11024</div><div class="line">批量终止xxx进程</div><div class="line">kill -9 `ps -ef |grep xxx |grep -v grep |awk &apos;&#123;print $2&#125;&apos;`</div><div class="line"></div><div class="line">ps -ef |grep ora_   查看进程</div><div class="line">df -h               查看磁盘空间</div><div class="line">free -m             查看内存</div><div class="line">vmstat 1 5          查看系统统计信息（包括cpu,mem,io等）</div><div class="line"></div><div class="line">top命令</div><div class="line">s 调整刷新频率，如改成1，即每秒刷新一次</div><div class="line">shift + P 按CPU排序</div><div class="line">shift + M 按内存排序</div><div class="line">shift + T 按时间排序</div><div class="line">shift + U 按用户过滤</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="2017/04/19/SDWebImage-Cache-Mechanism/" itemprop="url">
+                  SDWebImage Cache Mechanism
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-19T09:57:59+08:00" content="2017-04-19">
+              2017-04-19
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="2017/03/22/Dictionary-to-Model/" itemprop="url">
+                  Dictionary to Model
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-22T15:57:40+08:00" content="2017-03-22">
+              2017-03-22
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>字典转模型，这是每个项目中都需要用到的功能，我们项目中使用MJExtension来实现相关功能。之前自己也简单写过一个demo，不过没有完整的去实现这个功能，这次打算写一个来练练手。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="2017/03/18/runtime之methodSwizzling/" itemprop="url">
+                  runtime之methodSwizzling
                 </a>
               
             
@@ -304,7 +584,33 @@
       
         
           
-            
+            <p>Method swizzling被称为runtime的黑魔法，那么之所以被称为黑魔法，一方面有其强大之处，另一方面用的不好也会产生意想不到的问题，所以在使用method swizzling的时候一定要慎重考虑。</p>
+<p>Mthod swizzling，字面翻译就是方法交换，它可以允许我们<strong>动态地替换方法的实现</strong>。很多项目中都会用到埋点，记录每个页面的呈现次数。那么就需要我们在控制器中的viewDidAppear方法中去添加记录代码。这个功能可以通过写一个父类控制器，在父类viewDidAppear里添加记录代码，其他的控制器都继承与该父类控制器来实现。但是这么做的话，你需要UIViewController，UITableViewController，UINavigationController中都实现他们的viewDidAppear方法，比较繁琐。这时候，使用method swizzling也不失为一种好方法。</p>
+<p>首先要分清几个概念:</p>
+<p><strong>Selectors,Methods,Implementations</strong></p>
+<blockquote>
+<ul>
+<li>Selector（<code>typedef struct objc_selector *SEL</code>）:在运行时 Selectors 用来代表一个方法的名字。Selector 是一个在运行时被注册（或映射）的C类型字符串。Selector由编译器产生并且在当类被加载进内存时由运行时自动进行名字和实现的映射。</li>
+<li>Method（<code>typedef struct objc_method *Method</code>）:方法是一个不透明的用来代表一个方法的定义的类型。</li>
+<li>Implementation（<code>typedef id (*IMP)(id, SEL,...)</code>）:这个数据类型指向一个方法的实现的最开始的地方。该方法为当前CPU架构使用标准的C方法调用来实现。该方法的第一个参数指向调用方法的自身（即内存中类的实例对象，若是调用类方法，该指针则是指向元类对象metaclass）。第二个参数是这个方法的名字selector，该方法的真正参数紧随其后。</li>
+</ul>
+</blockquote>
+<p>理解 selector, method, implementation 这三个概念之间关系的最好方式是：在运行时，类（Class）维护了一个消息分发列表来解决消息的正确发送。每一个消息列表的入口是一个方法（Method），这个方法映射了一对键值对，其中键值是这个方法的名字 selector（SEL），值是指向这个方法实现的函数指针 implementation（IMP）。 Method swizzling 修改了类的消息分发列表使得已经存在的 selector 映射了另一个实现 implementation，同时重命名了原生方法的实现为一个新的 selector。</p>
+<p><strong>Method swizzling常用的API :</strong></p>
+<figure class="highlight plain"><figcaption><span>class_addMethod(Class cls, SEL name, IMP imp, const char *types);```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">```Method class_getInstanceMethod(Class cls, SEL name);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><figcaption><span>class_getClassMethod(Class cls, SEL name);```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">```IMP class_replaceMethod(Class cls, SEL name, IMP imp, const char *types);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><figcaption><span>class_getMethodImplementation(Class cls, SEL name);```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">```method_exchangeImplementations</div></pre></td></tr></table></figure>
+<p>使用method swizzling和category来添加统计方法</p>
+<p>首先给UIViewController添加一个category，然后去重写+(void)load方法，因为该方法在类被加载到内存时会且仅会被调用一次。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">#import &lt;objc/runtime.h&gt;</div><div class="line"></div><div class="line">@implementation UIViewController (swizzling)</div><div class="line"></div><div class="line">+ (void)load &#123;</div><div class="line"></div><div class="line">    // 通过class_getInstanceMethod()函数从当前对象中的method list获取method结构体，如果是类方法就使用class_getClassMethod()函数获取。</div><div class="line"></div><div class="line">    Method fromMethod = class_getInstanceMethod([self class], @selector(viewDidLoad));</div><div class="line"></div><div class="line">    Method toMethod = class_getInstanceMethod([self class], @selector(swizzlingViewDidLoad));</div><div class="line"></div><div class="line">    /**</div><div class="line">     *  使用class_addMethod()函数对Method Swizzling做了一层验证，如果self没有实现被交换的方法，会导致失败。</div><div class="line">     *  而且self没有交换的方法实现，但是父类有这个方法，这样就会调用父类的方法，结果就不是我们想要的结果了。</div><div class="line">     *  所以我们在这里通过class_addMethod()的验证，如果self实现了这个方法，class_addMethod()函数将会返回NO，我们就可以对其进行交换了。</div><div class="line">     */</div><div class="line">    if (!class_addMethod([self class], @selector(swizzlingViewDidLoad), method_getImplementation(toMethod), method_getTypeEncoding(toMethod))) &#123;</div><div class="line">        method_exchangeImplementations(fromMethod, toMethod);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 我们自己实现的方法，也就是和self的viewDidLoad方法进行交换的方法。</div><div class="line"></div><div class="line">- (void)swizzlingViewDidLoad &#123;</div><div class="line"></div><div class="line">    NSString *str = [NSString stringWithFormat:@&quot;%@&quot;, self.class];</div><div class="line"></div><div class="line">    // 我们在这里加一个判断，将系统的UIViewController的对象剔除掉</div><div class="line"></div><div class="line">    if(![str containsString:@&quot;UI&quot;])&#123;</div><div class="line"></div><div class="line">        NSLog(@&quot;埋点 : %@&quot;, self.class);</div><div class="line"></div><div class="line">    &#125;</div><div class="line">    [self swizzlingViewDidLoad];</div><div class="line">&#125;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>通过上述操作，当一个继承自UIViewController类的类被加载的时候，就会执行<code>(void) swizzlingViewDidLoad</code>，从而实现了添加统计代码的功能。</p>
+<p>另外，利用method swizzling 也可以来防止一些意外崩溃。比如我们往数组或者字典中插入nil对象引起的崩溃，或者数组越界的崩溃，都可以用method swizzling来避免。</p>
+<p><strong>对字典进行method swizzling</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">@implementation NSDictionary (Safe)</div><div class="line"></div><div class="line">+ (void)load &#123;</div><div class="line">    Method originalMethod = class_getClassMethod(self, @selector(dictionaryWithObjects:forKeys:count:));</div><div class="line">    Method swizzledMethod = class_getClassMethod(self, @selector(safe_dictionaryWithObjects:forKeys:count:));</div><div class="line">    method_exchangeImplementations(originalMethod, swizzledMethod);</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (instancetype)safe_dictionaryWithObjects:(const id [])objects forKeys:(const id &lt;NSCopying&gt; [])keys count:(NSUInteger)cnt &#123;</div><div class="line">    id nObjects[cnt];</div><div class="line">    id nKeys[cnt];</div><div class="line">    int i=0, j=0;</div><div class="line">    for (; i&lt;cnt &amp;&amp; j&lt;cnt; i++) &#123;</div><div class="line">        if (objects[i] &amp;&amp; keys[i]) &#123;</div><div class="line">            nObjects[j] = objects[i];</div><div class="line">            nKeys[j] = keys[i];</div><div class="line">            j++;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return [self safe_dictionaryWithObjects:nObjects forKeys:nKeys count:j];</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">@implementation NSMutableDictionary (Safe)</div><div class="line"></div><div class="line">+ (void)load &#123;</div><div class="line">    Class dictCls = NSClassFromString(@&quot;__NSDictionaryM&quot;);</div><div class="line">    Method originalMethod = class_getInstanceMethod(dictCls, @selector(setObject:forKey:));</div><div class="line">    Method swizzledMethod = class_getInstanceMethod(dictCls, @selector(na_setObject:forKey:));</div><div class="line">    method_exchangeImplementations(originalMethod, swizzledMethod);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)na_setObject:(id)anObject forKey:(id&lt;NSCopying&gt;)aKey &#123;</div><div class="line">    if (!anObject)</div><div class="line">        return;</div><div class="line">    [self na_setObject:anObject forKey:aKey];</div><div class="line">&#125;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>同样的，对数组也可以采取类似的方法。</p>
+<p>可以看到，method swizzling的功能十分强大，不过使用时要注意</p>
+
           
         
       
@@ -968,7 +1274,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">10</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -985,7 +1291,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
