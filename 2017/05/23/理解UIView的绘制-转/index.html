@@ -99,7 +99,7 @@
 <meta property="og:image" content="http://vizlabxt.github.io/images/2013/11/QQ20131123-3.png">
 <meta property="og:image" content="http://vizlabxt.github.io/images/2013/11/QQ20131123-4.png">
 <meta property="og:image" content="http://vizlabxt.github.io/images/2013/11/QQ20131123-6.png">
-<meta property="og:updated_time" content="2017-05-23T03:49:35.000Z">
+<meta property="og:updated_time" content="2017-05-23T03:54:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="理解UIView的绘制(转)">
 <meta name="twitter:description" content="本文转自 http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/
@@ -318,6 +318,7 @@
 <p>也许要先从<code>Runloop</code>开始说，iOS的main<code>Runloop</code>是一个60fps的回调，也就是说每16.7ms会绘制一次屏幕，这个时间段内要完成view的缓冲区创建，view内容的绘制（如果重写了<code>drawRect</code>），这些CPU的工作。然后将这个缓冲区交给GPU渲染，这个过程又包括多个view的拼接(compositing)，纹理的渲染（Texture）等，最终显示在屏幕上。因此，如果在16.7ms内完不成这些操作，比如，CPU做了太多的工作，或者view层次过于多，图片过于大，导致GPU压力太大，就会导致“卡”的现象，也就是丢帧。</p>
 <p>苹果官方给出的最佳帧率是：60fps，也就是1帧不丢，当然这是理想中的绝佳的体验。</p>
 <p>这个60fps改怎么理解呢？一般来说如果帧率达到25+fps，人眼就基本感觉不到停顿了，因此，如果你能让你ios程序稳定的保持在30fps已经很不错了，注意，是“稳定”在30fps，而不是，10fps，40fps，20fps这样的跳动，如果帧频不稳就会有卡的感觉。60fps真的很难达到，尤其在iphone4，4s上。</p>
+<a id="more"></a>
 <p>总的来说，<code>UIView</code>从绘制到Render的过程有如下几步：</p>
 <ul>
 <li>每一个<code>UIView</code>都有一个<code>layer</code>，每一个<code>layer</code>都有个<code>content</code>，这个<code>content</code>指向的是一块缓存，叫做backing store。</li>

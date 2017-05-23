@@ -94,7 +94,7 @@
 相对于Android,iOS是一个十分封闭的系统，这也是用户可以获得良好体验的保证之一。为了确保安装到用户手机上的App都是被官方认证">
 <meta property="og:image" content="http://blog.cnbang.net/wp-content/uploads/2017/03/sign0.png">
 <meta property="og:image" content="http://yoursite.com/2017/05/11/iOS-signature-and-certificate/chendongnan/Documents/Blog/source/_posts/iOS-signature-and-certificate/屏幕快照 2017-05-19 下午6.02.13.png">
-<meta property="og:updated_time" content="2017-05-19T10:36:34.000Z">
+<meta property="og:updated_time" content="2017-05-23T03:54:55.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS signature and certificate">
 <meta name="twitter:description" content="iOS签名机制一直是很困扰我的一件事，真机测试或者打包的时候，经常会遇到各种情况的报错，CertificateRequest,p12,Provision Profile,Code Sign五花八门的，所以在这里系统地记录一下相关知识，不再一知半解地去处理这些问题。
@@ -309,6 +309,7 @@
       
         <p>iOS签名机制一直是很困扰我的一件事，真机测试或者打包的时候，经常会遇到各种情况的报错，CertificateRequest,p12,Provision Profile,Code Sign五花八门的，所以在这里系统地记录一下相关知识，不再一知半解地去处理这些问题。</p>
 <p>相对于Android,iOS是一个十分封闭的系统，这也是用户可以获得良好体验的保证之一。为了确保安装到用户手机上的App都是被官方认证过的，苹果推出了签名机制。</p>
+<a id="more"></a>
 <h2 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h2><p>通常我们说的签名就是数字签名，它是基于非对称加密算法实现的。对称加密是通过同一份密钥加密和解密数据，而非对称加密则有两份密钥，分别是公钥和私钥，用公钥加密的数据，要用私钥才能解密，用私钥加密的数据，要用公钥才能解密。</p>
 <p>简单说一下常用的非对称加密算法 RSA 的数学原理，理解简单的数学原理，就可以理解非对称加密是怎么做到的，为什么会是安全的：</p>
 <ol>

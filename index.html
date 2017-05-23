@@ -303,88 +303,16 @@
 
       
         
-          
-            <p>本文转自 <a href="http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/" target="_blank" rel="external">http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/</a></p>
+          <p>本文转自 <a href="http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/">http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/</a></p>
 <h1 id="理解UIView的绘制"><a href="#理解UIView的绘制" class="headerlink" title="理解UIView的绘制"></a>理解UIView的绘制</h1><p><code>UIView</code>是如何显示到Screen上的</p>
 <p>也许要先从<code>Runloop</code>开始说，iOS的main<code>Runloop</code>是一个60fps的回调，也就是说每16.7ms会绘制一次屏幕，这个时间段内要完成view的缓冲区创建，view内容的绘制（如果重写了<code>drawRect</code>），这些CPU的工作。然后将这个缓冲区交给GPU渲染，这个过程又包括多个view的拼接(compositing)，纹理的渲染（Texture）等，最终显示在屏幕上。因此，如果在16.7ms内完不成这些操作，比如，CPU做了太多的工作，或者view层次过于多，图片过于大，导致GPU压力太大，就会导致“卡”的现象，也就是丢帧。</p>
 <p>苹果官方给出的最佳帧率是：60fps，也就是1帧不丢，当然这是理想中的绝佳的体验。</p>
 <p>这个60fps改怎么理解呢？一般来说如果帧率达到25+fps，人眼就基本感觉不到停顿了，因此，如果你能让你ios程序稳定的保持在30fps已经很不错了，注意，是“稳定”在30fps，而不是，10fps，40fps，20fps这样的跳动，如果帧频不稳就会有卡的感觉。60fps真的很难达到，尤其在iphone4，4s上。</p>
-<p>总的来说，<code>UIView</code>从绘制到Render的过程有如下几步：</p>
-<ul>
-<li>每一个<code>UIView</code>都有一个<code>layer</code>，每一个<code>layer</code>都有个<code>content</code>，这个<code>content</code>指向的是一块缓存，叫做backing store。</li>
-<li><code>UIView</code>的绘制和渲染是两个过程，当<code>UIView</code>被绘制时，CPU执行<code>drawRect</code>，通过context将数据写入backing store</li>
-<li>当backing store写完后，通过render server交给GPU去渲染，将backing store中的bitmap数据显示在屏幕上</li>
-</ul>
-<p>上面提到的从CPU到GPU的过程可用下图表示：</p>
-<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-1.png" target="_blank" rel="external"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-1.png" alt="UIView Rendering"></a></p>
-<p>下面具体来讨论下这个过程</p>
-<h3 id="CPU-bound："><a href="#CPU-bound：" class="headerlink" title="CPU bound："></a>CPU bound：</h3><p>假设我们创建一个<code>UILabel</code>：</p>
-<p><code>UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(10, 50, 300, 14)];label.backgroundColor = [UIColor whiteColor];label.font = [UIFont systemFontOfSize:14.0f];label.text = @&quot;test&quot;;[self.view addSubview:label];</code></p>
-<p>这个时候不会发生任何操作，由于<code>UILabel</code>重写了<code>drawRect</code>，因此，这个view会被marked as “dirty”：</p>
-<p>类似这个样子：</p>
-<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-2.png" target="_blank" rel="external"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-2.png" alt="img"></a></p>
-<p>然后一个新的<code>Runloop</code>到来，上面说道在这个<code>Runloop</code>中需要将界面渲染上去，对于UIKit的渲染，Apple用的是它的Core Animation。</p>
-<p>做法是在<code>Runloop</code>开始的时候调用：</p>
-<p><code>[CATransaction begin]</code></p>
-<p>在<code>Runloop</code>结束的时候调用</p>
-<p><code>[CATransaction commit]</code></p>
-<p>在begin和commit之间做的事情是将view增加到view hierarchy中，这个时候也不会发生任何绘制的操作。</p>
-<p>当<code>[CATransaction commit]</code>执行完后，CPU开始绘制这个view：</p>
-<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-3.png" target="_blank" rel="external"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-3.png" alt="img"></a></p>
-<ul>
-<li>首先CPU会为layer分配一块内存用来绘制bitmap，叫做backing store</li>
-<li>创建指向这块bitmap缓冲区的指针，叫做CGContextRef</li>
-<li>通过Core Graphic的api，也叫Quartz2D，绘制bitmap</li>
-<li>将layer的content指向生成的bitmap</li>
-<li>清空dirty flag标记</li>
-</ul>
-<p>这样CPU的绘制基本上就完成了。</p>
-<p>通过time profiler 可以完整的看到个过程：</p>
-<p><code>Running Time Self Symbol Name2.0ms 1.2% 0.0 +[CATransaction flush]2.0ms 1.2% 0.0 CA::Transaction::commit()2.0ms 1.2% 0.0 CA::Context::commit_transaction(CA::Transaction*)1.0ms 0.6% 0.0 CA::Layer::layout_and_display_if_needed(CA::Transaction*)1.0ms 0.6% 0.0 CA::Layer::display_if_needed(CA::Transaction*)1.0ms 0.6% 0.0 -[CALayer display]1.0ms 0.6% 0.0 CA::Layer::display()1.0ms 0.6% 0.0 -[CALayer _display]1.0ms 0.6% 0.0 CA::Layer::display_()1.0ms 0.6% 0.0 CABackingStoreUpdate_1.0ms 0.6% 0.0 backing_callback(CGContext*, void*)1.0ms 0.6% 0.0 -[CALayer drawInContext:]1.0ms 0.6% 0.0 -[UIView(CALayerDelegate) drawLayer:inContext:]1.0ms 0.6% 0.0 -[UILabel drawRect:]1.0ms 0.6% 0.0 -[UILabel drawTextInRect:]</code></p>
-<p>假如某个时刻修改了label的text：</p>
-<p><code>label.text = @&quot;hello world&quot;;</code></p>
-<p>由于内容变了，layer的content的bitmap的尺寸也要变化，因此这个时候当新的<code>Runloop</code>到来时，CPU要为layer重新创建一个backing store，重新绘制bitmap。</p>
-<p>CPU这一块最耗时的地方往往在Core Graphic的绘制上，关于Core Graphic的性能优化是另一个话题了，又会牵扯到很多东西，就不在这里讨论了。</p>
-<h3 id="GPU-bound："><a href="#GPU-bound：" class="headerlink" title="GPU bound："></a>GPU bound：</h3><p>CPU完成了它的任务：将view变成了bitmap，然后就是GPU的工作了，GPU处理的单位是Texture。</p>
-<p>基本上我们控制GPU都是通过OpenGL来完成的，但是从bitmap到Texture之间需要一座桥梁，Core Animation正好充当了这个角色：</p>
-<p>Core Animation对OpenGL的api有一层封装，当我们的要渲染的layer已经有了bitmap content的时候，这个content一般来说是一个CGImageRef，CoreAnimation会创建一个OpenGL的Texture并将CGImageRef（bitmap）和这个Texture绑定，通过TextureID来标识。</p>
-<p>这个对应关系建立起来之后，剩下的任务就是GPU如何将Texture渲染到屏幕上了。</p>
-<p>GPU大致的工作模式如下：</p>
-<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-4.png" target="_blank" rel="external"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-4.png" alt="`UIView` rendering-03"></a></p>
-<p>整个过程也就是一件事：CPU将准备好的bitmap放到RAM里，GPU去搬这快内存到VRAM中处理。</p>
-<p>而这个过程GPU所能承受的极限大概在16.7ms完成一帧的处理，所以最开始提到的60fps其实就是GPU能处理的最高频率。</p>
-<p>因此，GPU的挑战有两个：</p>
-<ul>
-<li>将数据从RAM搬到VRAM中</li>
-<li>将Texture渲染到屏幕上</li>
-</ul>
-<p>这两个中瓶颈基本在第二点上。渲染Texture基本要处理这么几个问题：</p>
-<h3 id="Compositing："><a href="#Compositing：" class="headerlink" title="Compositing："></a>Compositing：</h3><p>Compositing是指将多个纹理拼到一起的过程，对应UIKit，是指处理多个view合到一起的情况，如</p>
-<p><code>[self.view addsubview : subview]。</code></p>
-<p>如果view之间没有叠加，那么GPU只需要做普通渲染即可。 如果多个view之间有叠加部分，GPU需要做blending。</p>
-<p>加入两个view大小相同，一个叠加在另一个上面，那么计算公式如下：</p>
-<p><code>R = S+D*(1-Sa)</code></p>
-<p><code>R</code>: 为最终的像素值</p>
-<p><code>S</code>: 代表 上面的Texture（Top Texture）</p>
-<p><code>D</code>: 代表下面的Texture(lower Texture)</p>
-<p>其中S,D都已经pre-multiplied各自的alpha值。</p>
-<p><code>Sa</code>代表Texture的alpha值。</p>
-<p>假如Top Texture（上层view）的alpha值为<code>1</code>，即不透明。那么它会遮住下层的Texture。即,<code>R = S</code>。是合理的。 假如Top Texture（上层view）的alpha值为<code>0.5</code>，<code>S</code> 为 <code>(1,0,0</code>)，乘以alpha后为<code>(0.5,0,0）</code>。D为<code>(0，0，1)</code>。 得到的R为<code>（0.5，0，0.5）</code>。</p>
-<p>基本上每个像素点都需要这么计算一次。</p>
-<p>因此，view的层级很复杂，或者view都是半透明的（alpha值不为1）都会带来GPU额外的计算工作。</p>
-<h3 id="Size"><a href="#Size" class="headerlink" title="Size"></a>Size</h3><p>这个问题，主要是处理image带来的，假如内存里有一张400x400的图片，要放到100x100的imageview里，如果不做任何处理，直接丢进去，问题就大了，这意味着，GPU需要对大图进行缩放到小的区域显示，需要做像素点的sampling，这种smapling的代价很高，又需要兼顾pixel alignment。计算量会飙升。</p>
-<h3 id="Offscreen-Rendering-And-Mask"><a href="#Offscreen-Rendering-And-Mask" class="headerlink" title="Offscreen Rendering And Mask"></a>Offscreen Rendering And Mask</h3><p>如果我们对layer做这样的操作：</p>
-<p><code>label.layer.cornerRadius = 5.0f;label.layer.masksToBounds = YES;</code></p>
-<p>会产生offscreen rendering,它带来的最大的问题是，当渲染这样的layer的时候，需要额外开辟内存，绘制好radius，mask，然后再将绘制好的bitmap重新赋值给layer。</p>
-<p>因此继续性能的考虑，Quartz提供了优化的api：</p>
-<p><code>label.layer.cornerRadius = 5.0f;label.layer.masksToBounds = YES;label.layer.shouldRasterize = YES;label.layer.rasterizationScale = label.layer.contentsScale;</code></p>
-<p>简单的说，这是一种cache机制。</p>
-<p>同样GPU的性能也可以通过instrument去衡量：</p>
-<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-6.png" target="_blank" rel="external"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-6.png" alt="QQ20131123-6"></a></p>
-<p>红色代表GPU需要做额外的工作来渲染View，绿色代表GPU无需做额外的工作来处理bitmap。</p>
-<p>That’s all</p>
-
-          
+          <div class="post-more-link text-center">
+            <a class="btn" href="2017/05/23/理解UIView的绘制-转/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -475,32 +403,13 @@
 
       
         
-          
-            <p>iOS签名机制一直是很困扰我的一件事，真机测试或者打包的时候，经常会遇到各种情况的报错，CertificateRequest,p12,Provision Profile,Code Sign五花八门的，所以在这里系统地记录一下相关知识，不再一知半解地去处理这些问题。</p>
+          <p>iOS签名机制一直是很困扰我的一件事，真机测试或者打包的时候，经常会遇到各种情况的报错，CertificateRequest,p12,Provision Profile,Code Sign五花八门的，所以在这里系统地记录一下相关知识，不再一知半解地去处理这些问题。</p>
 <p>相对于Android,iOS是一个十分封闭的系统，这也是用户可以获得良好体验的保证之一。为了确保安装到用户手机上的App都是被官方认证过的，苹果推出了签名机制。</p>
-<h2 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h2><p>通常我们说的签名就是数字签名，它是基于非对称加密算法实现的。对称加密是通过同一份密钥加密和解密数据，而非对称加密则有两份密钥，分别是公钥和私钥，用公钥加密的数据，要用私钥才能解密，用私钥加密的数据，要用公钥才能解密。</p>
-<p>简单说一下常用的非对称加密算法 RSA 的数学原理，理解简单的数学原理，就可以理解非对称加密是怎么做到的，为什么会是安全的：</p>
-<ol>
-<li>选两个质数 p 和 q，相乘得出一个大整数n，例如 p = 61，q = 53，n = pq = 3233</li>
-<li>选 1-n 间的随便一个质数e，例如 e = 17</li>
-<li>经过一系列数学公式，算出一个数字 d，满足：<br>a.通过 n 和 e 这两个数据一组数据进行数学运算后，可以通过 n 和 d 去反解运算，反过来也可以。<br>b.如果只知道 n 和 e，要推导出 d，需要知道 p 和 q，也就是要需要把 n 因数分解。</li>
-</ol>
-<p>上述的 (n,e) 这两个数据在一起就是公钥，(n,d) 这两个数据就是私钥，满足用私钥加密，公钥解密，或反过来公钥加密，私钥解密，也满足在只暴露公钥 (只知道 n 和 e)的情况下，要推导出私钥 (n,d)，需要把大整数 n 因数分解。目前因数分解只能靠暴力穷举，而 n 数字越大，越难以用穷举计算出因数 p 和 q，也就越安全，当 n 大到二进制 1024 位或 2048 位时，以目前技术要破解几乎不可能，所以非常安全。</p>
-<h2 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h2><p>现在知道了有非对称加密这东西，那数字签名是怎么回事呢？</p>
-<p>数字签名的作用是我对某一份数据打个标记，表示我认可了这份数据（签了个名），然后我发送给其他人，其他人可以知道这份数据是经过我认证的，数据没有被篡改过。</p>
-<p>有了上述非对称加密算法，就可以实现这个需求：</p>
-<p><a href="http://blog.cnbang.net/wp-content/uploads/2017/03/sign0.png" target="_blank" rel="external"><img src="http://blog.cnbang.net/wp-content/uploads/2017/03/sign0.png" alt="sign0"></a></p>
-<ol>
-<li>首先用一种算法，算出原始数据的摘要。需满足 a.若原始数据有任何变化，计算出来的摘要值都会变化。 b.摘要要够短。这里最常用的算法是MD5。</li>
-<li>生成一份非对称加密的公钥和私钥，私钥我自己拿着，公钥公布出去。</li>
-<li>对一份数据，算出摘要后，用私钥加密这个摘要，得到一份加密后的数据，称为原始数据的签名。把它跟原始数据一起发送给用户。</li>
-<li>用户收到数据和签名后，用公钥解密得到摘要。同时用户用同样的算法计算原始数据的摘要，对比这里计算出来的摘要和用公钥解密签名得到的摘要是否相等，若相等则表示这份数据中途没有被篡改过，因为如果篡改过，摘要会变化。</li>
-</ol>
-<p>之所以要有第一步计算摘要，是因为非对称加密的原理限制可加密的内容不能太大（不能大于上述 n 的位数，也就是一般不能大于 1024 位 / 2048 位），于是若要对任意大的数据签名，就需要改成对它的特征值签名，效果是一样的。</p>
-<p>好了，有了非对称加密的基础，知道了数字签名是什么，怎样可以保证一份数据是经过某个地方认证的，来看看怎样通过数字签名的机制保证每一个安装到 iOS 上的 APP 都是经过苹果认证允许的。</p>
-<p><img src="/2017/05/11/iOS-signature-and-certificate/chendongnan/Documents/Blog/source/_posts/iOS-signature-and-certificate/屏幕快照 2017-05-19 下午6.02.13.png" alt="屏幕快照 2017-05-19 下午6.02.13"></p>
-
-          
+          <div class="post-more-link text-center">
+            <a class="btn" href="2017/05/11/iOS-signature-and-certificate/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
