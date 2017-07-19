@@ -92,7 +92,7 @@ Mthod swizzling，字面翻译就是方法交换，它可以允许我们动态�
 <meta property="og:site_name" content="陈栋楠的Blog">
 <meta property="og:description" content="Method swizzling被称为runtime的黑魔法，那么之所以被称为黑魔法，一方面有其强大之处，另一方面用的不好也会产生意想不到的问题，所以在使用method swizzling的时候一定要慎重考虑。
 Mthod swizzling，字面翻译就是方法交换，它可以允许我们动态地替换方法的实现。很多项目中都会用到埋点，记录每个页面的呈现次数。那么就需要我们在控制器中的viewDidAppea">
-<meta property="og:updated_time" content="2017-03-22T07:46:58.000Z">
+<meta property="og:updated_time" content="2017-07-19T10:05:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="runtime之methodSwizzling">
 <meta name="twitter:description" content="Method swizzling被称为runtime的黑魔法，那么之所以被称为黑魔法，一方面有其强大之处，另一方面用的不好也会产生意想不到的问题，所以在使用method swizzling的时候一定要慎重考虑。
@@ -306,6 +306,7 @@ Mthod swizzling，字面翻译就是方法交换，它可以允许我们动态�
       
         <p>Method swizzling被称为runtime的黑魔法，那么之所以被称为黑魔法，一方面有其强大之处，另一方面用的不好也会产生意想不到的问题，所以在使用method swizzling的时候一定要慎重考虑。</p>
 <p>Mthod swizzling，字面翻译就是方法交换，它可以允许我们<strong>动态地替换方法的实现</strong>。很多项目中都会用到埋点，记录每个页面的呈现次数。那么就需要我们在控制器中的viewDidAppear方法中去添加记录代码。这个功能可以通过写一个父类控制器，在父类viewDidAppear里添加记录代码，其他的控制器都继承与该父类控制器来实现。但是这么做的话，你需要UIViewController，UITableViewController，UINavigationController中都实现他们的viewDidAppear方法，比较繁琐。这时候，使用method swizzling也不失为一种好方法。</p>
+<a id="more"></a>
 <p>首先要分清几个概念:</p>
 <p><strong>Selectors,Methods,Implementations</strong></p>
 <blockquote>
