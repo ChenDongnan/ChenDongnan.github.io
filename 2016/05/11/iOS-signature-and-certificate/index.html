@@ -88,13 +88,13 @@
 相对于Android,iOS是一个十分封闭的系统，这也是用户可以获得良好体验的保证之一。为了确保安装到用户手机上的App都是被官方认证">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS signature and certificate">
-<meta property="og:url" content="http://chendongnan.com/2017/05/11/iOS-signature-and-certificate/index.html">
+<meta property="og:url" content="http://chendongnan.com/2016/05/11/iOS-signature-and-certificate/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
 <meta property="og:description" content="iOS签名机制一直是很困扰我的一件事，真机测试或者打包的时候，经常会遇到各种情况的报错，CertificateRequest,p12,Provision Profile,Code Sign五花八门的，所以在这里系统地记录一下相关知识，不再一知半解地去处理这些问题。
 相对于Android,iOS是一个十分封闭的系统，这也是用户可以获得良好体验的保证之一。为了确保安装到用户手机上的App都是被官方认证">
 <meta property="og:image" content="http://blog.cnbang.net/wp-content/uploads/2017/03/sign0.png">
-<meta property="og:image" content="http://chendongnan.com/2017/05/11/iOS-signature-and-certificate/chendongnan/Documents/Blog/source/_posts/iOS-signature-and-certificate/屏幕快照 2017-05-19 下午6.02.13.png">
-<meta property="og:updated_time" content="2017-05-23T03:54:55.000Z">
+<meta property="og:image" content="http://chendongnan.com/2016/05/11/iOS-signature-and-certificate/chendongnan/Documents/Blog/source/_posts/iOS-signature-and-certificate/屏幕快照 2017-05-19 下午6.02.13.png">
+<meta property="og:updated_time" content="2017-07-19T10:10:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS signature and certificate">
 <meta name="twitter:description" content="iOS签名机制一直是很困扰我的一件事，真机测试或者打包的时候，经常会遇到各种情况的报错，CertificateRequest,p12,Provision Profile,Code Sign五花八门的，所以在这里系统地记录一下相关知识，不再一知半解地去处理这些问题。
@@ -279,8 +279,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-05-11T10:44:29+08:00" content="2017-05-11">
-              2017-05-11
+            <time itemprop="dateCreated" datetime="2016-05-11T10:44:29+08:00" content="2016-05-11">
+              2016-05-11
             </time>
           </span>
 
@@ -330,7 +330,7 @@
 </ol>
 <p>之所以要有第一步计算摘要，是因为非对称加密的原理限制可加密的内容不能太大（不能大于上述 n 的位数，也就是一般不能大于 1024 位 / 2048 位），于是若要对任意大的数据签名，就需要改成对它的特征值签名，效果是一样的。</p>
 <p>好了，有了非对称加密的基础，知道了数字签名是什么，怎样可以保证一份数据是经过某个地方认证的，来看看怎样通过数字签名的机制保证每一个安装到 iOS 上的 APP 都是经过苹果认证允许的。</p>
-<p><img src="/2017/05/11/iOS-signature-and-certificate/chendongnan/Documents/Blog/source/_posts/iOS-signature-and-certificate/屏幕快照 2017-05-19 下午6.02.13.png" alt="屏幕快照 2017-05-19 下午6.02.13"></p>
+<p><img src="/2016/05/11/iOS-signature-and-certificate/chendongnan/Documents/Blog/source/_posts/iOS-signature-and-certificate/屏幕快照 2017-05-19 下午6.02.13.png" alt="屏幕快照 2017-05-19 下午6.02.13"></p>
 
       
     </div>
@@ -361,16 +361,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="../../../03/22/Dictionary-to-Model/" rel="next" title="Dictionary to Model">
-                <i class="fa fa-chevron-left"></i> Dictionary to Model
+              <a href="../../../03/24/runloop/" rel="next" title="runloop">
+                <i class="fa fa-chevron-left"></i> runloop
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="../../23/理解UIView的绘制-转/" rel="prev" title="理解UIView的绘制(转)">
-                理解UIView的绘制(转) <i class="fa fa-chevron-right"></i>
+              <a href="../../../12/21/Linux-Command/" rel="prev" title="Linux 常用命令">
+                Linux 常用命令 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
