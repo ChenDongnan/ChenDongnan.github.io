@@ -260,6 +260,134 @@
             
               
                 
+                <a class="post-title-link" href="2018/11/21/iOS通过Xcode进行性能分析/" itemprop="url">
+                  iOS通过Xcode进行性能分析
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-11-21T15:59:28+08:00" content="2018-11-21">
+              2018-11-21
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>趁着项目的短暂的空闲期，整理下最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。</p>
+<p><strong>基础知识</strong></p>
+<p>其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐<figure class="highlight plain"><figcaption><span>Core Animation advanced techniques  ```这本书，阅读之后受益匪浅。</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">***iOS 开发：绘制像素到屏幕***</div><div class="line">https://segmentfault.com/a/1190000000390012</div><div class="line"></div><div class="line">***深入理解 iOS Rendering Process***</div><div class="line"> https://juejin.im/post/5ad3f1cc6fb9a028d9379c5f?utm_source=gold_browser_extension</div><div class="line"></div><div class="line"></div><div class="line">**性能检测**</div><div class="line"></div><div class="line">既然要进行优化，那么首先需要做的就是检测我们项目中当前的性能状况，苹果的Xcode自带的Instrument就可以很好的完成这项工作，使用方法也很简单。这里以最新版**Xcode10**为例子,点击```Xcode-&gt;Open Developer Tool -&gt;Instruments```，启动Instruments, 如下图，点击Core Animation模块</div><div class="line">![instrument-coreanimation](http://www.chendongnan.com/markdown/instrument-coreAnimation.png)</div><div class="line">会出现如下面板，在All Processes这里可以选择你想要测试的项目</div><div class="line">这里我选择了公司的项目，然后点击左上角的红圈，instrument就运行了，你会发现你手机上安装的该项目也会随之运行起来。</div><div class="line">![instrument-debug](http://www.chendongnan.com/markdown/instrument-fps2.png)</div><div class="line">然后就会出现上图，显示的是项目运行的FPS,以及GPU的利用率。当画面静止的时候，FPS为0。一般来说，FPS应当要大于45才不会显得卡顿。</div><div class="line"></div><div class="line">影响FPS的因素是多样的, 这里我们只考虑UI方面的因素，我们可以在Xcode10工具栏的```Debug -&gt; View Debugging -&gt; Rendering```进行查看</div><div class="line">![rendering](http://www.chendongnan.com/markdown/rendering.png)</div><div class="line">可以看到这里有很多Debug选项, 我们来看几个比较重要的</div><div class="line"></div><div class="line">**Color Blended Layers**</div><div class="line">图层混色，就是多个视图的位置有重叠，视图本身又有透明度。重叠区域的每一个像素，GPU 需要算出一种新的颜色（混色）。混合计算的公式是：```R = S + D * ( 1 – Sa )</div></pre></td></tr></table></figure></p>
+<p>贴一个苹果文档中的解释</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">The blend mode constants introduced in OS X v10.5   represent the Porter-Duff blend modes. The symbols in the   equations for these blend modes are:</div><div class="line"></div><div class="line">    * R is the premultiplied result</div><div class="line"></div><div class="line">    * S is the source color, and includes alpha</div><div class="line"></div><div class="line">    * D is the destination color, and includes alpha</div><div class="line"></div><div class="line">    * Ra, Sa, and Da are the alpha components of R, S, and D</div></pre></td></tr></table></figure>
+<p>R是结果色，S是包含透明度的源色，D是包含透明度的目标色，Sa是原色的透明度</p>
+<p>如下图，绿色代表没有发生图层混色，红色代表发生了图层混色。label2由于开启了clipToBounds,</p>
+<p><img src="http://www.chendongnan.com/markdown/blending2.png" alt="blending"></p>
+<p><strong>Color Hits Green and Misses Red</strong></p>
+<p>这个选项是用来检测图像是否有栅格化(Rasterize)的，这个概念听起来是一头雾水，百度之<strong>栅格即像素，栅格化即将矢量图形转化为位图（栅格图像）</strong> 而Calayer有一个属性就是shouldRasterize</p>
+<p>同样贴一个苹果的文档</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">When true, the layer is rendered as a bitmap in its local coordinate  space (&quot;rasterized&quot;), then the bitmap is composited into the destination (with the minificationFilter and magnificationFilter  properties of the layer applied if the bitmap needs scaling). Rasterization occurs after the layer&apos;s filters and shadow effects are applied, but before the opacity modulation. As an implementation  detail the rendering engine may attempt to cache and reuse the bitmap from one frame to the next. (Whether it does or not will have no affect on the rendered output.) When false the layer is composited directly into the destination whenever possible (however, certain features of the compositing model may force rasterization, e.g. adding filters). Defaults to NO.</div></pre></td></tr></table></figure>
+<p>当这个属性被设置为YES时，即开启了光栅化。CALayer会被栅格化为bitmap,layer的阴影等效果也会被保存到bitmap中，光栅化后会将图层绘制到一个屏幕外的图像，然后这个图像将会被缓存起来并绘制到实际图层的 contents 和子图层，对于有很多的子图层或者有复杂的效果应用，这样做就会比重绘所有事务的所有帧来更加高效。但是光栅化原始图像需要时间，而且会消耗额外的内存。</p>
+<p>  故：当我们开启栅格化后,需要注意4点问题。</p>
+<p>​        1. 如果我们更新已栅格化的layer,会造成大量的offscreen渲染。</p>
+<p>​            因此CALayer的栅格化选项的开启与否需要我们仔细衡量使用场景。只能用在图像内容不变的前提下的：</p>
+<p>​                    用于避免静态内容的复杂特效的重绘,例如前面讲到的UIBlurEffect</p>
+<p>​                    用于避免多个View嵌套的复杂View的重绘。</p>
+<p>​            而对于经常变动的内容,这个时候不要开启,否则会造成性能的浪费。</p>
+<p>​        例如我们日程经常打交道的TableViewCell,因为TableViewCell的重绘是很频繁的（因为Cell的复用）,如果Cell的内容不断变化,则Cell需要不断重绘,如果此时设置了cell.layer可栅格化。则会造成大量的offscreen渲染,降低图形性能。</p>
+<p>​        当然,合理利用的话,是能够得到不少性能的提高的,因为使用shouldRasterize后layer会缓存为Bitmap位图,对一些添加了shawdow等效果的耗费资源较多的静态内容进行缓存,能够得到性能的提升。</p>
+<p>​        2. 不要过度使用,系统限制了缓存的大小为2.5X Screen Size.</p>
+<p>​            如果过度使用,超出缓存之后,同样会造成大量的offscreen渲染。</p>
+<p>​        3. 被栅格化的图片如果超过100ms没有被使用,则会被移除</p>
+<p>​            因此我们应该只对连续不断使用的图片进行缓存。对于不常使用的图片缓存是没有意义,且耗费资源的。</p>
+<ol>
+<li><p>当 UIView.layer.shouldRasterize = YES 时，生成的位图会缓存起来，如果TabelView 滑动的时候（UITableViewCell 复用)使用缓存直接命中，就显示绿色，反之，如果不命中，这时就显示红色。红色越多，性能越差.</p>
+<p>​</p>
+</li>
+</ol>
+<p><strong>Color Offscreen-Rendered Yellow</strong>  离屏渲染</p>
+<p>离屏渲染应该是经常听到的一次词了，简单来说就是GPU在当前屏幕缓冲区外新开辟一个缓冲区进行渲染操作，由于过程中需要切换context，性能消耗比较大。</p>
+<p>CoreGraphics的上下文绘制，drawRect绘制，layer圆角/边框/阴影/抗锯齿/光栅化等都可能导致离屏渲染</p>
+<p><img src="http://www.chendongnan.com/markdown/offscreen.PNG" alt="offscreen"></p>
+<p>经过测试，在iOS11上</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="2017/11/17/runtime之消息转发/" itemprop="url">
                   runtime之消息转发
                 </a>
@@ -324,6 +452,171 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">struct objc_method &#123;</div><div class="line">	SEL _Nonnull method_name OBJC2_UNAVAILABLE;</div><div class="line">	char * _Nullable method_types  OBJC2_UNAVAILABLE;</div><div class="line">	IMP _Nonnull method_imp  OBJC2_UNAVAILABLE;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">struct objc_class &#123;</div><div class="line">	Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</div><div class="line">#if !__OBJC2__</div><div class="line">	Class _Nullable super_class  OBJC2_UNAVAILABLE;</div><div class="line">	const char * _Nonnull name OBJC2_UNAVAILABLE;</div><div class="line">	long version OBJC2_UNAVAILABLE;</div><div class="line">	long info  OBJC2_UNAVAILABLE;</div><div class="line">	long instance_size OBJC2_UNAVAILABLE;</div><div class="line">	struct objc_ivar_list * _Nullable ivars  OBJC2_UNAVAILABLE;</div><div class="line">	struct objc_method_list * _Nullable * _Nullable methodLists  		OBJC2_UNAVAILABLE;</div><div class="line">	struct objc_cache * _Nonnull cache OBJC2_UNAVAILABLE;</div><div class="line">	struct objc_protocol_list * _Nullable protocols  OBJC2_UNAVAILABLE;</div><div class="line">#endif</div><div class="line">&#125; OBJC2_UNAVAILABLE;</div></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Class _Nonnull isa OBJC_ISA_AVAILABILITY;</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="2017/08/22/start-time/" itemprop="url">
+                  项目启动时间优化
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-22T11:47:51+08:00" content="2017-08-22">
+              2017-08-22
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>一个App整理一些启动时间优化的方法。</p>
+<p>首先需要知道当我们点击手机屏幕上App的图标，到App的首页呈现在面前，系统经历了怎样的过程。这里以main函数为分界，将启动过程分成main函数前和main函数后两个阶段。</p>
+<p><strong>main函数前</strong></p>
+<p>1.1. 加载应用的可执行文件（自身App的所有.o文件的集合）<br>1.2. 加载动态链接库加载器dyld（dynamic loader）<br>1.3. dyld递归加载应用所有依赖的dylib（dynamic library 动态链接库，动态链接库包括：iOS中用到的所有系统framework,加载OC runtime方法的libobjc，系统级别的libSystem，例如libdispatch（GCD）和libsystem_blocks(Block))。</p>
+<p><strong>Image与ImageLoader</strong></p>
+<p>image表示一个二进制文件（可执行文件或so文件），里面是被编译过的符号、代码等，imageLoader的作用是将这些文件加载进内存，且每一个文件对应一个ImageLoader实例来负责加载。</p>
+<p><strong>main函数后</strong></p>
+<p>2.1. dyld调用<code>main()</code><br>2.2. 调用<code>UIApplicationMain()</code><br>2.3. 调用<code>applicationWillFinishLaunching</code><br>2.4. 调用<code>didFinishLaunchingWithOptions</code></p>
+<p>要查看main函数前启动时间，可以通过Xcode 中 Edit scheme -&gt; Run -&gt; Auguments 将环境变量DYLD_PRINT_STATISTICS 设为1 ：</p>
+<p>main阶段函数</p>
+<p>main函数前的优化</p>
+<p>从之前的图中可以看到main函数前主要经历了</p>
+<ol>
+<li><p>Load dylibs</p>
+<p>1.分析所依赖的动态库</p>
+<p>2.找到动态库对应的mach-o文件</p>
+<p>3.打开文件</p>
+<p>4.验证文件</p>
+<p>5.在系统核心注册文件签名</p>
+<p>6.对动态库的每一个segment他调用mmap()</p>
+<p>针对这一步可做的优化：</p>
+<ol>
+<li>减少非系统库的依赖</li>
+<li>合并非系统库</li>
+<li>使用静态资源</li>
+</ol>
+</li>
+<li><p>Rebase/Bind</p>
+<p>Rebase : 在镜像内部调整指针的指向</p>
+<p>在过去，会把dylib加载到指定地址，所有指针和数据对于代码来说都是对的，dyld就无需做任何fix-up了，使用了ASLR（Address space layout randomization）后，会将dylib加载到新的随机地址（actual_address),这个随机地址跟代码和数据指向的旧地址(preferred_address)会有偏差,dyld需要修正这个偏差（slide），做法就是将dylib内部的指针地址都加上这个偏移量，偏移量 Slide = actual_address - preferred_address</p>
+<p>​</p>
+<p>Bind : 将指针指向镜像外部的内容</p>
+<p>是指处理那些指向dylib外部的指针，他们实际上被符号（symbol）名称绑定。dyld需要找到symbil对应的实现。</p>
+<p>​</p>
+<p>ImageLoader是一个用于加载可执行文件的基类，它负责链接镜像。</p>
+<p>每个可执行文件都会对应一个ImageLoader子类</p>
+<p>针对这一步：</p>
+<ol>
+<li>减少Objc类数量，减少selector数量</li>
+<li>减少C++虚函数数量</li>
+<li>使用swiif stuct（减少符号数量）</li>
+</ol>
+</li>
+<li><p>Objc setup</p>
+<p>这一步的主要工作是：</p>
+<ol>
+<li>注册Objc类</li>
+<li>把category的定义插入方法列表</li>
+<li>保证selector的唯一性</li>
+</ol>
+<p>针对这一步的优化其实在上一步就已经完成了</p>
+</li>
+<li><p>Initializers</p>
+<ol>
+<li>Objc的+load()函数</li>
+<li>C++的构造属性函数</li>
+</ol>
+</li>
+</ol>
+<p>使用+initialize来替代+load</p>
+<p>删除无用的库，文件</p>
+<p>main()函数之后的优化</p>
+<ul>
+<li><p>执行main()函数的耗时</p>
+</li>
+<li><p>执行applicationWillFinishLauching耗时</p>
+</li>
+<li><p>rootViewController及其childViewController的加载</p>
+<p>​</p>
+</li>
+</ul>
+<p>延迟一些第三方库的加载</p>
 
           
         
@@ -662,6 +955,102 @@
             
               
                 
+                <a class="post-title-link" href="2017/04/19/SDWebImage-Cache-Mechanism/" itemprop="url">
+                  SDWebImage Cache Mechanism
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-19T09:57:59+08:00" content="2017-04-19">
+              2017-04-19
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>SDWebImage是很多项目中都会用到的三方库。它的缓存机制也很值得学习。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="2017/04/19/SDWebImage-Cache-Mechanism/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="2017/03/22/Dictionary-to-Model/" itemprop="url">
                   Dictionary to Model
                 </a>
@@ -928,294 +1317,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="2017/02/16/编程与王者荣耀/" itemprop="url">
-                  编程与王者荣耀
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-16T09:43:19+08:00" content="2017-02-16">
-              2017-02-16
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>最近被同事带着玩了王者荣耀。 玩的过程中突然想到一点。 一个英雄，你看再多的介绍、攻略、视频，都不如上手实战几把熟悉得快。 编程也是，看再多的技术文章都不如实际上手敲几行代码来的有用。当然理论学习还是很必要的，不过在学习之前，先实战，遇到坑，再去深入学习，我觉得这样可能效果会更佳。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="2017/02/05/UI-Test/" itemprop="url">
-                  UI Test
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-02-05T10:44:25+08:00" content="2017-02-05">
-              2017-02-05
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="UI-Tests是什么？"><a href="#UI-Tests是什么？" class="headerlink" title="UI Tests是什么？"></a>UI Tests是什么？</h3><p>UI Tests是一个自动测试UI与交互的Testing组件</p>
-<h3 id="UI-Tests有什么用？"><a href="#UI-Tests有什么用？" class="headerlink" title="UI Tests有什么用？"></a>UI Tests有什么用？</h3><p>它可以通过编写代码、或者是记录开发者的操作过程并代码化，来实现自动点击某个按钮、视图，或者自动输入文字等功能。</p>
-<h3 id="UI-Tests的重要性"><a href="#UI-Tests的重要性" class="headerlink" title="UI Tests的重要性"></a>UI Tests的重要性</h3><p>在实际的开发过程中，随着项目越做越大，功能越来越多，仅仅靠人工操作的方式来覆盖所有测试用例是非常困难的，尤其是加入新功能以后，旧的功能也要重新测试一遍，这导致了测试需要花非常多的时间来进行回归测试，这里产生了大量重复的工作，而这些重复的工作有些是可以自动完成的，这时候UI Tests就可以帮助解决这个问题了</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="2017/02/05/UI-Test/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="2017/01/25/regex/" itemprop="url">
-                  关于正则表达式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-25T21:06:12+08:00" content="2017-01-25">
-              2017-01-25
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="iOS正则表达式的运用"><a href="#iOS正则表达式的运用" class="headerlink" title="iOS正则表达式的运用"></a>iOS正则表达式的运用</h2><p>前言：在大部分app表单填写场景中，都会去校验用户输入的合法性，如果输入有误就提示错误信息并组织上传到服务器。而这种功能就是由强大的正则表达式来实现的。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="2017/01/25/regex/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1261,7 +1362,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-count">18</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1278,7 +1379,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -1,0 +1,668 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="../../../../vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="../../../../vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="../../../../css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS开发," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="一个App整理一些启动时间优化的方法。
+首先需要知道当我们点击手机屏幕上App的图标，到App的首页呈现在面前，系统经历了怎样的过程。这里以main函数为分界，将启动过程分成main函数前和main函数后两个阶段。
+main函数前
+1.1. 加载应用的可执行文件（自身App的所有.o文件的集合）1.2. 加载动态链接库加载器dyld（dynamic loader）1.3. dyld递归加载应用所有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="项目启动时间优化">
+<meta property="og:url" content="http://blog.chendongnan.com/2017/08/22/start-time/index.html">
+<meta property="og:site_name" content="陈栋楠的Blog">
+<meta property="og:description" content="一个App整理一些启动时间优化的方法。
+首先需要知道当我们点击手机屏幕上App的图标，到App的首页呈现在面前，系统经历了怎样的过程。这里以main函数为分界，将启动过程分成main函数前和main函数后两个阶段。
+main函数前
+1.1. 加载应用的可执行文件（自身App的所有.o文件的集合）1.2. 加载动态链接库加载器dyld（dynamic loader）1.3. dyld递归加载应用所有">
+<meta property="og:updated_time" content="2018-11-22T02:41:45.781Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="项目启动时间优化">
+<meta name="twitter:description" content="一个App整理一些启动时间优化的方法。
+首先需要知道当我们点击手机屏幕上App的图标，到App的首页呈现在面前，系统经历了怎样的过程。这里以main函数为分界，将启动过程分成main函数前和main函数后两个阶段。
+main函数前
+1.1. 加载应用的可执行文件（自身App的所有.o文件的集合）1.2. 加载动态链接库加载器dyld（dynamic loader）1.3. dyld递归加载应用所有">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 项目启动时间优化 | 陈栋楠的Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">陈栋楠的Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'rA4VeyxKXysYspBXf5j9','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                项目启动时间优化
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-22T11:47:51+08:00" content="2017-08-22">
+              2017-08-22
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>一个App整理一些启动时间优化的方法。</p>
+<p>首先需要知道当我们点击手机屏幕上App的图标，到App的首页呈现在面前，系统经历了怎样的过程。这里以main函数为分界，将启动过程分成main函数前和main函数后两个阶段。</p>
+<p><strong>main函数前</strong></p>
+<p>1.1. 加载应用的可执行文件（自身App的所有.o文件的集合）<br>1.2. 加载动态链接库加载器dyld（dynamic loader）<br>1.3. dyld递归加载应用所有依赖的dylib（dynamic library 动态链接库，动态链接库包括：iOS中用到的所有系统framework,加载OC runtime方法的libobjc，系统级别的libSystem，例如libdispatch（GCD）和libsystem_blocks(Block))。</p>
+<p><strong>Image与ImageLoader</strong></p>
+<p>image表示一个二进制文件（可执行文件或so文件），里面是被编译过的符号、代码等，imageLoader的作用是将这些文件加载进内存，且每一个文件对应一个ImageLoader实例来负责加载。</p>
+<p><strong>main函数后</strong></p>
+<p>2.1. dyld调用<code>main()</code><br>2.2. 调用<code>UIApplicationMain()</code><br>2.3. 调用<code>applicationWillFinishLaunching</code><br>2.4. 调用<code>didFinishLaunchingWithOptions</code></p>
+<p>要查看main函数前启动时间，可以通过Xcode 中 Edit scheme -&gt; Run -&gt; Auguments 将环境变量DYLD_PRINT_STATISTICS 设为1 ：</p>
+<p>main阶段函数</p>
+<p>main函数前的优化</p>
+<p>从之前的图中可以看到main函数前主要经历了</p>
+<ol>
+<li><p>Load dylibs</p>
+<p>1.分析所依赖的动态库</p>
+<p>2.找到动态库对应的mach-o文件</p>
+<p>3.打开文件</p>
+<p>4.验证文件</p>
+<p>5.在系统核心注册文件签名</p>
+<p>6.对动态库的每一个segment他调用mmap()</p>
+<p>针对这一步可做的优化：</p>
+<ol>
+<li>减少非系统库的依赖</li>
+<li>合并非系统库</li>
+<li>使用静态资源</li>
+</ol>
+</li>
+<li><p>Rebase/Bind</p>
+<p>Rebase : 在镜像内部调整指针的指向</p>
+<p>在过去，会把dylib加载到指定地址，所有指针和数据对于代码来说都是对的，dyld就无需做任何fix-up了，使用了ASLR（Address space layout randomization）后，会将dylib加载到新的随机地址（actual_address),这个随机地址跟代码和数据指向的旧地址(preferred_address)会有偏差,dyld需要修正这个偏差（slide），做法就是将dylib内部的指针地址都加上这个偏移量，偏移量 Slide = actual_address - preferred_address</p>
+<p>​</p>
+<p>Bind : 将指针指向镜像外部的内容</p>
+<p>是指处理那些指向dylib外部的指针，他们实际上被符号（symbol）名称绑定。dyld需要找到symbil对应的实现。</p>
+<p>​</p>
+<p>ImageLoader是一个用于加载可执行文件的基类，它负责链接镜像。</p>
+<p>每个可执行文件都会对应一个ImageLoader子类</p>
+<p>针对这一步：</p>
+<ol>
+<li>减少Objc类数量，减少selector数量</li>
+<li>减少C++虚函数数量</li>
+<li>使用swiif stuct（减少符号数量）</li>
+</ol>
+</li>
+<li><p>Objc setup</p>
+<p>这一步的主要工作是：</p>
+<ol>
+<li>注册Objc类</li>
+<li>把category的定义插入方法列表</li>
+<li>保证selector的唯一性</li>
+</ol>
+<p>针对这一步的优化其实在上一步就已经完成了</p>
+</li>
+<li><p>Initializers</p>
+<ol>
+<li>Objc的+load()函数</li>
+<li>C++的构造属性函数</li>
+</ol>
+</li>
+</ol>
+<p>使用+initialize来替代+load</p>
+<p>删除无用的库，文件</p>
+<p>main()函数之后的优化</p>
+<ul>
+<li><p>执行main()函数的耗时</p>
+</li>
+<li><p>执行applicationWillFinishLauching耗时</p>
+</li>
+<li><p>rootViewController及其childViewController的加载</p>
+<p>​</p>
+</li>
+</ul>
+<p>延迟一些第三方库的加载</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="../../../../tags/iOS开发/" rel="tag">#iOS开发</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="../../../07/20/项目优化-一/" rel="next" title="项目优化(一)">
+                <i class="fa fa-chevron-left"></i> 项目优化(一)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="../../../11/17/runtime之消息转发/" rel="prev" title="runtime之消息转发">
+                runtime之消息转发 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="../../../../uploads/avatar.jpg"
+               alt="Roy Chen" />
+          <p class="site-author-name" itemprop="name">Roy Chen</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="../../../../archives">
+              <span class="site-state-item-count">18</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="../../../../tags">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Roy Chen</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="../../../../vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="../../../../vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="../../../../vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="../../../../vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="../../../../vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="../../../../vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="../../../../js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="../../../../js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
