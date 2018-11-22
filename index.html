@@ -303,44 +303,14 @@
 
       
         
-          
-            <p>趁着项目的短暂的空闲期，整理下最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。</p>
+          <p>趁着项目的短暂的空闲期，整理下最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。</p>
 <p><strong>基础知识</strong></p>
-<p>其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐<figure class="highlight plain"><figcaption><span>Core Animation advanced techniques  ```这本书，阅读之后受益匪浅。</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">***iOS 开发：绘制像素到屏幕***</div><div class="line">https://segmentfault.com/a/1190000000390012</div><div class="line"></div><div class="line">***深入理解 iOS Rendering Process***</div><div class="line"> https://juejin.im/post/5ad3f1cc6fb9a028d9379c5f?utm_source=gold_browser_extension</div><div class="line"></div><div class="line"></div><div class="line">**性能检测**</div><div class="line"></div><div class="line">既然要进行优化，那么首先需要做的就是检测我们项目中当前的性能状况，苹果的Xcode自带的Instrument就可以很好的完成这项工作，使用方法也很简单。这里以最新版**Xcode10**为例子,点击```Xcode-&gt;Open Developer Tool -&gt;Instruments```，启动Instruments, 如下图，点击Core Animation模块</div><div class="line">![instrument-coreanimation](http://www.chendongnan.com/markdown/instrument-coreAnimation.png)</div><div class="line">会出现如下面板，在All Processes这里可以选择你想要测试的项目</div><div class="line">这里我选择了公司的项目，然后点击左上角的红圈，instrument就运行了，你会发现你手机上安装的该项目也会随之运行起来。</div><div class="line">![instrument-debug](http://www.chendongnan.com/markdown/instrument-fps2.png)</div><div class="line">然后就会出现上图，显示的是项目运行的FPS,以及GPU的利用率。当画面静止的时候，FPS为0。一般来说，FPS应当要大于45才不会显得卡顿。</div><div class="line"></div><div class="line">影响FPS的因素是多样的, 这里我们只考虑UI方面的因素，我们可以在Xcode10工具栏的```Debug -&gt; View Debugging -&gt; Rendering```进行查看</div><div class="line">![rendering](http://www.chendongnan.com/markdown/rendering.png)</div><div class="line">可以看到这里有很多Debug选项, 我们来看几个比较重要的</div><div class="line"></div><div class="line">**Color Blended Layers**</div><div class="line">图层混色，就是多个视图的位置有重叠，视图本身又有透明度。重叠区域的每一个像素，GPU 需要算出一种新的颜色（混色）。混合计算的公式是：```R = S + D * ( 1 – Sa )</div></pre></td></tr></table></figure></p>
-<p>贴一个苹果文档中的解释</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">The blend mode constants introduced in OS X v10.5   represent the Porter-Duff blend modes. The symbols in the   equations for these blend modes are:</div><div class="line"></div><div class="line">    * R is the premultiplied result</div><div class="line"></div><div class="line">    * S is the source color, and includes alpha</div><div class="line"></div><div class="line">    * D is the destination color, and includes alpha</div><div class="line"></div><div class="line">    * Ra, Sa, and Da are the alpha components of R, S, and D</div></pre></td></tr></table></figure>
-<p>R是结果色，S是包含透明度的源色，D是包含透明度的目标色，Sa是原色的透明度</p>
-<p>如下图，绿色代表没有发生图层混色，红色代表发生了图层混色。label2由于开启了clipToBounds,</p>
-<p><img src="http://www.chendongnan.com/markdown/blending2.png" alt="blending"></p>
-<p><strong>Color Hits Green and Misses Red</strong></p>
-<p>这个选项是用来检测图像是否有栅格化(Rasterize)的，这个概念听起来是一头雾水，百度之<strong>栅格即像素，栅格化即将矢量图形转化为位图（栅格图像）</strong> 而Calayer有一个属性就是shouldRasterize</p>
-<p>同样贴一个苹果的文档</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">When true, the layer is rendered as a bitmap in its local coordinate  space (&quot;rasterized&quot;), then the bitmap is composited into the destination (with the minificationFilter and magnificationFilter  properties of the layer applied if the bitmap needs scaling). Rasterization occurs after the layer&apos;s filters and shadow effects are applied, but before the opacity modulation. As an implementation  detail the rendering engine may attempt to cache and reuse the bitmap from one frame to the next. (Whether it does or not will have no affect on the rendered output.) When false the layer is composited directly into the destination whenever possible (however, certain features of the compositing model may force rasterization, e.g. adding filters). Defaults to NO.</div></pre></td></tr></table></figure>
-<p>当这个属性被设置为YES时，即开启了光栅化。CALayer会被栅格化为bitmap,layer的阴影等效果也会被保存到bitmap中，光栅化后会将图层绘制到一个屏幕外的图像，然后这个图像将会被缓存起来并绘制到实际图层的 contents 和子图层，对于有很多的子图层或者有复杂的效果应用，这样做就会比重绘所有事务的所有帧来更加高效。但是光栅化原始图像需要时间，而且会消耗额外的内存。</p>
-<p>  故：当我们开启栅格化后,需要注意4点问题。</p>
-<p>​        1. 如果我们更新已栅格化的layer,会造成大量的offscreen渲染。</p>
-<p>​            因此CALayer的栅格化选项的开启与否需要我们仔细衡量使用场景。只能用在图像内容不变的前提下的：</p>
-<p>​                    用于避免静态内容的复杂特效的重绘,例如前面讲到的UIBlurEffect</p>
-<p>​                    用于避免多个View嵌套的复杂View的重绘。</p>
-<p>​            而对于经常变动的内容,这个时候不要开启,否则会造成性能的浪费。</p>
-<p>​        例如我们日程经常打交道的TableViewCell,因为TableViewCell的重绘是很频繁的（因为Cell的复用）,如果Cell的内容不断变化,则Cell需要不断重绘,如果此时设置了cell.layer可栅格化。则会造成大量的offscreen渲染,降低图形性能。</p>
-<p>​        当然,合理利用的话,是能够得到不少性能的提高的,因为使用shouldRasterize后layer会缓存为Bitmap位图,对一些添加了shawdow等效果的耗费资源较多的静态内容进行缓存,能够得到性能的提升。</p>
-<p>​        2. 不要过度使用,系统限制了缓存的大小为2.5X Screen Size.</p>
-<p>​            如果过度使用,超出缓存之后,同样会造成大量的offscreen渲染。</p>
-<p>​        3. 被栅格化的图片如果超过100ms没有被使用,则会被移除</p>
-<p>​            因此我们应该只对连续不断使用的图片进行缓存。对于不常使用的图片缓存是没有意义,且耗费资源的。</p>
-<ol>
-<li><p>当 UIView.layer.shouldRasterize = YES 时，生成的位图会缓存起来，如果TabelView 滑动的时候（UITableViewCell 复用)使用缓存直接命中，就显示绿色，反之，如果不命中，这时就显示红色。红色越多，性能越差.</p>
-<p>​</p>
-</li>
-</ol>
-<p><strong>Color Offscreen-Rendered Yellow</strong>  离屏渲染</p>
-<p>离屏渲染应该是经常听到的一次词了，简单来说就是GPU在当前屏幕缓冲区外新开辟一个缓冲区进行渲染操作，由于过程中需要切换context，性能消耗比较大。</p>
-<p>CoreGraphics的上下文绘制，drawRect绘制，layer圆角/边框/阴影/抗锯齿/光栅化等都可能导致离屏渲染</p>
-<p><img src="http://www.chendongnan.com/markdown/offscreen.PNG" alt="offscreen"></p>
-<p>经过测试，在iOS11上</p>
-
-          
+<p>其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐<code>iOS Core Animation advanced techniques</code>这本书，阅读之后受益匪浅。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="2018/11/21/iOS通过Xcode进行性能分析/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
