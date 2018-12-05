@@ -176,12 +176,12 @@
         </li>
       
         
-        <li class="menu-item menu-item-archives">
+        <li class="menu-item menu-item-categories">
           <a href="" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
             
-            归档
+            分类
           </a>
         </li>
       
@@ -298,7 +298,7 @@
       
         <h2 id="iOS正则表达式的运用"><a href="#iOS正则表达式的运用" class="headerlink" title="iOS正则表达式的运用"></a>iOS正则表达式的运用</h2><p>前言：在大部分app表单填写场景中，都会去校验用户输入的合法性，如果输入有误就提示错误信息并组织上传到服务器。而这种功能就是由强大的正则表达式来实现的。</p>
 <a id="more"></a>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">正则表达式，又称正规表示式、正规表示法、正规表达式、规则表达式、常规表示法（英语：Regular Expression，在代码中常简写为regex、regexp或RE），计算机科学的一个概念。正则表达式使用单个字符串来描述、匹配一系列匹配某个句法规则的字符串。在很多文本编辑器里，正则表达式通常被用来检索、替换那些匹配某个模式的文本。</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">正则表达式，又称正规表示式、正规表示法、正规表达式、规则表达式、常规表示法（英语：Regular Expression，在代码中常简写为regex、regexp或RE），计算机科学的一个概念。正则表达式使用单个字符串来描述、匹配一系列匹配某个句法规则的字符串。在很多文本编辑器里，正则表达式通常被用来检索、替换那些匹配某个模式的文本。</span><br></pre></td></tr></table></figure>
 <h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><p>正则表达式是由两种基本字符组成：普通字符（例如字符 a 到 z）以及特殊字符（称为”元字符” — metacharacter）所组成的<strong>描述文本规则的代码</strong>。规则用来描述在搜索文本时要匹配的一个或多个字符串。正则表达式作为文本规则，将某个文本规则与所搜索的字符串进行匹配。</p>
 <blockquote>
 <p><strong>元字符</strong><br>元字符就是指那些在正则表达式中具有特殊意义的专用字符，用来规定其前导字符（位于元字符前面的字符）在目标对象中的出现规则，一个元字符可以用来匹配一个或者多个字符。</p>
@@ -394,11 +394,11 @@
 </tbody>
 </table>
 <h3 id="正则表达式在iOS中的应用"><a href="#正则表达式在iOS中的应用" class="headerlink" title="正则表达式在iOS中的应用"></a>正则表达式在iOS中的应用</h3><p><strong>1.NSString的方法</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">- (NSRange)rangeOfString:(NSString *)aString options:(NSStringCompareOptions)mask&#123;</div><div class="line">NSString *searchText = @&quot;rangeOfString&quot;;</div><div class="line">NSRange range = [searchText rangeOfString:@&quot;^[0-9]+$&quot; options:NSRegularExpressionSearch];</div><div class="line">if (range.location != NSNotFound) &#123; </div><div class="line">NSLog(@&quot;range ：%@&quot;, [searchText substringWithRange:range]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (NSRange)rangeOfString:(NSString *)aString options:(NSStringCompareOptions)mask&#123;</span><br><span class="line">NSString *searchText = @&quot;rangeOfString&quot;;</span><br><span class="line">NSRange range = [searchText rangeOfString:@&quot;^[0-9]+$&quot; options:NSRegularExpressionSearch];</span><br><span class="line">if (range.location != NSNotFound) &#123; </span><br><span class="line">NSLog(@&quot;range ：%@&quot;, [searchText substringWithRange:range]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>2.NSPredicate</strong><br>Cocoa框架中的<strong>NSPredicate</strong>用于查询，原理和用法都类似于SQL中的where，作用相当于数据库的过滤取。 我们可以编写简单的谓词语句，就可以从数组中过滤出我们想要的数据。 代码示例:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (BOOL)validateEmail:(NSString *)email&#123; </div><div class="line">NSString *emailRegex = @&quot;[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]&#123;2,4&#125;&quot;;</div><div class="line"> NSPredicate *emailTest = [NSPredicate predicateWithFormat:@&quot;SELF MATCHES %@&quot;, emailRegex]; </div><div class="line">return [emailTest evaluateWithObject:email];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+ (BOOL)validateEmail:(NSString *)email&#123; </span><br><span class="line">NSString *emailRegex = @&quot;[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]&#123;2,4&#125;&quot;;</span><br><span class="line"> NSPredicate *emailTest = [NSPredicate predicateWithFormat:@&quot;SELF MATCHES %@&quot;, emailRegex]; </span><br><span class="line">return [emailTest evaluateWithObject:email];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>3.NSRegularExpression</strong><br><strong>NSRegularExpression</strong>这个类是苹果专门封装的一个用来处理<strong>正则表达式</strong>的类。<br>代码示例:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">objectivecNSString *searchText = @&quot;you want to match&quot;; </div><div class="line">NSError *error = NULL;</div><div class="line">NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@&quot;^[0-9]+$&quot; options:NSRegularExpressionCaseInsensitive error:&amp;error];</div><div class="line">NSTextCheckingResult *result = [regex firstMatchInString:searchText options:0 range:NSMakeRange(0, [searchText length])];</div><div class="line">if (result) &#123;</div><div class="line"> NSLog(@&quot;%@&quot;, [searchText substringWithRange:result.range]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">objectivecNSString *searchText = @&quot;you want to match&quot;; </span><br><span class="line">NSError *error = NULL;</span><br><span class="line">NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@&quot;^[0-9]+$&quot; options:NSRegularExpressionCaseInsensitive error:&amp;error];</span><br><span class="line">NSTextCheckingResult *result = [regex firstMatchInString:searchText options:0 range:NSMakeRange(0, [searchText length])];</span><br><span class="line">if (result) &#123;</span><br><span class="line"> NSLog(@&quot;%@&quot;, [searchText substringWithRange:result.range]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -503,7 +503,7 @@
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
-            <a href="../../../../archives">
+            <a href="../../../../">
               <span class="site-state-item-count">20</span>
               <span class="site-state-item-name">日志</span>
             </a>
@@ -511,10 +511,10 @@
 
           
             <div class="site-state-item site-state-categories">
-              
+              <a href="../../../../categories">
                 <span class="site-state-item-count">1</span>
                 <span class="site-state-item-name">分类</span>
-              
+              </a>
             </div>
           
 

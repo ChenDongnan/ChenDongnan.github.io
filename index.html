@@ -176,12 +176,12 @@
         </li>
       
         
-        <li class="menu-item menu-item-archives">
+        <li class="menu-item menu-item-categories">
           <a href="" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
             
-            归档
+            分类
           </a>
         </li>
       
@@ -938,7 +938,7 @@
 
       
         
-          <p>前几天看了一篇关于LLDB的文章<a href="https://www.objc.io/issues/19-debugging/lldb-debugging/，才发现它的功能如此强大。之前只会使用po这样简单的功能，实在是浪费了LLDB在调试中所能发挥的巨大作用。Facebook有一个开源项目chisel，Github地址：https://github.com/facebook/chisel#installation，对LLDB命令进一步封装，提供了一些非常方便的调试功能。">https://www.objc.io/issues/19-debugging/lldb-debugging/，才发现它的功能如此强大。之前只会使用po这样简单的功能，实在是浪费了LLDB在调试中所能发挥的巨大作用。Facebook有一个开源项目chisel，Github地址：https://github.com/facebook/chisel#installation，对LLDB命令进一步封装，提供了一些非常方便的调试功能。</a></p>
+          <p>前几天看了一篇关于LLDB的文章<a href="https://www.objc.io/issues/19-debugging/lldb-debugging/，才发现它的功能如此强大。之前只会使用po这样简单的功能，实在是浪费了LLDB在调试中所能发挥的巨大作用。Facebook有一个开源项目chisel，Github地址：https://github.com/facebook/chisel#installation，对LLDB命令进一步封装，提供了一些非常方便的调试功能。" target="_blank" rel="noopener">https://www.objc.io/issues/19-debugging/lldb-debugging/，才发现它的功能如此强大。之前只会使用po这样简单的功能，实在是浪费了LLDB在调试中所能发挥的巨大作用。Facebook有一个开源项目chisel，Github地址：https://github.com/facebook/chisel#installation，对LLDB命令进一步封装，提供了一些非常方便的调试功能。</a></p>
           <div class="post-more-link text-center">
             <a class="btn" href="2017/07/19/facebook-chisel/#more" rel="contents">
               阅读全文 &raquo;
@@ -1034,7 +1034,7 @@
 
       
         
-          <p>本文转自 <a href="http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/">http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/</a></p>
+          <p>本文转自 <a href="http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/" target="_blank" rel="noopener">http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/</a></p>
 <h1 id="理解UIView的绘制"><a href="#理解UIView的绘制" class="headerlink" title="理解UIView的绘制"></a>理解UIView的绘制</h1><p><code>UIView</code>是如何显示到Screen上的</p>
 <p>也许要先从<code>Runloop</code>开始说，iOS的main<code>Runloop</code>是一个60fps的回调，也就是说每16.7ms会绘制一次屏幕，这个时间段内要完成view的缓冲区创建，view内容的绘制（如果重写了<code>drawRect</code>），这些CPU的工作。然后将这个缓冲区交给GPU渲染，这个过程又包括多个view的拼接(compositing)，纹理的渲染（Texture）等，最终显示在屏幕上。因此，如果在16.7ms内完不成这些操作，比如，CPU做了太多的工作，或者view层次过于多，图片过于大，导致GPU压力太大，就会导致“卡”的现象，也就是丢帧。</p>
 <p>苹果官方给出的最佳帧率是：60fps，也就是1帧不丢，当然这是理想中的绝佳的体验。</p>
@@ -1302,7 +1302,7 @@
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
-            <a href="/archives">
+            <a href="">
               <span class="site-state-item-count">20</span>
               <span class="site-state-item-name">日志</span>
             </a>
@@ -1310,10 +1310,10 @@
 
           
             <div class="site-state-item site-state-categories">
-              
+              <a href="/categories">
                 <span class="site-state-item-count">1</span>
                 <span class="site-state-item-name">分类</span>
-              
+              </a>
             </div>
           
 

@@ -179,12 +179,12 @@
         </li>
       
         
-        <li class="menu-item menu-item-archives">
+        <li class="menu-item menu-item-categories">
           <a href="" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
             
-            归档
+            分类
           </a>
         </li>
       
@@ -313,7 +313,7 @@
 <h2 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h2><p>现在知道了有非对称加密这东西，那数字签名是怎么回事呢？</p>
 <p>数字签名的作用是我对某一份数据打个标记，表示我认可了这份数据（签了个名），然后我发送给其他人，其他人可以知道这份数据是经过我认证的，数据没有被篡改过。</p>
 <p>有了上述非对称加密算法，就可以实现这个需求：</p>
-<p><a href="http://blog.cnbang.net/wp-content/uploads/2017/03/sign0.png" target="_blank" rel="external"><img src="http://blog.cnbang.net/wp-content/uploads/2017/03/sign0.png" alt="sign0"></a></p>
+<p><a href="http://blog.cnbang.net/wp-content/uploads/2017/03/sign0.png" target="_blank" rel="noopener"><img src="http://blog.cnbang.net/wp-content/uploads/2017/03/sign0.png" alt="sign0"></a></p>
 <ol>
 <li>首先用一种算法，算出原始数据的摘要。需满足 a.若原始数据有任何变化，计算出来的摘要值都会变化。 b.摘要要够短。这里最常用的算法是MD5。</li>
 <li>生成一份非对称加密的公钥和私钥，私钥我自己拿着，公钥公布出去。</li>
@@ -428,7 +428,7 @@
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
-            <a href="../../../../archives">
+            <a href="../../../../">
               <span class="site-state-item-count">20</span>
               <span class="site-state-item-name">日志</span>
             </a>
@@ -436,10 +436,10 @@
 
           
             <div class="site-state-item site-state-categories">
-              
+              <a href="../../../../categories">
                 <span class="site-state-item-count">1</span>
                 <span class="site-state-item-name">分类</span>
-              
+              </a>
             </div>
           
 

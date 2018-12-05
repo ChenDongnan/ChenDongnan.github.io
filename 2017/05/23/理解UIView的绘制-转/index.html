@@ -182,12 +182,12 @@
         </li>
       
         
-        <li class="menu-item menu-item-archives">
+        <li class="menu-item menu-item-categories">
           <a href="" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
             
-            归档
+            分类
           </a>
         </li>
       
@@ -302,7 +302,7 @@
       
 
       
-        <p>本文转自 <a href="http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/" target="_blank" rel="external">http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/</a></p>
+        <p>本文转自 <a href="http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/" target="_blank" rel="noopener">http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/</a></p>
 <h1 id="理解UIView的绘制"><a href="#理解UIView的绘制" class="headerlink" title="理解UIView的绘制"></a>理解UIView的绘制</h1><p><code>UIView</code>是如何显示到Screen上的</p>
 <p>也许要先从<code>Runloop</code>开始说，iOS的main<code>Runloop</code>是一个60fps的回调，也就是说每16.7ms会绘制一次屏幕，这个时间段内要完成view的缓冲区创建，view内容的绘制（如果重写了<code>drawRect</code>），这些CPU的工作。然后将这个缓冲区交给GPU渲染，这个过程又包括多个view的拼接(compositing)，纹理的渲染（Texture）等，最终显示在屏幕上。因此，如果在16.7ms内完不成这些操作，比如，CPU做了太多的工作，或者view层次过于多，图片过于大，导致GPU压力太大，就会导致“卡”的现象，也就是丢帧。</p>
 <p>苹果官方给出的最佳帧率是：60fps，也就是1帧不丢，当然这是理想中的绝佳的体验。</p>
@@ -315,13 +315,13 @@
 <li>当backing store写完后，通过render server交给GPU去渲染，将backing store中的bitmap数据显示在屏幕上</li>
 </ul>
 <p>上面提到的从CPU到GPU的过程可用下图表示：</p>
-<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-1.png" target="_blank" rel="external"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-1.png" alt="UIView Rendering"></a></p>
+<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-1.png" target="_blank" rel="noopener"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-1.png" alt="UIView Rendering"></a></p>
 <p>下面具体来讨论下这个过程</p>
 <h3 id="CPU-bound："><a href="#CPU-bound：" class="headerlink" title="CPU bound："></a>CPU bound：</h3><p>假设我们创建一个<code>UILabel</code>：</p>
 <p><code>UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(10, 50, 300, 14)];label.backgroundColor = [UIColor whiteColor];label.font = [UIFont systemFontOfSize:14.0f];label.text = @&quot;test&quot;;[self.view addSubview:label];</code></p>
 <p>这个时候不会发生任何操作，由于<code>UILabel</code>重写了<code>drawRect</code>，因此，这个view会被marked as “dirty”：</p>
 <p>类似这个样子：</p>
-<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-2.png" target="_blank" rel="external"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-2.png" alt="img"></a></p>
+<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-2.png" target="_blank" rel="noopener"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-2.png" alt="img"></a></p>
 <p>然后一个新的<code>Runloop</code>到来，上面说道在这个<code>Runloop</code>中需要将界面渲染上去，对于UIKit的渲染，Apple用的是它的Core Animation。</p>
 <p>做法是在<code>Runloop</code>开始的时候调用：</p>
 <p><code>[CATransaction begin]</code></p>
@@ -329,7 +329,7 @@
 <p><code>[CATransaction commit]</code></p>
 <p>在begin和commit之间做的事情是将view增加到view hierarchy中，这个时候也不会发生任何绘制的操作。</p>
 <p>当<code>[CATransaction commit]</code>执行完后，CPU开始绘制这个view：</p>
-<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-3.png" target="_blank" rel="external"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-3.png" alt="img"></a></p>
+<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-3.png" target="_blank" rel="noopener"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-3.png" alt="img"></a></p>
 <ul>
 <li>首先CPU会为layer分配一块内存用来绘制bitmap，叫做backing store</li>
 <li>创建指向这块bitmap缓冲区的指针，叫做CGContextRef</li>
@@ -349,7 +349,7 @@
 <p>Core Animation对OpenGL的api有一层封装，当我们的要渲染的layer已经有了bitmap content的时候，这个content一般来说是一个CGImageRef，CoreAnimation会创建一个OpenGL的Texture并将CGImageRef（bitmap）和这个Texture绑定，通过TextureID来标识。</p>
 <p>这个对应关系建立起来之后，剩下的任务就是GPU如何将Texture渲染到屏幕上了。</p>
 <p>GPU大致的工作模式如下：</p>
-<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-4.png" target="_blank" rel="external"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-4.png" alt="`UIView` rendering-03"></a></p>
+<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-4.png" target="_blank" rel="noopener"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-4.png" alt="`UIView` rendering-03"></a></p>
 <p>整个过程也就是一件事：CPU将准备好的bitmap放到RAM里，GPU去搬这快内存到VRAM中处理。</p>
 <p>而这个过程GPU所能承受的极限大概在16.7ms完成一帧的处理，所以最开始提到的60fps其实就是GPU能处理的最高频率。</p>
 <p>因此，GPU的挑战有两个：</p>
@@ -379,7 +379,7 @@
 <p><code>label.layer.cornerRadius = 5.0f;label.layer.masksToBounds = YES;label.layer.shouldRasterize = YES;label.layer.rasterizationScale = label.layer.contentsScale;</code></p>
 <p>简单的说，这是一种cache机制。</p>
 <p>同样GPU的性能也可以通过instrument去衡量：</p>
-<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-6.png" target="_blank" rel="external"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-6.png" alt="QQ20131123-6"></a></p>
+<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-6.png" target="_blank" rel="noopener"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-6.png" alt="QQ20131123-6"></a></p>
 <p>红色代表GPU需要做额外的工作来渲染View，绿色代表GPU无需做额外的工作来处理bitmap。</p>
 <p>That’s all</p>
 
@@ -487,7 +487,7 @@
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
-            <a href="../../../../archives">
+            <a href="../../../../">
               <span class="site-state-item-count">20</span>
               <span class="site-state-item-name">日志</span>
             </a>
@@ -495,10 +495,10 @@
 
           
             <div class="site-state-item site-state-categories">
-              
+              <a href="../../../../categories">
                 <span class="site-state-item-count">1</span>
                 <span class="site-state-item-name">分类</span>
-              
+              </a>
             </div>
           
 

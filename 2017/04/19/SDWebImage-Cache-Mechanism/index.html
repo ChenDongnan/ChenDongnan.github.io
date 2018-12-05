@@ -179,12 +179,12 @@
         </li>
       
         
-        <li class="menu-item menu-item-archives">
+        <li class="menu-item menu-item-categories">
           <a href="" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
             
-            归档
+            分类
           </a>
         </li>
       
@@ -305,18 +305,18 @@
 <p><img src="http://www.chendongnan.com/markdown/SDWebImage/SDWebImageCache结构2.png" alt="SDWebImageCache结构"></p>
 <p><strong>SDWebImageCacheConfig</strong>，正如其名，主要缓存策略的配置选项，比如最大缓存容量、缓存过期时间，读取缓存选项等，比较简单。</p>
 <p><strong>SDWebImageCache</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">typedef NS_ENUM(NSInteger, SDImageCacheType) &#123;</div><div class="line">    /**</div><div class="line">     * The image wasn&apos;t available the SDWebImage caches, but was downloaded from the web.</div><div class="line">     */</div><div class="line">    SDImageCacheTypeNone,</div><div class="line">    /**</div><div class="line">     * The image was obtained from the disk cache.</div><div class="line">     */</div><div class="line">    SDImageCacheTypeDisk,</div><div class="line">    /**</div><div class="line">     * The image was obtained from the memory cache.</div><div class="line">     */</div><div class="line">    SDImageCacheTypeMemory</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">typedef NS_ENUM(NSInteger, SDImageCacheType) &#123;</span><br><span class="line">    /**</span><br><span class="line">     * The image wasn&apos;t available the SDWebImage caches, but was downloaded from the web.</span><br><span class="line">     */</span><br><span class="line">    SDImageCacheTypeNone,</span><br><span class="line">    /**</span><br><span class="line">     * The image was obtained from the disk cache.</span><br><span class="line">     */</span><br><span class="line">    SDImageCacheTypeDisk,</span><br><span class="line">    /**</span><br><span class="line">     * The image was obtained from the memory cache.</span><br><span class="line">     */</span><br><span class="line">    SDImageCacheTypeMemory</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>在SDWebImageCache头文件里，可以看到有三种缓存策略,<code>SDImageCacheTypeNone</code>，<code>SDImageCacheTypeDisk</code>，<code>SDImageCacheTypeMemory</code></p>
 <p>分别是不使用缓存，硬盘缓存和内存缓存。</p>
 <p>当我们使用SDImage加载图片是，往往会用到SDWebImage的扩展</p>
 <p><code>[imageView sd_setImageWithURL:[NSURL URLWithString:@&quot;https://pic.tugou.com/material/1476243549_0622559.jpg&quot;]];</code>,</p>
 <p>这个方法会调用<em>SDWebImageManager</em>的<code>downloadImageWithURL</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">id &lt;SDWebImageOperation&gt; operation = [SDWebImageManager.sharedManager downloadImageWithURL:url options:options progress:progressBlock completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) &#123;</div><div class="line">  </div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id &lt;SDWebImageOperation&gt; operation = [SDWebImageManager.sharedManager downloadImageWithURL:url options:options progress:progressBlock completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) &#123;</span><br><span class="line">  </span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
 <p>SDWebImageManager 内部的 <code>downloadImageWithURL</code>方法会先使用我们前面提到的 SDImageCache 类的 <code>queryDiskCacheForKey</code> 方法，查询图片缓存：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">operation.cacheOperation = [self.imageCache queryDiskCacheForKey:key done:^(UIImage *image, SDImageCacheType cacheType) &#123;</div><div class="line">	...</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">operation.cacheOperation = [self.imageCache queryDiskCacheForKey:key done:^(UIImage *image, SDImageCacheType cacheType) &#123;</span><br><span class="line">	...</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
 <p><code>queryDiskCacheForKey</code> 方法会先查询是否存在<em>Memory cahce</em></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">- (UIImage *)imageFromMemoryCacheForKey:(NSString *)key &#123;</div><div class="line">    return [self.memCache objectForKey:key];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (UIImage *)imageFromDiskCacheForKey:(NSString *)key &#123;</div><div class="line">    // First check the in-memory cache...</div><div class="line">    UIImage *image = [self imageFromMemoryCacheForKey:key];</div><div class="line">    if (image) &#123;</div><div class="line">        return image;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // Second check the disk cache...</div><div class="line">    UIImage *diskImage = [self diskImageForKey:key];</div><div class="line">    if (diskImage) &#123;</div><div class="line">        NSUInteger cost = SDCacheCostForImage(diskImage);</div><div class="line">        [self.memCache setObject:diskImage forKey:key cost:cost];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return diskImage;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- (UIImage *)imageFromMemoryCacheForKey:(NSString *)key &#123;</span><br><span class="line">    return [self.memCache objectForKey:key];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">- (UIImage *)imageFromDiskCacheForKey:(NSString *)key &#123;</span><br><span class="line">    // First check the in-memory cache...</span><br><span class="line">    UIImage *image = [self imageFromMemoryCacheForKey:key];</span><br><span class="line">    if (image) &#123;</span><br><span class="line">        return image;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Second check the disk cache...</span><br><span class="line">    UIImage *diskImage = [self diskImageForKey:key];</span><br><span class="line">    if (diskImage) &#123;</span><br><span class="line">        NSUInteger cost = SDCacheCostForImage(diskImage);</span><br><span class="line">        [self.memCache setObject:diskImage forKey:key cost:cost];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return diskImage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>LRU算法</strong></p>
 
       
@@ -423,7 +423,7 @@
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
-            <a href="../../../../archives">
+            <a href="../../../../">
               <span class="site-state-item-count">20</span>
               <span class="site-state-item-name">日志</span>
             </a>
@@ -431,10 +431,10 @@
 
           
             <div class="site-state-item site-state-categories">
-              
+              <a href="../../../../categories">
                 <span class="site-state-item-count">1</span>
                 <span class="site-state-item-name">分类</span>
-              
+              </a>
             </div>
           
 
