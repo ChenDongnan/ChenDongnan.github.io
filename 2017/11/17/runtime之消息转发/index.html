@@ -84,17 +84,21 @@
 
 
 
-<meta name="description" content="​    在项目开发中，一个很常见的报错是 *** Terminating app due to uncaught exception &amp;#39;NSInvalidArgumentException&amp;#39;, reason: &amp;#39;-[Person run]: unrecognized selector sent to instance，意思就是向实例发送了不能识别的方法。想要了解其发生根源">
+<meta name="description" content="在项目开发中，一个很常见的报错是 *** Terminating app due to uncaught exception &amp;#39;NSInvalidArgumentException&amp;#39;, reason: &amp;#39;-[Person run]: unrecognized selector sent to instance，意思就是向实例发送了不能识别的方法。想要了解其发生根源以及解决方">
 <meta property="og:type" content="article">
 <meta property="og:title" content="runtime之消息转发">
 <meta property="og:url" content="http://blog.chendongnan.com/2017/11/17/runtime之消息转发/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="​    在项目开发中，一个很常见的报错是 *** Terminating app due to uncaught exception &amp;#39;NSInvalidArgumentException&amp;#39;, reason: &amp;#39;-[Person run]: unrecognized selector sent to instance，意思就是向实例发送了不能识别的方法。想要了解其发生根源">
+<meta property="og:description" content="在项目开发中，一个很常见的报错是 *** Terminating app due to uncaught exception &amp;#39;NSInvalidArgumentException&amp;#39;, reason: &amp;#39;-[Person run]: unrecognized selector sent to instance，意思就是向实例发送了不能识别的方法。想要了解其发生根源以及解决方">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/objc_class.png">
-<meta property="og:updated_time" content="2018-12-04T06:25:51.555Z">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/Person.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/Person2.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/resolveInstanceMehtod.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/forwardingTargetForSelector.png">
+<meta property="og:updated_time" content="2018-12-05T02:43:12.376Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="runtime之消息转发">
-<meta name="twitter:description" content="​    在项目开发中，一个很常见的报错是 *** Terminating app due to uncaught exception &amp;#39;NSInvalidArgumentException&amp;#39;, reason: &amp;#39;-[Person run]: unrecognized selector sent to instance，意思就是向实例发送了不能识别的方法。想要了解其发生根源">
+<meta name="twitter:description" content="在项目开发中，一个很常见的报错是 *** Terminating app due to uncaught exception &amp;#39;NSInvalidArgumentException&amp;#39;, reason: &amp;#39;-[Person run]: unrecognized selector sent to instance，意思就是向实例发送了不能识别的方法。想要了解其发生根源以及解决方">
 <meta name="twitter:image" content="http://www.chendongnan.com/markdown/runtime/objc_class.png">
 
 
@@ -303,30 +307,67 @@
       
 
       
-        <p>​    在项目开发中，一个很常见的报错是 <code>*** Terminating app due to uncaught exception &#39;NSInvalidArgumentException&#39;, reason: &#39;-[Person run]: unrecognized selector sent to instance</code>，意思就是向实例发送了不能识别的方法。想要了解其发生根源以及解决方案，就需要深入了解runtime消息转发的机制了。</p>
+        <p>在项目开发中，一个很常见的报错是 <code>*** Terminating app due to uncaught exception &#39;NSInvalidArgumentException&#39;, reason: &#39;-[Person run]: unrecognized selector sent to instance</code>，意思就是向实例发送了不能识别的方法。想要了解其发生根源以及解决方案，就需要深入了解runtime消息转发的机制。</p>
 <a id="more"></a>
-<p>在初学OC的时候，只知道方法调用是<code>[Object  Method]</code>(实例方法)或者<code>Class  Method</code>（类方法）的形式（其实类也是一种对象-类对象，在后文会提到）。在OC中，方法调用也被称为消息发送，这是因为</p>
+<p>在初学OC的时候，只知道方法调用是<code>[Object  Method]</code>(实例方法)或者<code>[Class  Method]</code>（类方法）的形式（其实类也是一种对象-类对象，在后文会提到）。在OC中，方法调用也被称为消息发送，这是因为</p>
 <p><code>[Object Method]</code>在运行时会被编译器转换成<code>objc_msgSend(receiver, selector)</code>,如果方法含有参数，则是<code>objc_msgSend(receiver, selector, arg1, arg2, …)</code>的形式。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// Person 类</div><div class="line">@interface MyClass: NSObject</div><div class="line">- (void)run;</div><div class="line">@end</div><div class="line">@implementation Person</div><div class="line">- (void)run &#123;</div><div class="line">NSLog(@&quot;person run!&quot;);</div><div class="line">&#125;</div><div class="line">@end</div><div class="line"></div><div class="line">Person *person = [[Person alloc] init];</div><div class="line">[person run];</div><div class="line"></div><div class="line">// 输出： person run!</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// Person 类</div><div class="line">@interface MyClass: NSObject</div><div class="line">- (void)run;</div><div class="line">@end</div><div class="line">@implementation Person</div><div class="line">- (void)run &#123;</div><div class="line">	NSLog(@&quot;person run!&quot;);</div><div class="line">&#125;</div><div class="line">@end</div><div class="line"></div><div class="line">Person *person = [[Person alloc] init];</div><div class="line">[person run];</div><div class="line"></div><div class="line">// 输出： person run!</div></pre></td></tr></table></figure>
 <p>以上述代码为例，<code>[person run]</code>可以写成<code>((void (*)(id, SEL))(void *) objc_msgSend)(person, @selector(run));</code></p>
-<p><code>id objc_msgSend(id self, SEL op, …);</code>就是msgSend方法了，其中<code>self</code>指消息的接受者，<code>op</code> 指消息的方法名<code>...</code>指参数列表</p>
-<p>到这里就已经大致了解了OC方法调用的底层表现，但这肯定是远远不够的，还需要进一步探究runtime如何实现msgsend。</p>
-<p>首先需要了解一点基础概念</p>
-<p>Objective-C是一门面 向对象的语言，我们平时接触最多的也就是类和对象，而对象又被分为实例对象，类对象（没错，类也是对象）、元类对象以及根元类对象，他们通过一个叫做<code>isa</code>的指针互相关联起来，这么听着是不是很绕，我们还是上图吧。</p>
+<p><code>id objc_msgSend(id self, SEL op, …);</code>就是msgSend方法了，其中<code>self</code>指消息的接受者，<code>op</code> 指消息的方法名，<code>...</code>指参数列表</p>
+<p>到这里就已经大致了解了OC方法调用的底层表现，接下来需要进一步探究runtime如何实现msgsend。</p>
+<p>Objective-C是一门面向对象的语言，我们平时接触最多的也就是类和对象，而对象又被分为实例对象，类对象、元类对象以及根元类对象，他们通过<code>isa</code>指针互相关联起来，下面是一张它们的关系图。</p>
 <p><img src="http://www.chendongnan.com/markdown/runtime/objc_class.png" alt="object_class"></p>
 <p>以上文的Person类为例，<code>Person *person = [Person alloc] init];</code></p>
 <ul>
 <li><code>person</code> 是实例对象</li>
 <li><code>Person</code>是类对象 </li>
 <li><code>Person</code>的元类是<code>NSObject</code>的元类</li>
-<li><code>Person</code>的元类是<code>NSObject</code>的元类</li>
+<li><code>Person</code>的元类的元类是<code>NSObject</code>的元类</li>
+<li><code>NSObject</code>的元类是它本身</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">typedef struct objc_object *id;</div><div class="line"></div><div class="line">struct objc_object &#123;</div><div class="line">	Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>可以通过代码来验证上述结论</p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/Person.png" alt="Person"></p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/Person2.png" alt="Person"></p>
+<ol>
+<li><strong>SEL</strong></li>
+</ol>
+<p>SEL是选择器，表示一个方法的selector的指针</p>
+<p><code>typedef struct objc_selector *SEL;</code></p>
+<p>方法的</p>
+<p><strong>寻找过程</strong></p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&gt;typedef struct objc_object *id;</div><div class="line">&gt;</div><div class="line">&gt;struct objc_object &#123;</div><div class="line">&gt;	Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</div><div class="line">&gt;&#125;;</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+</blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">struct objc_class &#123;</div><div class="line">	Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</div><div class="line">#if !__OBJC2__</div><div class="line">	Class _Nullable super_class  OBJC2_UNAVAILABLE;</div><div class="line">	const char * _Nonnull name OBJC2_UNAVAILABLE;</div><div class="line">	long version OBJC2_UNAVAILABLE;</div><div class="line">	long info  OBJC2_UNAVAILABLE;</div><div class="line">	long instance_size OBJC2_UNAVAILABLE;</div><div class="line">	struct objc_ivar_list * _Nullable ivars  OBJC2_UNAVAILABLE;</div><div class="line">	struct objc_method_list * _Nullable * _Nullable methodLists  		OBJC2_UNAVAILABLE;</div><div class="line">	struct objc_cache * _Nonnull cache OBJC2_UNAVAILABLE;</div><div class="line">	struct objc_protocol_list * _Nullable protocols  OBJC2_UNAVAILABLE;</div><div class="line">#endif</div><div class="line">&#125; OBJC2_UNAVAILABLE;</div></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">struct objc_method_list &#123;</div><div class="line">	struct objc_method_list * _Nullable obsolete OBJC2_UNAVAILABLE;</div><div class="line">	</div><div class="line">	int method_count OBJC2_UNAVAILABLE;</div><div class="line">#ifdef __LP64__</div><div class="line">	int space  OBJC2_UNAVAILABLE;</div><div class="line">#endif</div><div class="line">	/* variable length structure */</div><div class="line">	struct objc_method method_list[1]  OBJC2_UNAVAILABLE;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">struct objc_method &#123;</div><div class="line">	SEL _Nonnull method_name OBJC2_UNAVAILABLE;</div><div class="line">	char * _Nullable method_types  OBJC2_UNAVAILABLE;</div><div class="line">	IMP _Nonnull method_imp  OBJC2_UNAVAILABLE;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">struct objc_class &#123;</div><div class="line">	Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</div><div class="line">#if !__OBJC2__</div><div class="line">	Class _Nullable super_class  OBJC2_UNAVAILABLE;</div><div class="line">	const char * _Nonnull name OBJC2_UNAVAILABLE;</div><div class="line">	long version OBJC2_UNAVAILABLE;</div><div class="line">	long info  OBJC2_UNAVAILABLE;</div><div class="line">	long instance_size OBJC2_UNAVAILABLE;</div><div class="line">	struct objc_ivar_list * _Nullable ivars  OBJC2_UNAVAILABLE;</div><div class="line">	struct objc_method_list * _Nullable * _Nullable methodLists  		OBJC2_UNAVAILABLE;</div><div class="line">	struct objc_cache * _Nonnull cache OBJC2_UNAVAILABLE;</div><div class="line">	struct objc_protocol_list * _Nullable protocols  OBJC2_UNAVAILABLE;</div><div class="line">#endif</div><div class="line">&#125; OBJC2_UNAVAILABLE;</div></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Class _Nonnull isa OBJC_ISA_AVAILABILITY;</div></pre></td></tr></table></figure>
+<p>##消息转发##</p>
+<p>那么回到文章开头的问题，<code>unrecognized selector sent to instance</code>报错，用消息转发来解释的话就是消息接收者找不到对应的selector.</p>
+<p>当在methodList中找不到对应的selector后，就会走消息转发流程，系统会给我们三次补救的机会。</p>
+<p><strong>第一次</strong></p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; + (BOOL)resolveInstanceMethod:(SEL)sel &#123;&#125; </div><div class="line">&gt; + (BOOL)resolveClassMethod:(SEL)sel &#123;&#125;  </div><div class="line">&gt;</div></pre></td></tr></table></figure>
+</blockquote>
+<p>上述一个对应实例方法，一个对应类方法</p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/resolveInstanceMehtod.png" alt="resolveInstanceMehtod"></p>
+<p>官方文档已经讲的很清楚了，可以在该方法内，通过<code>class_addMethod</code>动态地添加selector的实现。</p>
+<p><strong>第二次</strong></p>
+<p>如果上述方法返回值为NO，那么会走到</p>
+<blockquote>
+<p><code>(id)forwardingTargetForSelector:(SEL)aSelector {}</code></p>
+</blockquote>
+<p><img src="http://www.chendongnan.com/markdown/runtime/forwardingTargetForSelector.png" alt="forwardingTargetForSelector"></p>
+<p>这个方法可以返回一个对象来作为新的消息接收者。</p>
+<p><strong>第三次</strong></p>
+<p>下面来看一个示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#import &lt;Foundation/Foundation.h&gt;</div><div class="line"></div><div class="line">@interface RuntimeObject : NSObject</div><div class="line"></div><div class="line">- (void)test;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>在<code>RuntimeObject</code>类的.h文件中，声明一个<code>test</code>方法，但是在.m文件中不实现</p>
+<p>然后在<code>Appdelegate</code>的<code>didFinishLaunchingWithOptions</code>中调用<code>test</code>方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions &#123;</div><div class="line">    // Override point for customization after application launch.</div><div class="line">    </div><div class="line">    RuntimeObject *obj = [[RuntimeObject alloc] init];</div><div class="line">    [obj test];</div><div class="line">    </div><div class="line">    return YES;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>毫无疑问，这样的结果就是会造成程序崩溃，崩溃原因就是</p>
+<p><code>Terminating app due to uncaught exception &#39;NSInvalidArgumentException&#39;, reason: &#39;-[RuntimeObject test]: unrecognized selector sent to instance 0x600002254240&#39;**</code></p>
 
       
     </div>
@@ -603,6 +644,135 @@
 
   
   
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';                
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+                            
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').mousedown(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
   
 
   
