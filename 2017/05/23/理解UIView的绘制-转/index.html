@@ -6,15 +6,15 @@
 
 
 <html class="theme-next mist use-motion">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -29,7 +29,7 @@
 
   
   
-  <link href="../../../../vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="../../../../vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -63,37 +63,35 @@
 
 
 
-<link href="../../../../vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+<link href="../../../../vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css">
 
-<link href="../../../../css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="iOS," />
+<link href="../../../../css/main.css?v=5.0.1" rel="stylesheet" type="text/css">
 
 
+  <meta name="keywords" content="iOS,">
 
 
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico?v=5.0.1" />
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico?v=5.0.1">
 
 
 
 
 
 
-<meta name="description" content="本文转自 http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/
-理解UIView的绘制UIView是如何显示到Screen上的
-也许要先从Runloop开始说，iOS的mainRunloop是一个60fps的回调，也就是说每16.7ms会绘制一次屏幕，这个时间段内要完成view的缓冲区创建，view内容的绘制（如果重写了drawRe">
+<meta name="description" content="本文转自 http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/ 理解UIView的绘制UIView是如何显示到Screen上的 也许要先从Runloop开始说，iOS的mainRunloop是一个60fps的回调，也就是说每16.7ms会绘制一次屏幕，这个时间段内要完成view的缓冲区创建，view内容的绘制（如果重写了drawRe">
+<meta name="keywords" content="iOS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="理解UIView的绘制(转)">
 <meta property="og:url" content="http://blog.chendongnan.com/2017/05/23/理解UIView的绘制-转/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="本文转自 http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/
-理解UIView的绘制UIView是如何显示到Screen上的
-也许要先从Runloop开始说，iOS的mainRunloop是一个60fps的回调，也就是说每16.7ms会绘制一次屏幕，这个时间段内要完成view的缓冲区创建，view内容的绘制（如果重写了drawRe">
+<meta property="og:description" content="本文转自 http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/ 理解UIView的绘制UIView是如何显示到Screen上的 也许要先从Runloop开始说，iOS的mainRunloop是一个60fps的回调，也就是说每16.7ms会绘制一次屏幕，这个时间段内要完成view的缓冲区创建，view内容的绘制（如果重写了drawRe">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://vizlabxt.github.io/images/2013/11/QQ20131123-1.png">
 <meta property="og:image" content="http://vizlabxt.github.io/images/2013/11/QQ20131123-2.png">
 <meta property="og:image" content="http://vizlabxt.github.io/images/2013/11/QQ20131123-3.png">
@@ -102,9 +100,7 @@
 <meta property="og:updated_time" content="2017-05-23T03:54:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="理解UIView的绘制(转)">
-<meta name="twitter:description" content="本文转自 http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/
-理解UIView的绘制UIView是如何显示到Screen上的
-也许要先从Runloop开始说，iOS的mainRunloop是一个60fps的回调，也就是说每16.7ms会绘制一次屏幕，这个时间段内要完成view的缓冲区创建，view内容的绘制（如果重写了drawRe">
+<meta name="twitter:description" content="本文转自 http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/ 理解UIView的绘制UIView是如何显示到Screen上的 也许要先从Runloop开始说，iOS的mainRunloop是一个60fps的回调，也就是说每16.7ms会绘制一次屏幕，这个时间段内要完成view的缓冲区创建，view内容的绘制（如果重写了drawRe">
 <meta name="twitter:image" content="http://vizlabxt.github.io/images/2013/11/QQ20131123-1.png">
 
 
@@ -126,7 +122,7 @@
   <title> 理解UIView的绘制(转) | 陈栋楠的Blog </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -147,12 +143,12 @@
   <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-meta ">
   
 
   <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">陈栋楠的Blog</span>
       <span class="logo-line-after"><i></i></span>
@@ -179,7 +175,7 @@
         <li class="menu-item menu-item-home">
           <a href="" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -189,7 +185,7 @@
         <li class="menu-item menu-item-archives">
           <a href="" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -199,7 +195,7 @@
         <li class="menu-item menu-item-tags">
           <a href="" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -212,7 +208,7 @@
             <a href="#" class="st-search-show-outputs">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -225,7 +221,7 @@
     <div class="site-search">
       
   <form class="site-search-form">
-  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input">
 </form>
 
 <script type="text/javascript">
@@ -262,7 +258,7 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
 
     
       <header class="post-header">
@@ -481,7 +477,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -491,10 +487,8 @@
       
 
       <section class="site-overview sidebar-panel ">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="../../../../uploads/avatar.jpg"
-               alt="陈栋楠" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="../../../../uploads/avatar.jpg" alt="陈栋楠">
           <p class="site-author-name" itemprop="name">陈栋楠</p>
           <p class="site-description motion-element" itemprop="description">陈栋楠的个人Blog，主要记录iOS学习过程中的一些经验和心得</p>
         </div>
@@ -547,7 +541,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#理解UIView的绘制"><span class="nav-number">1.</span> <span class="nav-text">理解UIView的绘制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU-bound："><span class="nav-number">1.0.1.</span> <span class="nav-text">CPU bound：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GPU-bound："><span class="nav-number">1.0.2.</span> <span class="nav-text">GPU bound：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Compositing："><span class="nav-number">1.0.3.</span> <span class="nav-text">Compositing：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Size"><span class="nav-number">1.0.4.</span> <span class="nav-text">Size</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Offscreen-Rendering-And-Mask"><span class="nav-number">1.0.5.</span> <span class="nav-text">Offscreen Rendering And Mask</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#理解UIView的绘制"><span class="nav-number">1.</span> <span class="nav-text">理解UIView的绘制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU-bound："><span class="nav-number">1.0.1.</span> <span class="nav-text">CPU bound：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GPU-bound："><span class="nav-number">1.0.2.</span> <span class="nav-text">GPU bound：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Compositing："><span class="nav-number">1.0.3.</span> <span class="nav-text">Compositing：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Size"><span class="nav-number">1.0.4.</span> <span class="nav-text">Size</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Offscreen-Rendering-And-Mask"><span class="nav-number">1.0.5.</span> <span class="nav-text">Offscreen Rendering And Mask</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
@@ -563,7 +557,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2018</span>
