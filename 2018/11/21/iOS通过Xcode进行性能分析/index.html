@@ -87,17 +87,17 @@
 <meta property="og:site_name" content="陈栋楠的Blog">
 <meta property="og:description" content="趁着项目的短暂的空闲期，整理下最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。 基础知识 其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced techni">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/instrument-coreAnimation.png">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/instrument-fps2.png">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/rendering.png">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/blending1.png">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/offscreeniOS9.png">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/offscreen2.PNG">
-<meta property="og:updated_time" content="2018-12-07T01:55:00.870Z">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/instrument-coreAnimation.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/instrument-fps2.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/rendering.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/blending1.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/offscreeniOS9.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/offscreen2.PNG">
+<meta property="og:updated_time" content="2018-12-07T03:35:11.949Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS通过Xcode进行性能分析">
 <meta name="twitter:description" content="趁着项目的短暂的空闲期，整理下最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。 基础知识 其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced techni">
-<meta name="twitter:image" content="http://www.chendongnan.com/markdown/instrument-coreAnimation.png">
+<meta name="twitter:image" content="http://www.chendongnan.com/markdown/Rendering/instrument-coreAnimation.png">
 
 
 
@@ -374,18 +374,17 @@
         <p>趁着项目的短暂的空闲期，整理下最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。</p>
 <p><strong>基础知识</strong></p>
 <p>其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐<code>iOS Core Animation advanced techniques</code>这本书，阅读之后受益匪浅。</p>
-<a id="more"></a>
 <p><strong><em>iOS 开发：绘制像素到屏幕</em></strong><br><a href="https://segmentfault.com/a/1190000000390012" target="_blank" rel="noopener">https://segmentfault.com/a/1190000000390012</a></p>
 <p><strong><em>深入理解 iOS Rendering Process</em></strong><br> <a href="https://juejin.im/post/5ad3f1cc6fb9a028d9379c5f?utm_source=gold_browser_extension" target="_blank" rel="noopener">https://juejin.im/post/5ad3f1cc6fb9a028d9379c5f?utm_source=gold_browser_extension</a></p>
-<p><strong>性能检测</strong></p>
-<p>既然要进行优化，那么首先需要做的就是检测我们项目中当前的性能状况，苹果的Xcode自带的Instrument就可以很好的完成这项工作，使用方法也很简单。这里以最新版<strong>Xcode10</strong>为例子,点击<code>Xcode-&gt;Open Developer Tool -&gt;Instruments</code>，启动Instruments, 如下图，点击Core Animation模块<br><img src="http://www.chendongnan.com/markdown/instrument-coreAnimation.png" alt="instrument-coreanimation"><br>会出现如下面板，在All Processes这里可以选择你想要测试的项目<br>这里我选择了公司的项目，然后点击左上角的红圈，instrument就运行了，你会发现你手机上安装的该项目也会随之运行起来。<br><img src="http://www.chendongnan.com/markdown/instrument-fps2.png" alt="instrument-debug"><br>然后就会出现上图，显示的是项目运行的FPS,以及GPU的利用率。当画面静止的时候，FPS为0。一般来说，FPS应当要大于45才不会显得卡顿。</p>
-<p>影响FPS的因素是多样的, 这里我们只考虑UI方面的因素，我们可以在Xcode10工具栏的<code>Debug -&gt; View Debugging -&gt; Rendering</code>进行查看<br><img src="http://www.chendongnan.com/markdown/rendering.png" alt="rendering"><br>可以看到这里有很多Debug选项, 我们来看几个比较重要的</p>
-<p><strong>Color Blended Layers</strong><br>图层混色，就是多个视图的位置有重叠，视图本身又有透明度。重叠区域的每一个像素，GPU 需要算出一种新的颜色（混色）。混合计算的公式是：<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">贴一个苹果文档中的解释</span><br><span class="line"></span><br><span class="line">```objective-c</span><br><span class="line">The blend mode constants introduced in OS X v10.5   represent the Porter-Duff blend modes. The symbols in the   equations for these blend modes are:</span><br><span class="line"></span><br><span class="line">    * R is the premultiplied result</span><br><span class="line"></span><br><span class="line">    * S is the source color, and includes alpha</span><br><span class="line"></span><br><span class="line">    * D is the destination color, and includes alpha</span><br><span class="line"></span><br><span class="line">    * Ra, Sa, and Da are the alpha components of R, S, and D</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<h2 id="性能检测"><a href="#性能检测" class="headerlink" title="性能检测"></a>性能检测</h2><p>既然要进行优化，那么首先需要做的就是检测我们项目中当前的性能状况，苹果的Xcode自带的Instrument就可以很好的完成这项工作，使用方法也很简单。这里以最新版<strong>Xcode10</strong>为例子,点击<code>Xcode-&gt;Open Developer Tool -&gt;Instruments</code>，启动Instruments, 如下图，点击Core Animation模块<br><img src="http://www.chendongnan.com/markdown/Rendering/instrument-coreAnimation.png" alt="instrument-coreanimation"><br>会出现如下面板，在All Processes这里可以选择你想要测试的项目<br>这里我选择了公司的项目，然后点击左上角的红圈，instrument就运行了，你会发现你手机上安装的该项目也会随之运行起来。<br><img src="http://www.chendongnan.com/markdown/Rendering/instrument-fps2.png" alt="instrument-debug"><br>然后就会出现上图，显示的是项目运行的FPS,以及GPU的利用率。当画面静止的时候，FPS为0。一般来说，FPS应当要大于45才不会显得卡顿。</p>
+<p>影响FPS的因素是多样的, 这里我们只考虑UI方面的因素，我们可以在Xcode10工具栏的<code>Debug -&gt; View Debugging -&gt; Rendering</code>进行查看<br><img src="http://www.chendongnan.com/markdown/Rendering/rendering.png" alt="rendering"><br>可以看到这里有很多Debug选项, 我们来看几个比较重要的</p>
+<p><strong>Color Blended Layers</strong><br>图层混色，就是多个视图的位置有重叠，视图本身又有透明度。重叠区域的每一个像素，GPU 需要算出一种新的颜色（混色）。混合计算的公式是：<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">贴一个苹果文档中的解释</span><br><span class="line"></span><br><span class="line">&gt;```objective-c</span><br><span class="line">&gt;The blend mode constants introduced in OS X v10.5   represent the Porter-Duff blend modes. The symbols in the   equations for these blend modes are:</span><br><span class="line">&gt;</span><br><span class="line">&gt;    * R is the premultiplied result</span><br><span class="line">&gt;</span><br><span class="line">&gt;    * S is the source color, and includes alpha</span><br><span class="line">&gt;</span><br><span class="line">&gt;    * D is the destination color, and includes alpha</span><br><span class="line">&gt;</span><br><span class="line">&gt;    * Ra, Sa, and Da are the alpha components of R, S, and D</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></p>
 <p>R是结果色，S是包含透明度的源色，D是包含透明度的目标色，Sa是原色的透明度</p>
-<p>如下图，绿色代表没有发生图层混色，红色代表发生了图层混色。label2由于开启了clipToBounds,</p>
-<p><img src="http://www.chendongnan.com/markdown/blending1.png" alt="blending"></p>
+<p>如下图，绿色代表没有发生图层混色，红色代表发生了图层混色。</p>
+<p><img src="http://www.chendongnan.com/markdown/Rendering/blending1.png" alt="blending"></p>
 <p><strong>Color Hits Green and Misses Red</strong></p>
-<p>这个选项是用来检测图像是否有栅格化(Rasterize)的，这个概念听起来是一头雾水，百度之<strong>栅格即像素，栅格化即将矢量图形转化为位图（栅格图像）</strong> 而Calayer有一个属性就是shouldRasterize</p>
+<p>这个选项是用来检测图像是否有栅格化(Rasterize)的，这个概念听起来是一头雾水，百度之; <strong>栅格即像素，栅格化即将矢量图形转化为位图（栅格图像）</strong> 而Calayer有一个属性就是shouldRasterize</p>
 <p>同样贴一个苹果的文档</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">When true, the layer is rendered as a bitmap in its local coordinate  space (&quot;rasterized&quot;), then the bitmap is composited into the destination (with the minificationFilter and magnificationFilter  properties of the layer applied if the bitmap needs scaling). Rasterization occurs after the layer&apos;s filters and shadow effects are applied, but before the opacity modulation. As an implementation  detail the rendering engine may attempt to cache and reuse the bitmap from one frame to the next. (Whether it does or not will have no affect on the rendered output.) When false the layer is composited directly into the destination whenever possible (however, certain features of the compositing model may force rasterization, e.g. adding filters). Defaults to NO.</span><br></pre></td></tr></table></figure>
 <p>当这个属性被设置为YES时，即开启了光栅化。CALayer会被栅格化为bitmap,layer的阴影等效果也会被保存到bitmap中，光栅化后会将图层绘制到一个屏幕外的图像，然后这个图像将会被缓存起来并绘制到实际图层的 contents 和子图层，对于有很多的子图层或者有复杂的效果应用，这样做就会比重绘所有事务的所有帧来更加高效。但是光栅化原始图像需要时间，而且会消耗额外的内存。</p>
@@ -414,8 +413,8 @@
 <p>离屏渲染应该是经常听到的一次词了，简单来说就是GPU在当前屏幕缓冲区外新开辟一个缓冲区进行渲染操作，由于过程中需要切换context，性能消耗比较大。</p>
 <p>CoreGraphics的上下文绘制，drawRect绘制，layer圆角/边框/阴影/抗锯齿/光栅化等都可能导致离屏渲染</p>
 <p>如下图所示，呈现黄色的部分为发生了离屏渲染。</p>
-<p><img src="http://www.chendongnan.com/markdown/offscreeniOS9.png" alt="offscreen">f</p>
-<p><img src="http://www.chendongnan.com/markdown/offscreen2.PNG" alt="offscreen"></p>
+<p><img src="http://www.chendongnan.com/markdown/Rendering/offscreeniOS9.png" alt="offscreen">f</p>
+<p><img src="http://www.chendongnan.com/markdown/Rendering/offscreen2.PNG" alt="offscreen"></p>
 <p>经过测试，我发现以下情况</p>
 <ul>
 <li>在iOS9系统上, 对UIImageView/UILabel/Button,使用cornerRadius + masksToBounds/ClipToBounds会发生离屏渲染</li>
@@ -530,8 +529,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -593,6 +601,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#性能检测"><span class="nav-number">1.</span> <span class="nav-text">性能检测</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
