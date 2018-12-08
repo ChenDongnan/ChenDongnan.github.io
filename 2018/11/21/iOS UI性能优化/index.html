@@ -91,10 +91,10 @@
 <meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/instrument-fps2.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/rendering.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/blending1.png">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/offscreeniOS9.png">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/offscreen2.PNG">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/iOS9离屏渲染.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/iOS11离屏渲染.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/shadowPath.png">
-<meta property="og:updated_time" content="2018-12-07T10:53:03.069Z">
+<meta property="og:updated_time" content="2018-12-08T07:34:52.712Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS UI性能调优">
 <meta name="twitter:description" content="趁着项目的短暂的空闲期，把最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。 基础知识 其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced techniqu">
@@ -382,28 +382,28 @@
 <p>影响FPS的因素是多样的, 这里我们只考虑UI方面的因素，我们可以在Xcode10工具栏的<code>Debug -&gt; View Debugging -&gt; Rendering</code>进行查看<br><img src="http://www.chendongnan.com/markdown/Rendering/rendering.png" alt="rendering"><br>可以看到这里有很多Debug选项, 我们来看几个比较重要的</p>
 <p><strong>Color Blended Layers</strong><br>图层混色，就是多个视图的位置有重叠，视图本身又有透明度。重叠区域的每一个像素，GPU 需要算出一种新的颜色（混色）。混合计算的公式是：<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">贴一个苹果文档中的解释</span><br><span class="line"></span><br><span class="line">&gt;```objective-c</span><br><span class="line">&gt;The blend mode constants introduced in OS X v10.5   represent the Porter-Duff blend modes. The symbols in the   equations for these blend modes are:</span><br><span class="line">&gt;</span><br><span class="line">&gt;    * R is the premultiplied result</span><br><span class="line">&gt;</span><br><span class="line">&gt;    * S is the source color, and includes alpha</span><br><span class="line">&gt;</span><br><span class="line">&gt;    * D is the destination color, and includes alpha</span><br><span class="line">&gt;</span><br><span class="line">&gt;    * Ra, Sa, and Da are the alpha components of R, S, and D</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></p>
 <p>R是结果色，S是包含透明度的源色，D是包含透明度的目标色，Sa是原色的透明度</p>
-<p>如下图，绿色代表没有发生图层混色，红色代表发生了图层混色。通过给View设置一个不透明的背景色，可以避免图层混色的发生。</p>
+<p>如下图，绿色代表没有发生图层混色，红色代表发生了图层混色。图中的label2设置了alpha为0.5，因此触发了Color Blended; 我们通过给View设置一个不透明的背景色，来避免图层混色的发生。</p>
 <p><img src="http://www.chendongnan.com/markdown/Rendering/blending1.png" alt="blending"></p>
-<p>关于<strong>Color Blended Layers</strong>还有几个注意点</p>
+<p>关于<strong>Color Blended Layers</strong>有几个注意点</p>
 <ul>
 <li>如果label中的内容包含中文，label实际渲染区域要大于label的size，最外层会多一个subLayer，所以即使设置背景色不透明，仍然会发生混色。因此，还需要添加masksToBounds = YES</li>
 <li>UIImageView不仅需要自身容器不透明，并且imageView包含的内容图片也必须是不透明的</li>
 </ul>
 <p><strong>Color Hits Green and Misses Red</strong></p>
-<p>这个选项是用来检测图像是否有光栅化(Rasterize)的，这个概念听起来是一头雾水，百度之; <strong>栅格即像素，光栅化即将矢量图形转化为位图（栅格图像）</strong> 而Calayer有一个属性就是shouldRasterize</p>
-<p>同样贴一个苹果的文档</p>
+<p>这个选项是用来检测图像是否有光栅化(Rasterize)的，这个概念听起来是一头雾水，百度之; <strong>光栅化即将矢量图形转化为位图（栅格图像）</strong> , Calayer有一个属性shouldRasterize，就是用来决定是否开启光栅化的。</p>
+<p>放一个苹果的文档</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">When true, the layer is rendered as a bitmap in its local coordinate  space (&quot;rasterized&quot;), then the bitmap is composited into the destination (with the minificationFilter and magnificationFilter  properties of the layer applied if the bitmap needs scaling). Rasterization occurs after the layer&apos;s filters and shadow effects are applied, but before the opacity modulation. As an implementation  detail the rendering engine may attempt to cache and reuse the bitmap from one frame to the next. (Whether it does or not will have no affect on the rendered output.) When false the layer is composited directly into the destination whenever possible (however, certain features of the compositing model may force rasterization, e.g. adding filters). Defaults to NO.</span><br></pre></td></tr></table></figure>
-<p>当这个属性被设置为YES时，即开启了光栅化。它会将一个layer预先渲染成位图(bitmap),再加入到缓存中，layer的阴影等效果也会被保存到bitmap中，光栅化后会将图层绘制到一个屏幕外的图像，然后这个图像将会被缓存起来并绘制到实际图层的 contents 和子图层，对于有很多的子图层或者有复杂的效果应用，这样做就会比重绘所有事务的所有帧来更加高效。但是光栅化原始图像需要时间，而且会消耗额外的内存。</p>
+<p>当这个属性被设置为YES时，即开启了光栅化。它会将一个layer预先渲染成bitmap再加入到缓存中，layer的阴影等效果也会被保存到bitmap中，光栅化后会将图层绘制到一个屏幕外的图像，然后这个图像将会被缓存起来并绘制到实际图层的 contents 和子图层，对于有很多的子图层或者有复杂的效果应用，这样做就会比重绘所有事务的所有帧来更加高效。但是光栅化原始图像需要时间，而且会消耗额外的内存。</p>
 <p>当我们开启光栅化后,需要注意几点问题：</p>
 <ol>
-<li><p><strong>如果我们更新已光栅化的layer,会造成大量的offscreen渲染。 </strong></p>
-<p>因此CALayer的光栅化选项的开启与否需要我们仔细衡量使用场景。它主要适用于设置阴影耗费资源比较多的静态内容，而对于经常变动的内容,这个时候不要开启,否则会造成性能的浪费。例如TableViewCell,因为TableViewCell的重绘是很频繁的（因为Cell的复用）,如果Cell的内容不断变化,则Cell需要不断重绘,如果此时设置了cell.layer可栅格化。则会造成大量的offscreen渲染,降低图形性能。</p>
+<li><p><strong>如果我们更新已光栅化的layer,会造成大量的离屏渲染。 </strong></p>
+<p>CALayer的光栅化选项的开启与否需要我们仔细衡量使用场景。它主要适用于设置阴影耗费资源比较多的静态内容，而对于经常变动的内容,这个时候不要开启,否则会造成性能的浪费。例如TableViewCell,因为TableViewCell的重绘是很频繁的（因为Cell的复用）,如果Cell的内容不断变化,则Cell需要不断重绘,如果此时设置了cell.layer可栅格化。则会造成大量的offscreen渲染,降低图形性能。</p>
 </li>
 <li><p><strong>不要过度使用,系统限制了缓存的大小为2.5X Screen Size. 如果过度使用,超出缓存之后,同样会造成大量的offscreen渲染。</strong></p>
 </li>
 </ol>
 <ol start="3">
-<li><p><strong>被栅格化的图片如果超过100ms没有被使用,则会被移除。 </strong></p>
+<li><p><strong>被光栅化的图片如果超过100ms没有被使用,则会被移除。 </strong></p>
 <p>因此我们应该只对连续不断使用的图片进行缓存。对于不常使用的图片缓存是没有意义,且耗费资源的。</p>
 </li>
 </ol>
@@ -411,29 +411,29 @@
 <p>离屏渲染应该是经常听到的一次词了，简单来说就是GPU在当前屏幕缓冲区外新开辟一个缓冲区进行渲染操作，由于过程中需要切换context，性能消耗比较大。</p>
 <p>CoreGraphics的上下文绘制，drawRect绘制，layer圆角/边框/阴影/抗锯齿/光栅化等都可能导致离屏渲染</p>
 <p>在Debug选项中选中<code>Color Offscreen-Rendered Yellow</code>,就可以检测视图的离屏渲染情况。如下图所示，呈现黄色的部分为发生了离屏渲染。</p>
-<p><img src="http://www.chendongnan.com/markdown/Rendering/offscreeniOS9.png" alt="offscreen"></p>
-<p><img src="http://www.chendongnan.com/markdown/Rendering/offscreen2.PNG" alt="offscreen"></p>
-<p>经过测试，发现以下情况</p>
+<p><img src="http://www.chendongnan.com/markdown/Rendering/iOS9离屏渲染.png" alt="offscreen" title="iOS 9"></p>
+<p><img src="http://www.chendongnan.com/markdown/Rendering/iOS11离屏渲染.png" alt="offscreen" title="iOS11">经过真机测试，发现以下情况</p>
 <ul>
-<li>在iOS9系统上, 对UIImageView/UILabel/Button,使用cornerRadius + masksToBounds/ClipToBounds会发生离屏渲染</li>
+<li>在iOS9系统上, 对UIImageView/UILabel/Button,使用cornerRadius + masksToBounds/ClipToBounds会发生离屏渲染, 但是对于UIButton,只需要设置cornerRadius就可以实现圆角效果，不会发生离屏渲染。</li>
 <li>在iOS11上, 对UIImageView/UILabel,使用cornerRadius + masksToBounds/ClipToBounds并不会触发离屏渲染，但是在设置了shadow之后会触发离屏渲染。</li>
 </ul>
 <p>在查找了网上的一些资料后，了解到苹果在iOS9之后做了优化，减少了不必要的离屏渲染。</p>
-<p><strong>针对离屏渲染的优化</strong></p>
+<p><strong>针设置圆角/阴影导致的离屏渲染的处理方式</strong></p>
 <ul>
-<li>对于UIView和UIButton，只设置CornerRadius,无需设置ClipToBounds也可以实现圆角效果，不会触发离屏渲染。</li>
+<li>如果方便的情况下，可以让设计师直接提供裁切好圆角的图片。</li>
+<li>对于UIView，只设置CornerRadius,无需设置ClipToBounds就可以实现圆角效果，不会触发离屏渲染。</li>
+<li>对于UILabel，只设置CornerRadius,无需设置ClipToBounds就可以实现圆角效果，不会触发离屏渲染；如果label有背景色，在iOS10以上系统，可以使用CornerRadius + ClipToBounds组合，10以下的系统，可以设置<code>label.layer.backgroundColor</code>来代替<code>label.backgroundColor</code></li>
 </ul>
 <ul>
-<li><p>如果方便的情况下，可以让设计师直接提供裁切好圆角的图片</p>
-</li>
-<li><p>如果需要代码实现圆角，如果只需要支持iOS10及更新版本的机型，那么大胆的使用cornerRadius + masksToBounds也没有关系；</p>
-</li>
-<li><p>对于UIButton，可以使用BezelPath来实现圆角，在我们的项目中，给UIView添加了一个Category方法</p>
-</li>
-<li><p>可以使用CGContexRef/UIBezierPath绘制阴影路径并设置给ShadowPath来代替shadowOffset等属性设置阴影</p>
-<p><img src="http://www.chendongnan.com/markdown/Rendering/shadowPath.png" alt="shadowPath"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GMutablePathRef shadowPath = CGPathCreateMutable(); </span><br><span class="line">CGPathAddRect(shadowPath, NULL, self.layerView.bounds); </span><br><span class="line">self.layerView.layer.shadowPath = shadowPath; </span><br><span class="line">CGPathRelease(shadowPath);</span><br></pre></td></tr></table></figure>
+<li><p>对于UIImageView 如果只需要支持iOS10及更新版本的机型，那么大胆的使用cornerRadius + masksToBounds，不会触发离屏渲染； 10以下的机型，可以通过给UIImage添加Category，利用UIBezierPath来实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (UIImage*)imageAddCornerWithRadius:(CGFloat)radius andSize:(CGSize)size&#123;</span><br><span class="line">    CGRect rect = CGRectMake(0, 0, size.width, size.height);</span><br><span class="line">    UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);</span><br><span class="line">    CGContextRef ctx = UIGraphicsGetCurrentContext();</span><br><span class="line">    UIBezierPath * path = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(radius, radius)];</span><br><span class="line">    CGContextAddPath(ctx,path.CGPath);</span><br><span class="line">    CGContextClip(ctx);</span><br><span class="line">    [self drawInRect:rect];</span><br><span class="line">    CGContextDrawPath(ctx, kCGPathFillStroke);</span><br><span class="line">    UIImage * newImage = UIGraphicsGetImageFromCurrentImageContext();</span><br><span class="line">    UIGraphicsEndImageContext();</span><br><span class="line">    return newImage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>​</p>
+</li>
+<li><p>对于UIButton，如果只需要实现文字 + 圆角效果，那么用ConerRadius就可以了；如果要实现有图片的Button的圆角效果, 可以先参照上述方法先对图片进行处理。</p>
+</li>
+<li><p>对于简单阴影，可以使用CGContexRef/UIBezierPath绘制阴影路径并设置给<code>ShadowPath</code>来代替shadowOffset等属性设置阴影，下面是关于shadowPath的官方解释</p>
+<p><img src="http://www.chendongnan.com/markdown/Rendering/shadowPath.png" alt="shadowPath"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">imageView.layer.shadowColor = [UIColor grayColor].CGColor;</span><br><span class="line">imageView.layer.shadowOpacity = 1.0;</span><br><span class="line">imageView.layer.shadowRadius = 2.0;</span><br><span class="line">UIBezierPath *path = [UIBezierPath bezierPathWithRect:imageView.frame];</span><br><span class="line">imageView.layer.shadowPath = path.CGPath;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 
