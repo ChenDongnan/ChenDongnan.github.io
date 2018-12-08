@@ -40,7 +40,7 @@
 
   
   
-  <link href="../../../../lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="../../lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -48,29 +48,27 @@
 
 
 
-<link href="../../../../lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="../../lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="../../../../css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="../../../../images/apple-touch-icon-next.png?v=5.1.4">
+<link href="../../css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="../../../../favicon.ico?v=5.1.4">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../images/apple-touch-icon-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="../../../../favicon.ico?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon.ico?v=5.1.4">
 
 
-  <link rel="mask-icon" href="../../../../images/logo.svg?v=5.1.4" color="#222">
+  <link rel="icon" type="image/png" sizes="16x16" href="../../favicon.ico?v=5.1.4">
 
 
+  <link rel="mask-icon" href="../../images/logo.svg?v=5.1.4" color="#222">
 
 
 
-  <meta name="keywords" content="iOS,">
 
 
+  <meta name="keywords" content="Hexo, NexT">
 
 
 
@@ -79,25 +77,18 @@
 
 
 
-<meta name="description" content="趁着项目的短暂的空闲期，整理下最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。 基础知识 其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced techni">
-<meta name="keywords" content="iOS">
-<meta property="og:type" content="article">
-<meta property="og:title" content="iOS通过Xcode进行性能分析">
-<meta property="og:url" content="http://blog.chendongnan.com/2018/11/21/iOS通过Xcode进行性能分析/index.html">
+
+
+<meta name="description" content="陈栋楠的个人Blog，主要记录开发中的一些经验和心得">
+<meta property="og:type" content="website">
+<meta property="og:title" content="陈栋楠的Blog">
+<meta property="og:url" content="http://blog.chendongnan.com/categories/runtime/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="趁着项目的短暂的空闲期，整理下最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。 基础知识 其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced techni">
+<meta property="og:description" content="陈栋楠的个人Blog，主要记录开发中的一些经验和心得">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/instrument-coreAnimation.png">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/instrument-fps2.png">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/rendering.png">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/blending1.png">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/offscreeniOS9.png">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/offscreen2.PNG">
-<meta property="og:updated_time" content="2018-12-07T03:35:11.949Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS通过Xcode进行性能分析">
-<meta name="twitter:description" content="趁着项目的短暂的空闲期，整理下最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。 基础知识 其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced techni">
-<meta name="twitter:image" content="http://www.chendongnan.com/markdown/Rendering/instrument-coreAnimation.png">
+<meta name="twitter:title" content="陈栋楠的Blog">
+<meta name="twitter:description" content="陈栋楠的个人Blog，主要记录开发中的一些经验和心得">
 
 
 
@@ -127,13 +118,13 @@
 
 
 
-  <link rel="canonical" href="http://blog.chendongnan.com/2018/11/21/iOS通过Xcode进行性能分析/">
+  <link rel="canonical" href="http://blog.chendongnan.com/categories/runtime/">
 
 
 
 
 
-  <title>iOS通过Xcode进行性能分析 | 陈栋楠的Blog</title>
+  <title>分类: runtime | 陈栋楠的Blog</title>
   
 
 
@@ -152,7 +143,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -268,236 +259,53 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
+  
+  
+  
+  <div class="post-block category">
 
-  
+    <div id="posts" class="posts-collapse">
+      <div class="collection-title">
+        <h1>runtime<small>分类</small>
+        </h1>
+      </div>
 
-  
-  
-  
+      
+        
 
   <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.chendongnan.com">
+    <header class="post-header">
 
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="陈栋楠">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="../../../../uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="陈栋楠的Blog">
-    </span>
-
-    
-      <header class="post-header">
-
+      <h2 class="post-title">
         
+            <a class="post-title-link" href="../../2017/02/23/runtime之associatedObject/" itemprop="url">
+              
+                <span itemprop="name">runtime之AssosiatedObject</span>
+              
+            </a>
         
-          <h1 class="post-title" itemprop="name headline">iOS通过Xcode进行性能分析</h1>
-        
+      </h2>
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-21T15:59:28+08:00">
-                2018-11-21
-              </time>
-            
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2017-02-23T14:58:38+08:00" content="2017-02-23">
+          02-23
+        </time>
+      </div>
 
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="../../../../categories/性能优化/" itemprop="url" rel="index">
-                    <span itemprop="name">性能优化</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>趁着项目的短暂的空闲期，整理下最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。</p>
-<p><strong>基础知识</strong></p>
-<p>其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐<code>iOS Core Animation advanced techniques</code>这本书，阅读之后受益匪浅。</p>
-<p><strong><em>iOS 开发：绘制像素到屏幕</em></strong><br><a href="https://segmentfault.com/a/1190000000390012" target="_blank" rel="noopener">https://segmentfault.com/a/1190000000390012</a></p>
-<p><strong><em>深入理解 iOS Rendering Process</em></strong><br> <a href="https://juejin.im/post/5ad3f1cc6fb9a028d9379c5f?utm_source=gold_browser_extension" target="_blank" rel="noopener">https://juejin.im/post/5ad3f1cc6fb9a028d9379c5f?utm_source=gold_browser_extension</a></p>
-<a id="more"></a>
-<h2 id="性能检测"><a href="#性能检测" class="headerlink" title="性能检测"></a>性能检测</h2><p>既然要进行优化，那么首先需要做的就是检测我们项目中当前的性能状况，苹果的Xcode自带的Instrument就可以很好的完成这项工作，使用方法也很简单。这里以最新版<strong>Xcode10</strong>为例子,点击<code>Xcode-&gt;Open Developer Tool -&gt;Instruments</code>，启动Instruments, 如下图，点击Core Animation模块<br><img src="http://www.chendongnan.com/markdown/Rendering/instrument-coreAnimation.png" alt="instrument-coreanimation"><br>会出现如下面板，在All Processes这里可以选择你想要测试的项目<br>这里我选择了公司的项目，然后点击左上角的红圈，instrument就运行了，你会发现你手机上安装的该项目也会随之运行起来。<br><img src="http://www.chendongnan.com/markdown/Rendering/instrument-fps2.png" alt="instrument-debug"><br>然后就会出现上图，显示的是项目运行的FPS,以及GPU的利用率。当画面静止的时候，FPS为0。一般来说，FPS应当要大于45才不会显得卡顿。</p>
-<p>影响FPS的因素是多样的, 这里我们只考虑UI方面的因素，我们可以在Xcode10工具栏的<code>Debug -&gt; View Debugging -&gt; Rendering</code>进行查看<br><img src="http://www.chendongnan.com/markdown/Rendering/rendering.png" alt="rendering"><br>可以看到这里有很多Debug选项, 我们来看几个比较重要的</p>
-<p><strong>Color Blended Layers</strong><br>图层混色，就是多个视图的位置有重叠，视图本身又有透明度。重叠区域的每一个像素，GPU 需要算出一种新的颜色（混色）。混合计算的公式是：<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">贴一个苹果文档中的解释</span><br><span class="line"></span><br><span class="line">&gt;```objective-c</span><br><span class="line">&gt;The blend mode constants introduced in OS X v10.5   represent the Porter-Duff blend modes. The symbols in the   equations for these blend modes are:</span><br><span class="line">&gt;</span><br><span class="line">&gt;    * R is the premultiplied result</span><br><span class="line">&gt;</span><br><span class="line">&gt;    * S is the source color, and includes alpha</span><br><span class="line">&gt;</span><br><span class="line">&gt;    * D is the destination color, and includes alpha</span><br><span class="line">&gt;</span><br><span class="line">&gt;    * Ra, Sa, and Da are the alpha components of R, S, and D</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></p>
-<p>R是结果色，S是包含透明度的源色，D是包含透明度的目标色，Sa是原色的透明度</p>
-<p>如下图，绿色代表没有发生图层混色，红色代表发生了图层混色。</p>
-<p><img src="http://www.chendongnan.com/markdown/Rendering/blending1.png" alt="blending"></p>
-<p><strong>Color Hits Green and Misses Red</strong></p>
-<p>这个选项是用来检测图像是否有栅格化(Rasterize)的，这个概念听起来是一头雾水，百度之; <strong>栅格即像素，栅格化即将矢量图形转化为位图（栅格图像）</strong> 而Calayer有一个属性就是shouldRasterize</p>
-<p>同样贴一个苹果的文档</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">When true, the layer is rendered as a bitmap in its local coordinate  space (&quot;rasterized&quot;), then the bitmap is composited into the destination (with the minificationFilter and magnificationFilter  properties of the layer applied if the bitmap needs scaling). Rasterization occurs after the layer&apos;s filters and shadow effects are applied, but before the opacity modulation. As an implementation  detail the rendering engine may attempt to cache and reuse the bitmap from one frame to the next. (Whether it does or not will have no affect on the rendered output.) When false the layer is composited directly into the destination whenever possible (however, certain features of the compositing model may force rasterization, e.g. adding filters). Defaults to NO.</span><br></pre></td></tr></table></figure>
-<p>当这个属性被设置为YES时，即开启了光栅化。CALayer会被栅格化为bitmap,layer的阴影等效果也会被保存到bitmap中，光栅化后会将图层绘制到一个屏幕外的图像，然后这个图像将会被缓存起来并绘制到实际图层的 contents 和子图层，对于有很多的子图层或者有复杂的效果应用，这样做就会比重绘所有事务的所有帧来更加高效。但是光栅化原始图像需要时间，而且会消耗额外的内存。</p>
-<p>  故：当我们开启栅格化后,需要注意4点问题。</p>
-<ol>
-<li>如果我们更新已栅格化的layer,会造成大量的offscreen渲染。</li>
-</ol>
-<p>​       因此CALayer的栅格化选项的开启与否需要我们仔细衡量使用场景。只能用在图像内容不变的前提下的：</p>
-<ul>
-<li>用于避免静态内容的复杂特效的重绘,例如前面讲到的UIBlurEffect</li>
-<li>用于避免多个View嵌套的复杂View的重绘。</li>
-</ul>
-<p>​            而对于经常变动的内容,这个时候不要开启,否则会造成性能的浪费。</p>
-<p>​        例如我们日程经常打交道的TableViewCell,因为TableViewCell的重绘是很频繁的（因为Cell的复用）,如果Cell的内容不断变化,则Cell需要不断重绘,如果此时设置了cell.layer可栅格化。则会造成大量的offscreen渲染,降低图形性能。</p>
-<p>​        当然,合理利用的话,是能够得到不少性能的提高的,因为使用shouldRasterize后layer会缓存为Bitmap位图,对一些添加了shawdow等效果的耗费资源较多的静态内容进行缓存,能够得到性能的提升。</p>
-<p>​        2. 不要过度使用,系统限制了缓存的大小为2.5X Screen Size.</p>
-<p>​            如果过度使用,超出缓存之后,同样会造成大量的offscreen渲染。</p>
-<p>​        3. 被栅格化的图片如果超过100ms没有被使用,则会被移除</p>
-<p>​            因此我们应该只对连续不断使用的图片进行缓存。对于不常使用的图片缓存是没有意义,且耗费资源的。</p>
-<ol start="4">
-<li><p>当 UIView.layer.shouldRasterize = YES 时，生成的位图会缓存起来，如果TabelView 滑动的时候（UITableViewCell 复用)使用缓存直接命中，就显示绿色，反之，如果不命中，这时就显示红色。红色越多，性能越差.</p>
-<p>​</p>
-</li>
-</ol>
-<p><strong>Color Offscreen-Rendered Yellow</strong>  离屏渲染</p>
-<p>离屏渲染应该是经常听到的一次词了，简单来说就是GPU在当前屏幕缓冲区外新开辟一个缓冲区进行渲染操作，由于过程中需要切换context，性能消耗比较大。</p>
-<p>CoreGraphics的上下文绘制，drawRect绘制，layer圆角/边框/阴影/抗锯齿/光栅化等都可能导致离屏渲染</p>
-<p>如下图所示，呈现黄色的部分为发生了离屏渲染。</p>
-<p><img src="http://www.chendongnan.com/markdown/Rendering/offscreeniOS9.png" alt="offscreen">f</p>
-<p><img src="http://www.chendongnan.com/markdown/Rendering/offscreen2.PNG" alt="offscreen"></p>
-<p>经过测试，我发现以下情况</p>
-<ul>
-<li>在iOS9系统上, 对UIImageView/UILabel/Button,使用cornerRadius + masksToBounds/ClipToBounds会发生离屏渲染</li>
-<li>在iOS11上, 对UIImageView/UILabel,使用cornerRadius + masksToBounds/ClipToBounds并不会触发离屏渲染，但是在设置了shadow之后会触发离屏渲染。</li>
-</ul>
-<p>在查找了网上的一些资料后，了解到苹果在iOS9之后做了优化。</p>
-<p><strong>针对离屏渲染的优化</strong></p>
-<ul>
-<li>对于UIView和UIButton，只设置CornerRadius,无需设置ClipToBounds也可以实现圆角效果，不会触发离屏渲染。</li>
-</ul>
-<ul>
-<li><p>如果方便的情况下，让设计师直接提供裁切好圆角的图片</p>
-</li>
-<li><p>如果需要代码实现圆角，如果只需要支持iOS10及更新版本的机型，那么大胆的使用cornerRadius + masksToBounds也没有关系；</p>
-</li>
-<li><p>对于UIButton，可以使用BezelPath来实现圆角，在我们的项目中，给UIView添加了一个Category方法</p>
-<p>​</p>
-<p>​</p>
-</li>
-</ul>
-
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="../../../../tags/iOS/" rel="tag"># iOS</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="../../../../2017/08/22/start-time/" rel="next" title="项目启动时间优化">
-                <i class="fa fa-chevron-left"></i> 项目启动时间优化
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="../../26/从MVC到MVVM/" rel="prev" title="从MVC到MVVM">
-                从MVC到MVVM <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
+    </header>
   </article>
 
 
-
-    <div class="post-spread">
       
     </div>
+
   </div>
+  
+  
+  
+
+  
+
 
 
           </div>
@@ -505,10 +313,6 @@
 
 
           
-
-  
-
-
 
         </div>
         
@@ -529,21 +333,12 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image" src="../../../../uploads/avatar.jpg" alt="陈栋楠">
+              <img class="site-author-image" itemprop="image" src="../../uploads/avatar.jpg" alt="陈栋楠">
             
               <p class="site-author-name" itemprop="name">陈栋楠</p>
               <p class="site-description motion-element" itemprop="description">陈栋楠的个人Blog，主要记录开发中的一些经验和心得</p>
@@ -554,7 +349,7 @@
             
               <div class="site-state-item site-state-posts">
               
-                <a href="../../../../archives">
+                <a href="../../archives">
               
                   <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">日志</span>
@@ -566,8 +361,8 @@
               
               
               <div class="site-state-item site-state-categories">
-                <a href="../../../../categories/index.html">
-                  <span class="site-state-item-count">2</span>
+                <a href="../index.html">
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -577,7 +372,7 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="../../../../tags/index.html">
+                <a href="../../tags/index.html">
                   <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
@@ -601,22 +396,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#性能检测"><span class="nav-number">1.</span> <span class="nav-text">性能检测</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -708,57 +487,53 @@
 
   
   
-    <script type="text/javascript" src="../../../../lib/jquery/index.js?v=2.1.3"></script>
+    <script type="text/javascript" src="../../lib/jquery/index.js?v=2.1.3"></script>
   
 
   
   
-    <script type="text/javascript" src="../../../../lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+    <script type="text/javascript" src="../../lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
   
 
   
   
-    <script type="text/javascript" src="../../../../lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+    <script type="text/javascript" src="../../lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
   
 
   
   
-    <script type="text/javascript" src="../../../../lib/velocity/velocity.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="../../lib/velocity/velocity.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="../../../../lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="../../lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="../../../../lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+    <script type="text/javascript" src="../../lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
   
-
-
-  
-
-
-  <script type="text/javascript" src="../../../../js/src/utils.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="../../../../js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-  
-  <script type="text/javascript" src="../../../../js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="../../../../js/src/post-details.js?v=5.1.4"></script>
-
 
 
   
 
 
-  <script type="text/javascript" src="../../../../js/src/bootstrap.js?v=5.1.4"></script>
+  <script type="text/javascript" src="../../js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="../../js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="../../js/src/bootstrap.js?v=5.1.4"></script>
 
 
 
