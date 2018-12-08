@@ -94,7 +94,8 @@
 <meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/iOS9离屏渲染.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/iOS11离屏渲染.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/shadowPath.png">
-<meta property="og:updated_time" content="2018-12-08T07:34:52.712Z">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/CALayer.png">
+<meta property="og:updated_time" content="2018-12-08T09:09:01.756Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS UI性能调优">
 <meta name="twitter:description" content="趁着项目的短暂的空闲期，把最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。 基础知识 其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced techniqu">
@@ -409,7 +410,7 @@
 </ol>
 <p><strong>Color Offscreen-Rendered Yellow  离屏渲染</strong></p>
 <p>离屏渲染应该是经常听到的一次词了，简单来说就是GPU在当前屏幕缓冲区外新开辟一个缓冲区进行渲染操作，由于过程中需要切换context，性能消耗比较大。</p>
-<p>CoreGraphics的上下文绘制，drawRect绘制，layer圆角/边框/阴影/抗锯齿/光栅化等都可能导致离屏渲染</p>
+<p>CoreGraphics的上下文绘制，drawRect绘制，layer圆角/边框/阴影/抗锯齿/光栅化等都可能导致离屏渲染 (Core Graphics 的绘制API出发的离屏渲染不是那种GPU的离屏渲染，使用Core Graphics 绘制 API 是在 CPU 上执行，触发的是 CPU 的离屏渲染。)</p>
 <p>在Debug选项中选中<code>Color Offscreen-Rendered Yellow</code>,就可以检测视图的离屏渲染情况。如下图所示，呈现黄色的部分为发生了离屏渲染。</p>
 <p><img src="http://www.chendongnan.com/markdown/Rendering/iOS9离屏渲染.png" alt="offscreen" title="iOS 9"></p>
 <p><img src="http://www.chendongnan.com/markdown/Rendering/iOS11离屏渲染.png" alt="offscreen" title="iOS11">经过真机测试，发现以下情况</p>
@@ -436,6 +437,14 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">imageView.layer.shadowColor = [UIColor grayColor].CGColor;</span><br><span class="line">imageView.layer.shadowOpacity = 1.0;</span><br><span class="line">imageView.layer.shadowRadius = 2.0;</span><br><span class="line">UIBezierPath *path = [UIBezierPath bezierPathWithRect:imageView.frame];</span><br><span class="line">imageView.layer.shadowPath = path.CGPath;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
+<p>以上就是对于UI的一些性能优化方法。 本来文章到这里结束了，不过想了想还是有个问题没明白，为什么设置圆角或者阴影，就会导致离屏渲染的出现？ 下面再简单的记录一下</p>
+<p><strong>CALayer</strong></p>
+<p>首先还是要提一下<code>CALayer</code>的概念</p>
+<table><br><br>​    <tr><br><br>​        <td><center><br><br>​        <img src="http://www.chendongnan.com/markdown/Rendering/CALayer.png"><br><br>​        </center><br><br>​        <center><br><br>​        出自 WWDC 2012: iOS App Performance: Graphics and Animations<br><br>​        </center></td><br><br>​    </tr><tr><br><br></tr></table>
+
+<blockquote>
+<p>Setting the radius to a value greater than 0.0 causes the layer to begin drawing rounded corners on its background. By default, the corner radius does not apply to the image in the layer’s contents property; it applies only to the background color and border of the layer. However, setting the masksToBounds property to YES causes the content to be clipped to the rounded corners.</p>
+</blockquote>
 
       
     </div>
@@ -568,7 +577,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="../../../../categories/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
