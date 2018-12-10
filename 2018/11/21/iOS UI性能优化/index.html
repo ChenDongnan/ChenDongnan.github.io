@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="趁着项目的短暂的空闲期，把最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。 基础知识 其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced techniqu">
+<meta name="description" content="趁着项目的短暂的空闲期，把最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。 ##基础知识## 其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced tech">
 <meta name="keywords" content="iOS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS UI性能调优">
 <meta property="og:url" content="http://blog.chendongnan.com/2018/11/21/iOS UI性能优化/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="趁着项目的短暂的空闲期，把最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。 基础知识 其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced techniqu">
+<meta property="og:description" content="趁着项目的短暂的空闲期，把最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。 ##基础知识## 其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced tech">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/instrument-coreAnimation.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/instrument-fps2.png">
@@ -94,11 +94,10 @@
 <meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/iOS9离屏渲染.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/iOS11离屏渲染.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/shadowPath.png">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/CALayer.png">
-<meta property="og:updated_time" content="2018-12-08T09:09:01.756Z">
+<meta property="og:updated_time" content="2018-12-10T02:22:06.327Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS UI性能调优">
-<meta name="twitter:description" content="趁着项目的短暂的空闲期，把最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。 基础知识 其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced techniqu">
+<meta name="twitter:description" content="趁着项目的短暂的空闲期，把最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。 ##基础知识## 其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced tech">
 <meta name="twitter:image" content="http://www.chendongnan.com/markdown/Rendering/instrument-coreAnimation.png">
 
 
@@ -374,7 +373,7 @@
 
       
         <p>趁着项目的短暂的空闲期，把最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。</p>
-<p><strong>基础知识</strong></p>
+<p>##基础知识##</p>
 <p>其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐<code>iOS Core Animation advanced techniques</code>这本书，阅读之后受益匪浅。</p>
 <p><strong><em>iOS 开发：绘制像素到屏幕</em></strong><br><a href="https://segmentfault.com/a/1190000000390012" target="_blank" rel="noopener">https://segmentfault.com/a/1190000000390012</a></p>
 <p><strong><em>深入理解 iOS Rendering Process</em></strong><br> <a href="https://juejin.im/post/5ad3f1cc6fb9a028d9379c5f?utm_source=gold_browser_extension" target="_blank" rel="noopener">https://juejin.im/post/5ad3f1cc6fb9a028d9379c5f?utm_source=gold_browser_extension</a></p>
@@ -389,6 +388,7 @@
 <ul>
 <li>如果label中的内容包含中文，label实际渲染区域要大于label的size，最外层会多一个subLayer，所以即使设置背景色不透明，仍然会发生混色。因此，还需要添加masksToBounds = YES</li>
 <li>UIImageView不仅需要自身容器不透明，并且imageView包含的内容图片也必须是不透明的</li>
+<li>如果使用的是CALayer，要把opaque属性设置成YES(默认是NO)。如果是用的UIView, opaque属性默认是YES。</li>
 </ul>
 <p><strong>Color Hits Green and Misses Red</strong></p>
 <p>这个选项是用来检测图像是否有光栅化(Rasterize)的，这个概念听起来是一头雾水，百度之; <strong>光栅化即将矢量图形转化为位图（栅格图像）</strong> , Calayer有一个属性shouldRasterize，就是用来决定是否开启光栅化的。</p>
@@ -437,14 +437,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">imageView.layer.shadowColor = [UIColor grayColor].CGColor;</span><br><span class="line">imageView.layer.shadowOpacity = 1.0;</span><br><span class="line">imageView.layer.shadowRadius = 2.0;</span><br><span class="line">UIBezierPath *path = [UIBezierPath bezierPathWithRect:imageView.frame];</span><br><span class="line">imageView.layer.shadowPath = path.CGPath;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<p>以上就是对于UI的一些性能优化方法。 本来文章到这里结束了，不过想了想还是有个问题没明白，为什么设置圆角或者阴影，就会导致离屏渲染的出现？ 下面再简单的记录一下</p>
-<p><strong>CALayer</strong></p>
-<p>首先还是要提一下<code>CALayer</code>的概念</p>
-<table><br><br>​    <tr><br><br>​        <td><center><br><br>​        <img src="http://www.chendongnan.com/markdown/Rendering/CALayer.png"><br><br>​        </center><br><br>​        <center><br><br>​        出自 WWDC 2012: iOS App Performance: Graphics and Animations<br><br>​        </center></td><br><br>​    </tr><tr><br><br></tr></table>
-
-<blockquote>
-<p>Setting the radius to a value greater than 0.0 causes the layer to begin drawing rounded corners on its background. By default, the corner radius does not apply to the image in the layer’s contents property; it applies only to the background color and border of the layer. However, setting the masksToBounds property to YES causes the content to be clipped to the rounded corners.</p>
-</blockquote>
+<p>以上就是对于UI的一些性能优化方法。 </p>
 
       
     </div>
