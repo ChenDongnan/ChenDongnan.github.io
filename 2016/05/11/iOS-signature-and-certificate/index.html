@@ -90,8 +90,10 @@
 <meta property="og:image" content="http://www.chendongnan.com/markdown/signature/sign0.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/signature/plan1.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/signature/plan2.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/signature/plan3.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/signature/plan4.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/signature/signature.png">
-<meta property="og:updated_time" content="2018-12-24T07:23:00.995Z">
+<meta property="og:updated_time" content="2018-12-24T10:05:49.228Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS签名原理学习记录">
 <meta name="twitter:description" content="iOS签名机制一直是很困扰我的一件事，真机测试或者打包的时候，经常会遇到各种情况的报错，CertificateRequest,p12,Provision Profile,Code Sign五花八门的，所以在这里系统地记录一下相关知识，不再一知半解地去处理这些问题。">
@@ -411,10 +413,48 @@
 <li>在安装时，通过iOS系统内置的公钥A，去解密第三步用私钥A加密的数据，来验证证书的数字签名是否正确</li>
 <li>验证证书后，确保了公钥L是苹果认证的，再用公钥L去验证App的签名,这里就间接验证了这个app的安装行为是经过苹果允许的（这里只验证安装行为，不验证App是否被改动，因为在开发阶段App是不断变化的）</li>
 </ol>
+<p>上述流程解决了开发版本App需要经过苹果认证，但是还没有解决可能存在的滥用问题，于是苹果又加了两个限制，一是限制在苹果后台注册过的设备才可以安装，二是限制签名只能针对某个具体App。</p>
+<p>在上述第三步用私钥A签名公钥L之外，也可以加上其他数据，这些数据都可以保证是经过苹果官方认证的，不会被篡改。</p>
+<p><img src="http://www.chendongnan.com/markdown/signature/plan3.png" alt="plan3"></p>
+<p>把AppID和允许安装的设备ID列表等数据，在第三步的时候和公钥L一起组成证书，用私钥A进行签名，在第五步 r如果通过验证,就可以确定拿到的设备ID列表/AppID/公钥L是经过苹果认证的，这样就避免了滥用。</p>
+<h2 id="最终流程"><a href="#最终流程" class="headerlink" title="最终流程"></a>最终流程</h2><p>除了上述情况外，苹果还想要控制App里的iCloud/Push等等，苹果把这些权限开关统一称为Entitlements，它也需要通过签名授权。</p>
+<p>把各种信息塞入到证书是不符合规范的，因此，苹果又搞了个叫做Provision Profile的东西，它就包括了证书以及上述提到的所有额外信息以及信息的签名。</p>
+<p>所以整个流程又变为</p>
+<p><img src="http://www.chendongnan.com/markdown/signature/plan4.png" alt="plan4"></p>
+<p>再来看一下整个流程</p>
 <ol>
-<li><h2 id="第1步对应的是keychain里的’’从证书颁发机构请求证书’’"><a href="#第1步对应的是keychain里的’’从证书颁发机构请求证书’’" class="headerlink" title="第1步对应的是keychain里的’’从证书颁发机构请求证书’’"></a>第1步对应的是keychain里的’’从证书颁发机构请求证书’’</h2></li>
+<li>在mac上生成一对公私钥，图里标示为公钥L，私钥L，L代表Local的意思</li>
+<li>苹果自己也生成一对公私钥，私钥在苹果后台，公钥在每个iOS设备上，标示为公钥L，私钥A， A代表Apple</li>
+<li>把公钥L传给苹果后台，用私钥A对公钥L进行签名，得到一份包含了公钥L以及其签名的数据，称为证书。</li>
+<li>在苹果后台申请AppID，配置好设备ID和App的各项权限，再加上第三部生成的证书，组成的数据用私钥A签名后，把数据和签名一起组成一个Provision Profile文件，下载到本地。</li>
+<li>在开发时，编译完一个App后，用私钥L对App进行签名，同时把第四步得到的Probvision Profile文件打包进App里，文件名为embeded.mobileprovision，把App安装到手机上。</li>
+<li>在安装时，iOS系统去的证书，通过私钥A去验证embedded.mobileprovision的数字签是否正确，证书签名也会验证一遍</li>
+<li>确保embedded.mobileprovision里的数据都是苹果授权的之后，就可以取出数据，来验证数据是否符合要求如设备ID是否在设备列表上，AppID是否对应，权限开关是否对应等。</li>
+</ol>
+<h2 id="相关操作"><a href="#相关操作" class="headerlink" title="相关操作"></a>相关操作</h2><p>上面的步骤对应我们的具体操作和概念如下：</p>
+<ol>
+<li>第1步对应的是在Mac上的keychain中，<strong>从证书颁发机构请求证书</strong>。这里就生成了公钥L和私钥L，保存的CertificateSigningRequest就是公钥，私钥则保存在本地电脑中。</li>
 </ol>
 <p><img src="http://www.chendongnan.com/markdown/signature/signature.png" alt="signature1"></p>
+<ol start="2">
+<li>第2步是由苹果处理</li>
+<li>第3步对应把CertificateSigningRequest传到苹果后台生成证书，并下载到本地。这是本地有两个证书，一个是第一步生成的，一个是这边下载的。keychain会这两个证书关联起来，因为他们的公私钥是对应的。在Xcode选择证书时，实际上会找到keychain里对应的私钥去签名。这里私钥只有生成它的Mac本地有，如果别的Mac也想要编译签名这个App，就需要把私钥导出给其他Mac使用。在keychain里导出私钥会生成一个.p12文件，其他Mac打开这个文件后就导入了这个私钥。</li>
+<li>这一步是在苹果开发者官网操作的，配置AppID/权限/设备等，最后下载Provision Profile文件。</li>
+<li>第 5 步 Xcode 会通过第 3 步下载回来的证书（存着公钥），在本地找到对应的私钥（第一步生成的），用本地私钥去签名 App，并把 Provisioning Profile 文件命名为 embedded.mobileprovision 一起打包进去。这里对 App 的签名数据保存分两部分，Mach-O 可执行文件会把签名直接写入这个文件里，其他资源文件则会保存在 _CodeSignature 目录下。</li>
+<li>第 6 – 7 步的打包和验证都是 Xcode 和 iOS 系统自动做的事。</li>
+</ol>
+<h2 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h2><ol>
+<li><strong>证书</strong>：包含公钥或者私钥，由其他机构对其签名组成的数据包</li>
+<li><strong>Entitlements</strong>：包含了App权限开关信息</li>
+<li><strong>CertificateSigningRequest</strong> :本地公钥</li>
+<li><strong>p12</strong> : 本地私钥，可以导入到其他电脑</li>
+<li><strong>Provisioning Profile</strong>：包含了 证书 / Entitlements 等数据，并由苹果后台私钥签名的数据包。</li>
+</ol>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>以上的流程是以开发包为例子的，In-house和ad-hoc流程也是大同小异的。</p>
+<p>而 AppStore 的签名验证方式有些不一样，前面提到的最简单的签名方式，苹果在后台直接用私钥签名 App 就可以了，实际上苹果确实是这样做的，如果去下载一个 AppStore 的安装包，会发现它里面是没有 embedded.mobileprovision 文件的，也就是它安装和启动的流程是不依赖这个文件，验证流程也就跟上述几种类型不一样了。</p>
+<p>据猜测，因为上传到 AppStore 的包苹果会重新对内容加密，原来的本地私钥签名就没有用了，需要重新签名，从 AppStore 下载的包苹果也并不打算控制它的有效期，不需要内置一个 embedded.mobileprovision 去做校验，直接在苹果用后台的私钥重新签名，iOS 安装时用本地公钥验证 App 签名就可以了。</p>
+<p>那为什么发布 AppStore 的包还是要跟开发版一样搞各种证书和 Provisioning Profile？猜测因为苹果想做统一管理，Provisioning Profile 里包含一些权限控制，AppID 的检验等，苹果不想在上传 AppStore 包时重新用另一种协议做一遍这些验证，就不如统一把这部分放在 Provisioning Profile 里，上传 AppStore 时只要用同样的流程验证这个 Provisioning Profile 是否合法就可以了。</p>
+<p>所以 App 上传到 AppStore 后，就跟你的 证书 / Provisioning Profile 都没有关系了，无论他们是否过期或被废除，都不会影响 AppStore 上的安装包。</p>
 
       
     </div>
@@ -591,7 +631,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#对称加密"><span class="nav-number">1.</span> <span class="nav-text">对称加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非对称加密"><span class="nav-number">2.</span> <span class="nav-text">非对称加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数字签名"><span class="nav-number">3.</span> <span class="nav-text">数字签名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案一"><span class="nav-number">4.</span> <span class="nav-text">方案一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装开发版本App"><span class="nav-number">5.</span> <span class="nav-text">安装开发版本App</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第1步对应的是keychain里的’’从证书颁发机构请求证书’’"><span class="nav-number">6.</span> <span class="nav-text">第1步对应的是keychain里的’’从证书颁发机构请求证书’’</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#对称加密"><span class="nav-number">1.</span> <span class="nav-text">对称加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非对称加密"><span class="nav-number">2.</span> <span class="nav-text">非对称加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数字签名"><span class="nav-number">3.</span> <span class="nav-text">数字签名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案一"><span class="nav-number">4.</span> <span class="nav-text">方案一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装开发版本App"><span class="nav-number">5.</span> <span class="nav-text">安装开发版本App</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最终流程"><span class="nav-number">6.</span> <span class="nav-text">最终流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关操作"><span class="nav-number">7.</span> <span class="nav-text">相关操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关概念"><span class="nav-number">8.</span> <span class="nav-text">相关概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">9.</span> <span class="nav-text">其他</span></a></li></ol></div>
             
 
           </div>
