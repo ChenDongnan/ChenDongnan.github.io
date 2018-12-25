@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="../../../../lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="../../../../lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="../../../../css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../../images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../../favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="../../../../favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="../../../../images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="其他,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="LinuxLinux是一套免费使用和自由传播的类Unix操作系统（MacOS也是）。 它的基本思想是：  一切皆文件 除了普通文件，诸如目录、字符设备、块设备、套接字等在Unix/Linux中也都是以文件来对待，虽然类型不同，但是对其提供的却是同一套操作界面。不同的文件根据类型或用途放在不同的目录下。 由目的单一、短小、精悍的程序组成 通过短小、简单的程序保障linux的高效。 文本文件保存配置信">
+<meta name="keywords" content="其他">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 常用命令">
+<meta property="og:url" content="http://blog.chendongnan.com/2015/12/21/Linux-Command/index.html">
+<meta property="og:site_name" content="陈栋楠的Blog">
+<meta property="og:description" content="LinuxLinux是一套免费使用和自由传播的类Unix操作系统（MacOS也是）。 它的基本思想是：  一切皆文件 除了普通文件，诸如目录、字符设备、块设备、套接字等在Unix/Linux中也都是以文件来对待，虽然类型不同，但是对其提供的却是同一套操作界面。不同的文件根据类型或用途放在不同的目录下。 由目的单一、短小、精悍的程序组成 通过短小、简单的程序保障linux的高效。 文本文件保存配置信">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-12-25T02:51:12.129Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux 常用命令">
+<meta name="twitter:description" content="LinuxLinux是一套免费使用和自由传播的类Unix操作系统（MacOS也是）。 它的基本思想是：  一切皆文件 除了普通文件，诸如目录、字符设备、块设备、套接字等在Unix/Linux中也都是以文件来对待，虽然类型不同，但是对其提供的却是同一套操作界面。不同的文件根据类型或用途放在不同的目录下。 由目的单一、短小、精悍的程序组成 通过短小、简单的程序保障linux的高效。 文本文件保存配置信">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.chendongnan.com/2015/12/21/Linux-Command/">
+
+
+
+
+
+  <title>Linux 常用命令 | 陈栋楠的Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">陈栋楠的Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.chendongnan.com">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="陈栋楠">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="../../../../uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="陈栋楠的Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux 常用命令</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-12-21T11:23:26+08:00">
+                2015-12-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="../../../../categories/工具/" itemprop="url" rel="index">
+                    <span itemprop="name">工具</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h2><p>Linux是一套免费使用和自由传播的类Unix操作系统（MacOS也是）。 它的基本思想是：</p>
+<ol>
+<li>一切皆文件 除了普通文件，诸如目录、字符设备、块设备、套接字等在Unix/Linux中也都是以文件来对待，虽然类型不同，但是对其提供的却是同一套操作界面。不同的文件根据类型或用途放在不同的目录下。</li>
+<li>由目的单一、短小、精悍的程序组成 通过短小、简单的程序保障linux的高效。</li>
+<li>文本文件保存配置信息 使用简单的文件编辑器就可以完成配置、更改配置。</li>
+<li>尽量避免捕获用户接口 一个程序一旦开始运行，就不需要用户进行任何操作，尽量不和用户交互。</li>
+</ol>
+<h2 id="shell"><a href="#shell" class="headerlink" title="shell"></a>shell</h2><p>shell翻译过来是壳的意思，它是包裹在linux内核外层的，一个可通过一系列的linux命令对操作系统发出相关指令的人机界面。 shell可以通过其条件语句和循环语句等，把一系列linux命令结合在一起，形成一个相当于面向过程的程序—shell script，来实现一些较为复杂的功能。</p>
+<a id="more"></a>
+<ul>
+<li>linux目录操作命令</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   ------目录的增、删、改、查------</span><br><span class="line">   cd, pwd, ls, mkdir, mv, ls(du, df, tree)</span><br><span class="line">   切换目录,跟window的使用类似</span><br><span class="line">   cd </span><br><span class="line"></span><br><span class="line">显示目录的详细信息</span><br><span class="line"></span><br><span class="line">ls -ld</span><br><span class="line"></span><br><span class="line">直接切换到根目录</span><br><span class="line"></span><br><span class="line">cd /</span><br><span class="line"></span><br><span class="line">在根目录下创建oracle目录</span><br><span class="line"></span><br><span class="line">mkdir /oracle</span><br><span class="line"></span><br><span class="line">ls -ld /oracle</span><br><span class="line"></span><br><span class="line">drwxr-xr-x 2 root root 4096 Jun 21 15:00 /oracle</span><br><span class="line"></span><br><span class="line"> 一次创建多个目录</span><br><span class="line"></span><br><span class="line">mkdir -p /u01/app/oracle</span><br><span class="line"></span><br><span class="line">显示当前文件夹的路径</span><br><span class="line"></span><br><span class="line">pwd </span><br><span class="line"></span><br><span class="line">删除oracle目录时显示确认</span><br><span class="line"></span><br><span class="line">rm -r /oracle</span><br><span class="line"></span><br><span class="line">删除oracle目录时不显示确认</span><br><span class="line"></span><br><span class="line">rm -rf /oracle</span><br><span class="line"></span><br><span class="line">把oracle目录名修改成oracle1</span><br><span class="line"></span><br><span class="line">mv /oracle oracle1</span><br><span class="line"></span><br><span class="line">把oracle目录移动到/tmp目录下</span><br><span class="line"></span><br><span class="line">mv /oracle /tmp</span><br><span class="line"></span><br><span class="line">显示某个目录的详细信息</span><br><span class="line"></span><br><span class="line">ls oracle -ld</span><br><span class="line"></span><br><span class="line">相看磁盘空间</span><br><span class="line"></span><br><span class="line">df -h </span><br><span class="line"></span><br><span class="line">df /tmp</span><br><span class="line"></span><br><span class="line">以树形式显示tmp目录的结构</span><br><span class="line"></span><br><span class="line">tree /tmp</span><br><span class="line"></span><br><span class="line">查看tmp文件夹下所有文件的路径</span><br><span class="line"></span><br><span class="line">du /tmp</span><br><span class="line"></span><br><span class="line">拷贝文件到某个目录</span><br><span class="line"></span><br><span class="line">cp source dest</span><br></pre></td></tr></table></figure>
+<ul>
+<li>linux文件操作命令</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">------文件增，删，改，查------</span><br><span class="line">touch, cat, more, less, tail, head, rm -f, mv, cp, vi</span><br><span class="line">创建test文本文档</span><br><span class="line">touch test</span><br><span class="line"></span><br><span class="line">vi打开文件模式下，显示行号命令</span><br><span class="line">:set number</span><br><span class="line"></span><br><span class="line">查看test文档的内容</span><br><span class="line">cat test</span><br><span class="line"></span><br><span class="line">查看test文档的内容前10行</span><br><span class="line">head -10 test</span><br><span class="line"></span><br><span class="line">查看test文档的内容最后10行</span><br><span class="line">tail -10 test</span><br><span class="line"></span><br><span class="line">网络登录本地机器</span><br><span class="line">ssh localhost</span><br><span class="line"></span><br><span class="line">实时监控登录信息</span><br><span class="line">tail -f /var/log/messages</span><br><span class="line">tail -f /var/log/secure</span><br><span class="line"></span><br><span class="line">分页显示test文本内容，按空格键显示下一页，按q退出</span><br><span class="line">more test</span><br><span class="line"></span><br><span class="line">分页显示test文本内容，按空格键显示下一页，按q退出，按上下键进行上翻和下翻</span><br><span class="line">less test</span><br><span class="line"></span><br><span class="line">test文件重命名为test1</span><br><span class="line">mv test test1</span><br><span class="line"></span><br><span class="line">把test文件移动到上一级目录下</span><br><span class="line">mv test ../</span><br><span class="line"></span><br><span class="line">把上一级文件test移动到当前目录</span><br><span class="line">mv ../test .</span><br><span class="line"></span><br><span class="line">把test1拷贝成test2</span><br><span class="line">cp test1 test2</span><br><span class="line"></span><br><span class="line">把一个目录拷贝成另一个目录</span><br><span class="line">cp -r hh dd</span><br><span class="line"></span><br><span class="line">删除test1文件并提示是否删除</span><br><span class="line">rm test1</span><br><span class="line"></span><br><span class="line">强制删除test1文件</span><br><span class="line">rm -f test1</span><br><span class="line"></span><br><span class="line">删除当前目录下所有文件</span><br><span class="line">rm -rf *</span><br><span class="line"></span><br><span class="line">备份某个文件</span><br><span class="line">cp test test.bak</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">3. vi操作文件常用方式</span><br><span class="line">查看模式：</span><br><span class="line">G(shift+g)　　 跳到文件尾部</span><br><span class="line">gg　　　　　　  跳到文件首部</span><br><span class="line">/             从文本尾部开始查找某个文本</span><br><span class="line">?             从文本首部开始查找某个文本</span><br><span class="line">dd            删除一行</span><br><span class="line">ndd           删除多行</span><br><span class="line">yy            复制一行</span><br><span class="line">nyy           复制多行</span><br><span class="line">p             粘贴一行或多行</span><br><span class="line">u             撤消上一个操作</span><br><span class="line"></span><br><span class="line">冒号模式 </span><br><span class="line">:w            保存</span><br><span class="line">:wq　　　      保存并退出</span><br><span class="line">:x            保存并退出</span><br><span class="line">:q!           不保存退出 </span><br><span class="line">:wq!          强制保存并退出 </span><br><span class="line">:set number   显示行号</span><br><span class="line"></span><br><span class="line">编辑模式：</span><br><span class="line">a             当前字符的后面插入 </span><br><span class="line">i             当前位置插入 </span><br><span class="line">o             当前行后面追加一个新行后插入 </span><br><span class="line"></span><br><span class="line">不同模式之间切换ESC</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">4. linux用户和组操作</span><br><span class="line">id oracle                 查看用户信息</span><br><span class="line">cd /home </span><br><span class="line">ls -a</span><br><span class="line">cat /etc/passwd</span><br><span class="line">cat /etc/shodaw</span><br><span class="line"></span><br><span class="line">useradd oracle            创建oracle用户</span><br><span class="line">useradd -u 501 oracle </span><br><span class="line">useradd -u 501 -g root oracle</span><br><span class="line">useradd -h                查看useradd命令简略帮助</span><br><span class="line">man useradd               查看useradd命令详细帮助，</span><br><span class="line">                          直接打开帮助文件，q退出</span><br><span class="line"></span><br><span class="line">usermod -u 502 oracle     修改用户信息</span><br><span class="line">usermod -g root oracle</span><br><span class="line"></span><br><span class="line">userdel -r oracle         删除oracle用户</span><br><span class="line"></span><br><span class="line">passwd oracle             修改用户密码</span><br><span class="line"></span><br><span class="line">cat /etc/group            查看组信息</span><br><span class="line"></span><br><span class="line">groupadd -g 501 dba       添加组信息</span><br><span class="line"></span><br><span class="line">groupdel dba              删除组，如果组下面有用户，要先删除用户</span><br><span class="line"></span><br><span class="line">groupmod -g 502 dba       修改组的gid</span><br><span class="line"></span><br><span class="line">useradd -u 501  -g oinstall -G dba oracle      给用户添加多个组</span><br><span class="line"></span><br><span class="line">su - oracle         切换用户并切换用户的配置文件              </span><br><span class="line"></span><br><span class="line">su oracle           切换用户但不切换用户配置文件</span><br><span class="line"></span><br><span class="line">权限设置</span><br><span class="line">r     w     x</span><br><span class="line">4     2     1</span><br><span class="line">rwx   r-x   r-x</span><br><span class="line">user　group others </span><br><span class="line">7     5     5</span><br><span class="line">root  root  others</span><br><span class="line"></span><br><span class="line">chown oracle:oinstall /oracle     修改某个目录权限</span><br><span class="line">chown -R oracle:oinstall /oracle  修改某个目录及其子目录权限</span><br><span class="line"></span><br><span class="line">ls -ld /oracle                    查看目录权限</span><br><span class="line"></span><br><span class="line">chmod -R 777 /oracle              设置目录为最大权限</span><br><span class="line">chmod -R 755 /oracle              修改oracle目录及其子目录权限为755</span><br><span class="line"></span><br><span class="line">chown用法</span><br><span class="line">用来更改某个目录或文件的用户名和用户组的</span><br><span class="line">chown 用户名:组名 文件路径（可以是就对路径也可以是相对路径）</span><br><span class="line">例1：chown root:root /tmp/tmp1</span><br><span class="line">就是把tmp下的tmp1的用户名和用户组改成root和root（只修改了tmp1的属组）.</span><br><span class="line">例2：chown -R root:root /tmp/tmp1</span><br><span class="line">就是把tmp下的tmp1下的所有文件的属组都改成root和root。</span><br><span class="line"></span><br><span class="line">chmod用法</span><br><span class="line">用来修改某个目录或文件的访问权限。</span><br><span class="line">语法：chmod [who] [+ | - | =] [mode] 文件名</span><br><span class="line"> 命令中各选项的含义为： </span><br><span class="line">操作对象who可是下述字母中的任一个或者它们的组合：</span><br><span class="line"> 　　u 表示“用户（user）”，即文件或目录的所有者。</span><br><span class="line"> 　　g 表示“同组（group）用户”，即与文件属主有相同组ID的所有用户。</span><br><span class="line"> 　　o 表示“其他（others）用户”。</span><br><span class="line"> 　　a 表示“所有（all）用户”。它是系统默认值。</span><br><span class="line"> 操作符号可以是：</span><br><span class="line"> 　　+ 添加某个权限。</span><br><span class="line"> 　　- 取消某个权限。</span><br><span class="line"> 　　= 赋予给定权限并取消其他所有权限（如果有的话）。</span><br><span class="line"> 设置 mode 所表示的权限可用下述字母的任意组合：</span><br><span class="line"> 　　r 可读。</span><br><span class="line"> 　　w 可写。</span><br><span class="line">   　x 可执行。</span><br><span class="line"> 　　X 只有目标文件对某些用户是可执行的或该目标文件是目录时才追加x 属性。</span><br><span class="line"> 　　s 在文件执行时把进程的属主或组ID置为该文件的文件属主。</span><br><span class="line">       方式“u＋s”设置文件的用户ID位，“g＋s”设置组ID位。</span><br><span class="line"> 　　t 保存程序的文本到交换设备上。</span><br><span class="line"> 　　u 与文件属主拥有一样的权限。</span><br><span class="line"> 　　g 与和文件属主同组的用户拥有一样的权限。</span><br><span class="line"> 　　o 与其他用户拥有一样的权限。</span><br><span class="line"> 文件名：以空格分开的要改变权限的文件列表，支持通配符。</span><br><span class="line"> </span><br><span class="line">5. linux软件的安装、解压缩，yum </span><br><span class="line">file a.tar.gz</span><br><span class="line"></span><br><span class="line">*.tar</span><br><span class="line">tar -xvf a.tar</span><br><span class="line">tar cvf a.tar a/</span><br><span class="line"></span><br><span class="line">*.tar.gz</span><br><span class="line">tar -zcvf a.tar.gz a</span><br><span class="line">tar -zxvf a.tar.gz</span><br><span class="line"></span><br><span class="line">*.gz</span><br><span class="line">gunzip a.gz</span><br><span class="line">gzip -6 a a.gz</span><br><span class="line"></span><br><span class="line">*.bz2</span><br><span class="line">tar -jxvf a.bz2</span><br><span class="line">tar -cjvf a a.bz2 </span><br><span class="line"></span><br><span class="line">*.cpio</span><br><span class="line">cpio -idmv &lt; a.cpio</span><br><span class="line"></span><br><span class="line">*.cpio.gz</span><br><span class="line">zcat a.cpio.gz | cpio -idmv</span><br><span class="line"></span><br><span class="line">*.zip</span><br><span class="line">unzip a.zip</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">安装软件</span><br><span class="line">rpm -ivh file.rpm</span><br><span class="line"></span><br><span class="line">过滤安装好的带有zsh字符的软件</span><br><span class="line">rpm -qa|grep zsh</span><br><span class="line"></span><br><span class="line">卸载软件</span><br><span class="line">rpm -e file.el5</span><br><span class="line"></span><br><span class="line">查看所以已安装软件</span><br><span class="line">rpm -ga</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">使用yum安装软件</span><br><span class="line">mount /dev/hdc /mnt</span><br><span class="line"></span><br><span class="line">cp rhel-debuginfo.repo rhel5.repo</span><br><span class="line"></span><br><span class="line">vi rhel5.repo</span><br><span class="line"></span><br><span class="line">6. linux主机名、网络配置、网络的查看</span><br><span class="line"></span><br><span class="line">设置网卡向导</span><br><span class="line">setup</span><br><span class="line"><span class="meta">#</span>###################################</span><br><span class="line">Name                 eth0</span><br><span class="line">Device               eth0</span><br><span class="line">Use DHCP             []</span><br><span class="line">Static IP            192.168.12.100</span><br><span class="line">Netmask              255.255.255.0</span><br><span class="line">Default gateway IP   192.168.12.1</span><br><span class="line"><span class="meta">#</span>##################################</span><br><span class="line"></span><br><span class="line">重启网卡</span><br><span class="line">/etc/init.d/network restart</span><br><span class="line"></span><br><span class="line">查看网络配置信息</span><br><span class="line">ifconfig etho</span><br><span class="line">ifconfig -a</span><br><span class="line">ip a</span><br><span class="line">ip add</span><br><span class="line"></span><br><span class="line">手动修改网络配置文件</span><br><span class="line">vi /etc/sysconfig/network-scripts</span><br><span class="line"><span class="meta">#</span>##############################################################</span><br><span class="line"><span class="meta">#</span>Inter Corporation 82545EM Gigabit Ethernet Controller (Copper)</span><br><span class="line">DEVICE=eth0</span><br><span class="line">BOOTPROTO=none</span><br><span class="line">HWADDR=00:0c:29:9e:72:f4</span><br><span class="line">ONBOOT=yes</span><br><span class="line">TYPE=Ethernet</span><br><span class="line">NETMASK=255.255.255.0</span><br><span class="line">IPADDR=192.168.12.100</span><br><span class="line">GATEWAY=192.168.12.1</span><br><span class="line"><span class="meta">#</span>##############################################################</span><br><span class="line"></span><br><span class="line">修改主机域名</span><br><span class="line">vi /etc/hosts</span><br><span class="line"><span class="meta">#</span>#################################################</span><br><span class="line">127.0.0.1       localhost.localdomain localhost</span><br><span class="line">::1             localhost6.localdomain6 localhost6</span><br><span class="line">192.168.91.10   RHL5</span><br><span class="line"><span class="meta">#</span>#################################################</span><br><span class="line"></span><br><span class="line">vi /etc/sysconfig/network</span><br><span class="line"><span class="meta">#</span>#######################</span><br><span class="line">NETWORKING=yes</span><br><span class="line">NETWORKING_IPV6=no</span><br><span class="line">HOSTNAME=RHL5</span><br><span class="line">GATEWAY=192.168.91.1</span><br><span class="line"><span class="meta">#</span>######################</span><br><span class="line"></span><br><span class="line">立即刷新系统设置</span><br><span class="line">su -</span><br><span class="line"></span><br><span class="line">手工修改域名</span><br><span class="line">hostname RHL5</span><br><span class="line">退出终端，重新打开</span><br><span class="line"></span><br><span class="line">检查IP是否设置成功</span><br><span class="line">ping 192.168.12.100</span><br><span class="line"></span><br><span class="line">检查域名是否设置成功</span><br><span class="line">ping RHL5</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">7.linux磁盘管理、存储配置命令（raw配置），多路径软件配置</span><br><span class="line"></span><br><span class="line">查看各个分区的信息</span><br><span class="line">fdisk -l    </span><br><span class="line"></span><br><span class="line">进入分区模式</span><br><span class="line">fdisk /dev/sda</span><br><span class="line"></span><br><span class="line">让分区操作立即生效</span><br><span class="line">partprobe</span><br><span class="line"></span><br><span class="line">格式化某个分区</span><br><span class="line">mkfs.ext3 /dev/sda5</span><br><span class="line"></span><br><span class="line">把分区mount到某个目录才能使用分区</span><br><span class="line">mount /dev/sda5 /mnt</span><br><span class="line"></span><br><span class="line">取消分区的mount操作</span><br><span class="line">umount /dev/sda5</span><br><span class="line"></span><br><span class="line">把分区映射到某个裸设备, 并增加dba权限</span><br><span class="line">cd /etc/udev/rules.d</span><br><span class="line"></span><br><span class="line">vi 60-raw.rules</span><br><span class="line"><span class="meta">#</span>#######################################################</span><br><span class="line">ACTION=="add", KERNEL=="sda5",RUN+="/bin/raw/raw1 %N"</span><br><span class="line">KERNEL=="raw*", OWNER="oracle" GROUP="dba", MODE="0660"</span><br><span class="line"><span class="meta">#</span>#######################################################</span><br><span class="line"></span><br><span class="line">start_udev</span><br><span class="line"></span><br><span class="line">raw -qa</span><br><span class="line"></span><br><span class="line">cat 60-raw.rules</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">8.ssh基本操作</span><br><span class="line">ssh重启</span><br><span class="line">/etc/init.d/sshd restart</span><br><span class="line"></span><br><span class="line">ssh登录到远程机器</span><br><span class="line">ssh 192.168.21.100</span><br><span class="line"></span><br><span class="line">拷贝文件到远程主机某个目录</span><br><span class="line">scp -r /oracle 192.168.12.100:/tmp</span><br><span class="line"></span><br><span class="line">9.linux优化的命令</span><br><span class="line">终止指定进程</span><br><span class="line">kill -9 11024</span><br><span class="line">批量终止xxx进程</span><br><span class="line">kill -9 `ps -ef |grep xxx |grep -v grep |awk '&#123;print $2&#125;'`</span><br><span class="line"></span><br><span class="line">ps -ef |grep ora_   查看进程</span><br><span class="line">df -h               查看磁盘空间</span><br><span class="line">free -m             查看内存</span><br><span class="line">vmstat 1 5          查看系统统计信息（包括cpu,mem,io等）</span><br><span class="line"></span><br><span class="line">10.top命令</span><br><span class="line">top命令是Linux下常用的性能分析工具，能够实时显示系统中各个进程的资源占用状况，类似于Windows的任务管理器。</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="../../../../tags/其他/" rel="tag"># 其他</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="../../../11/09/markdown/" rel="next" title="Markdown基本语法">
+                <i class="fa fa-chevron-left"></i> Markdown基本语法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="../../../../2016/01/23/placeholder/" rel="prev" title="DZNEmptyDataSet实现空数据占位图">
+                DZNEmptyDataSet实现空数据占位图 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="../../../../uploads/avatar.jpg" alt="陈栋楠">
+            
+              <p class="site-author-name" itemprop="name">陈栋楠</p>
+              <p class="site-description motion-element" itemprop="description">陈栋楠的个人Blog，主要记录开发中的一些经验和心得</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="../../../../archives">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="../../../../categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="../../../../tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux"><span class="nav-number">1.</span> <span class="nav-text">Linux</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shell"><span class="nav-number">2.</span> <span class="nav-text">shell</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">陈栋楠</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="../../../../js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="../../../../js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
