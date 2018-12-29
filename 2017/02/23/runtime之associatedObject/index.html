@@ -79,18 +79,23 @@
 
 
 
-<meta name="description" content="iOS runtime特性真的是十分强大，虽然项目中直接使用的不多，但很多三方里面都有用到相关内容，所以也是在此记录一下runtime的相关知识点，因为确实很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。">
+<meta name="description" content="不得不说OC的runtime特性真的是十分强大，于是想着要系统得记录一下runtime的相关知识点和思考。由于涉及到的内容很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。">
 <meta name="keywords" content="iOS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="runtime之AssosiatedObject">
 <meta property="og:url" content="http://blog.chendongnan.com/2017/02/23/runtime之associatedObject/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="iOS runtime特性真的是十分强大，虽然项目中直接使用的不多，但很多三方里面都有用到相关内容，所以也是在此记录一下runtime的相关知识点，因为确实很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。">
+<meta property="og:description" content="不得不说OC的runtime特性真的是十分强大，于是想着要系统得记录一下runtime的相关知识点和思考。由于涉及到的内容很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-12-07T08:23:07.073Z">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/associatedObject/Person.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/associatedObject/warning.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/associatedObject/maxlength.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/associatedObject/dzn.png">
+<meta property="og:updated_time" content="2018-12-29T13:02:01.116Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="runtime之AssosiatedObject">
-<meta name="twitter:description" content="iOS runtime特性真的是十分强大，虽然项目中直接使用的不多，但很多三方里面都有用到相关内容，所以也是在此记录一下runtime的相关知识点，因为确实很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。">
+<meta name="twitter:description" content="不得不说OC的runtime特性真的是十分强大，于是想着要系统得记录一下runtime的相关知识点和思考。由于涉及到的内容很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。">
+<meta name="twitter:image" content="http://www.chendongnan.com/markdown/associatedObject/Person.png">
 
 
 
@@ -364,14 +369,13 @@
       
 
       
-        <p>iOS runtime特性真的是十分强大，虽然项目中直接使用的不多，但很多三方里面都有用到相关内容，所以也是在此记录一下runtime的相关知识点，因为确实很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。 </p>
+        <p>不得不说OC的runtime特性真的是十分强大，于是想着要系统得记录一下runtime的相关知识点和思考。由于涉及到的内容很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。 </p>
 <a id="more"></a>
 <p>在<code>object/runtime.h</code>文件中，找到相关API</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">/** </span><br><span class="line"> * Sets an associated value for a given object using a given key and association policy.</span><br><span class="line"> * </span><br><span class="line"> * @param object The source object for the association.</span><br><span class="line"> * @param key The key for the association.</span><br><span class="line"> * @param value The value to associate with the key key for object. Pass nil to clear an existing association.</span><br><span class="line"> * @param policy The policy for the association. For possible values, see “Associative Object Behaviors.”</span><br><span class="line"> * </span><br><span class="line"> * @see objc_setAssociatedObject</span><br><span class="line"> * @see objc_removeAssociatedObjects</span><br><span class="line"> */</span><br><span class="line">OBJC_EXPORT void objc_setAssociatedObject(id object, const void *key, id value, objc_AssociationPolicy policy)</span><br><span class="line">    OBJC_AVAILABLE(10.6, 3.1, 9.0, 1.0);</span><br><span class="line"></span><br><span class="line">/** </span><br><span class="line"> * Returns the value associated with a given object for a given key.</span><br><span class="line"> * </span><br><span class="line"> * @param object The source object for the association.</span><br><span class="line"> * @param key The key for the association.</span><br><span class="line"> * </span><br><span class="line"> * @return The value associated with the key \e key for \e object.</span><br><span class="line"> * </span><br><span class="line"> * @see objc_setAssociatedObject</span><br><span class="line"> */</span><br><span class="line">OBJC_EXPORT id objc_getAssociatedObject(id object, const void *key)</span><br><span class="line">    OBJC_AVAILABLE(10.6, 3.1, 9.0, 1.0);</span><br><span class="line"></span><br><span class="line">/** </span><br><span class="line"> * Removes all associations for a given object.</span><br><span class="line"> * </span><br><span class="line"> * @param object An object that maintains associated objects.</span><br><span class="line"> * </span><br><span class="line"> * @note The main purpose of this function is to make it easy to return an object </span><br><span class="line"> *  to a &quot;pristine state”. You should not use this function for general removal of</span><br><span class="line"> *  associations from objects, since it also removes associations that other clients</span><br><span class="line"> *  may have added to the object. Typically you should use \c objc_setAssociatedObject </span><br><span class="line"> *  with a nil value to clear an association.</span><br><span class="line"> * </span><br><span class="line"> * @see objc_setAssociatedObject</span><br><span class="line"> * @see objc_getAssociatedObject</span><br><span class="line"> */</span><br><span class="line">OBJC_EXPORT void objc_removeAssociatedObjects(id object)</span><br><span class="line">    OBJC_AVAILABLE(10.6, 3.1, 9.0, 1.0);</span><br></pre></td></tr></table></figure>
 <p>以及枚举类型的引用策略：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Policies related to associative references.</span><br><span class="line"> * These are options to objc_setAssociatedObject()</span><br><span class="line"> */</span><br><span class="line">typedef OBJC_ENUM(uintptr_t, objc_AssociationPolicy) &#123;</span><br><span class="line">    OBJC_ASSOCIATION_ASSIGN = 0,           /**&lt; Specifies a weak reference to the associated object. */</span><br><span class="line">    OBJC_ASSOCIATION_RETAIN_NONATOMIC = 1, /**&lt; Specifies a strong reference to the associated object. </span><br><span class="line">                                            *   The association is not made atomically. */</span><br><span class="line">    OBJC_ASSOCIATION_COPY_NONATOMIC = 3,   /**&lt; Specifies that the associated object is copied. </span><br><span class="line">                                            *   The association is not made atomically. */</span><br><span class="line">    OBJC_ASSOCIATION_RETAIN = 01401,       /**&lt; Specifies a strong reference to the associated object.</span><br><span class="line">                                            *   The association is made atomically. */</span><br><span class="line">    OBJC_ASSOCIATION_COPY = 01403          /**&lt; Specifies that the associated object is copied.</span><br><span class="line">                                            *   The association is made atomically. */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>API解析</p>
-<p><code>void objc_setAssociatedObject(id object, const void *key, id value, objc_AssociationPolicy policy)</code> API可以为两个对象建立起关联</p>
+<h2 id="API解析"><a href="#API解析" class="headerlink" title="API解析"></a>API解析</h2><p><code>void objc_setAssociatedObject(id object, const void *key, id value, objc_AssociationPolicy policy)</code> API可以为两个对象建立起关联</p>
 <ul>
 <li><strong>id object</strong> ：关联者</li>
 <li><strong>id value</strong> :    被关联者</li>
@@ -384,19 +388,19 @@
 <li><strong>const void *key</strong> : 被关联者的key</li>
 </ul>
 <p><code>void objc_removeAssociatedObjects(id object)</code> 该 API 可以移除一个 关联者 对象所有的 被关联者。当需要移除特定的对象时，我们可以使用<code>objc_setAssociatedObject</code>方法并指定 <code>id value</code> 参数对象为空即可。</p>
-<p><strong>AssosiatedObject的使用</strong></p>
-<p>明白了API的意思后，就需要深入到我们实际的应用了。</p>
-<ol>
-<li>为category添加变量</li>
-</ol>
-<p>category可以为已经存在的类添加方法，但是无法添加属性。不过通过AssoiatedObejct，我们可以实现这一点。</p>
-<h4 id="NSObject-AssociatedObject-h"><a href="#NSObject-AssociatedObject-h" class="headerlink" title="NSObject+AssociatedObject.h"></a>NSObject+AssociatedObject.h</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@interface NSObject (AssociatedObject)</span><br><span class="line"></span><br><span class="line">@property (nonatomic, strong) id associatedObject;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
-<h4 id="NSObject-AssociatedObject-m"><a href="#NSObject-AssociatedObject-m" class="headerlink" title="NSObject+AssociatedObject.m"></a>NSObject+AssociatedObject.m</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@dynamic associatedObject;</span><br><span class="line"></span><br><span class="line">static char kAssociatedObjectKey;</span><br><span class="line"></span><br><span class="line">- (void)setAssociatedObject:(id)object &#123;</span><br><span class="line"></span><br><span class="line">     objc_setAssociatedObject(self, &amp;kAssociatedObjectKey, object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (id)associatedObject &#123;</span><br><span class="line"></span><br><span class="line">    return objc_getAssociatedObject(self, &amp;kAssociatedObjectKey));</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用了<code>objc_getAssociatedObject</code> 以及 <code>objc_setAssociatedObject</code> 来模拟『属性』的存取方法，而使用关联对象模拟实例变量，从而达到为category添加属性的效果。</p>
-<ol start="2">
-<li>在一些特殊场景下，比如想知道一个系统内部对象或者第三方对象是何时被释放时，我们可以为该对象关联一个自定义的对象，并且使用 <code>OBJC_ASSOCIATION_RETAIN_NONATOMIC</code> 来指定内存管理策略，当关联者被释放是，被关联者也会跟着被释放，这样可以在我们自定义的对象中，知道感兴趣的对象何时被释放的。在调试一些内存问题时，该方法还是蛮有用的。</li>
-</ol>
-<p><strong>关联对象应该被当做最后的手段来使用（不得不用时才用），要在完全理解其的基础上再进行使用，否则可能会造成意想不到的后果。</strong></p>
+<h2 id="为category添加属性"><a href="#为category添加属性" class="headerlink" title="为category添加属性"></a>为category添加属性</h2><p>当我们使用@property声明属性时，编译器会自动帮我们生成以”_”开头的成员变量，以及该变量的setter和getter方法。但是在Category中，我们无法用@property来添加属性，可以看下面的demo。</p>
+<p>这里我们创建一个<code>Person</code>类和它的分类<code>Person + Ext</code>，然后在分类中声明一个属性，如下图</p>
+<p><img src="http://www.chendongnan.com/markdown/associatedObject/Person.png" alt="Person"></p>
+<p>编译一下，会发现如下警告</p>
+<p><img src="http://www.chendongnan.com/markdown/associatedObject/warning.png" alt="warning"></p>
+<p>这个警告的意思就是让我们手动去实现name的存取方法。这是由于分类是在运行时绑定方法的功能，而类属性需要在编译期确定，所以我们无法直接为category添加属性。不过通过AssoiatedObejct，我们可以间接实现这个需求。</p>
+<h4 id="Person-Ext-h"><a href="#Person-Ext-h" class="headerlink" title="Person+Ext.h"></a>Person+Ext.h</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;Person.h&quot;</span><br><span class="line"></span><br><span class="line">@interface Person (Ext)</span><br><span class="line">@property (nonatomic, copy) NSString *name;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<h4 id="Person-Ext-m"><a href="#Person-Ext-m" class="headerlink" title="Person+Ext.m"></a>Person+Ext.m</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;Person+Ext.h&quot;</span><br><span class="line">#import &lt;objc/runtime.h&gt;</span><br><span class="line"></span><br><span class="line">@implementation Person (Ext)</span><br><span class="line">-(void)setName:(NSString *)name &#123;</span><br><span class="line">    objc_setAssociatedObject(self, @&quot;name&quot;, name, OBJC_ASSOCIATION_COPY);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(NSString *)name &#123;</span><br><span class="line">    return objc_getAssociatedObject(self, @&quot;name&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用了<code>objc_setAssociatedObject</code>以及 <code>objc_setAssociatedObject</code> 来实现<code>property</code>的存取方法，而使用关联对象模拟实例变量，从而达到为category添加属性的效果。</p>
+<h2 id="实际场景"><a href="#实际场景" class="headerlink" title="实际场景"></a>实际场景</h2><p><img src="http://www.chendongnan.com/markdown/associatedObject/maxlength.png" alt="warning"></p>
+<p>项目中我们用associatedObject为UITextField添加了max_length属性，可以直接使用max_length来实现限制输入字符的效果，而不必每次都在UITextField的代理中写一大段代码来实现。</p>
+<p><img src="http://www.chendongnan.com/markdown/associatedObject/dzn.png" alt="warning"></p>
+<p>在DZNEmptyDataSet中，使用了setAssociatedObject，对scrollView的分类添加了<code>EmptyDataSetSource</code>的属性，在属性的setter方法中给<code>reloadData</code>注入了自己实现的<code>dzn-reloadData</code>，实现了无感知替换。</p>
 
       
     </div>
@@ -529,7 +533,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="../../../../categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -573,7 +577,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#NSObject-AssociatedObject-h"><span class="nav-number">1.</span> <span class="nav-text">NSObject+AssociatedObject.h</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NSObject-AssociatedObject-m"><span class="nav-number">2.</span> <span class="nav-text">NSObject+AssociatedObject.m</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#API解析"><span class="nav-number">1.</span> <span class="nav-text">API解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为category添加属性"><span class="nav-number">2.</span> <span class="nav-text">为category添加属性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Person-Ext-h"><span class="nav-number">2.0.1.</span> <span class="nav-text">Person+Ext.h</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Person-Ext-m"><span class="nav-number">2.0.2.</span> <span class="nav-text">Person+Ext.m</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#实际场景"><span class="nav-number">3.</span> <span class="nav-text">实际场景</span></a></li></div>
             
 
           </div>
