@@ -79,23 +79,38 @@
 
 
 
-<meta name="description" content="不得不说OC的runtime特性真的是十分强大，于是想着要系统得记录一下runtime的相关知识点和思考。由于涉及到的内容很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。">
+<meta name="description" content="runtime的第二篇文章，记录下消息转发相关知识 在项目开发中，一个很常见的报错是 Terminating app due to uncaught exception &amp;#39;NSInvalidArgumentException&amp;#39;, reason: &amp;#39;-[Person run]: unrecognized selector sent to instance，意思就是向实例发送了">
 <meta name="keywords" content="iOS">
 <meta property="og:type" content="article">
-<meta property="og:title" content="runtime之AssosiatedObject">
-<meta property="og:url" content="http://blog.chendongnan.com/2017/02/23/runtime之associatedObject/index.html">
+<meta property="og:title" content="runtime之消息转发">
+<meta property="og:url" content="http://blog.chendongnan.com/2016/11/17/runtime之消息转发/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="不得不说OC的runtime特性真的是十分强大，于是想着要系统得记录一下runtime的相关知识点和思考。由于涉及到的内容很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。">
+<meta property="og:description" content="runtime的第二篇文章，记录下消息转发相关知识 在项目开发中，一个很常见的报错是 Terminating app due to uncaught exception &amp;#39;NSInvalidArgumentException&amp;#39;, reason: &amp;#39;-[Person run]: unrecognized selector sent to instance，意思就是向实例发送了">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/associatedObject/Person.png">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/associatedObject/warning.png">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/associatedObject/maxlength.png">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/associatedObject/dzn.png">
-<meta property="og:updated_time" content="2018-12-29T13:02:01.116Z">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/objc_class.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/NSObject.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/objc-private.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/typeEncodings.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/SELIMP.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/resolveInstanceMehtod.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/forwardingTargetForSelector.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/methodSignature.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/methodSignatureDiscussion.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/forwardInvocation.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/forwardInvocationDiscussion.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/消息转发流程.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/resolveInstanceMethodTest.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/resolveInstanceMethodPrint.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/account.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/forwardingTargetForSelectorTest1.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/forwardingTargetForSelectorPrint.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/forwardInvocationTest.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/forwardInvocationPrint.png">
+<meta property="og:updated_time" content="2018-12-31T15:12:43.388Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="runtime之AssosiatedObject">
-<meta name="twitter:description" content="不得不说OC的runtime特性真的是十分强大，于是想着要系统得记录一下runtime的相关知识点和思考。由于涉及到的内容很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。">
-<meta name="twitter:image" content="http://www.chendongnan.com/markdown/associatedObject/Person.png">
+<meta name="twitter:title" content="runtime之消息转发">
+<meta name="twitter:description" content="runtime的第二篇文章，记录下消息转发相关知识 在项目开发中，一个很常见的报错是 Terminating app due to uncaught exception &amp;#39;NSInvalidArgumentException&amp;#39;, reason: &amp;#39;-[Person run]: unrecognized selector sent to instance，意思就是向实例发送了">
+<meta name="twitter:image" content="http://www.chendongnan.com/markdown/runtime/objc_class.png">
 
 
 
@@ -125,13 +140,13 @@
 
 
 
-  <link rel="canonical" href="http://blog.chendongnan.com/2017/02/23/runtime之associatedObject/">
+  <link rel="canonical" href="http://blog.chendongnan.com/2016/11/17/runtime之消息转发/">
 
 
 
 
 
-  <title>runtime之AssosiatedObject | 陈栋楠的Blog</title>
+  <title>runtime之消息转发 | 陈栋楠的Blog</title>
   
 
 
@@ -297,7 +312,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">runtime之AssosiatedObject</h1>
+          <h1 class="post-title" itemprop="name headline">runtime之消息转发</h1>
         
 
         <div class="post-meta">
@@ -309,8 +324,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-23T14:58:38+08:00">
-                2017-02-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-17T15:33:42+08:00">
+                2016-11-17
               </time>
             
 
@@ -369,38 +384,111 @@
       
 
       
-        <p>不得不说OC的runtime特性真的是十分强大，于是想着要系统得记录一下runtime的相关知识点和思考。由于涉及到的内容很多，所以把它们整理成了几个部分。第一篇就写点关于关联对象（AssociatedObject）相关内容。 </p>
+        <p>runtime的第二篇文章，记录下消息转发相关知识</p>
+<p>在项目开发中，一个很常见的报错是 <code>Terminating app due to uncaught exception &#39;NSInvalidArgumentException&#39;, reason: &#39;-[Person run]: unrecognized selector sent to instance</code>，意思就是向实例发送了不能识别的方法。想要了解其发生根源以及解决方案，就需要深入了解runtime的消息转发机制。</p>
 <a id="more"></a>
-<p>在<code>object/runtime.h</code>文件中，找到相关API</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">/** </span><br><span class="line"> * Sets an associated value for a given object using a given key and association policy.</span><br><span class="line"> * </span><br><span class="line"> * @param object The source object for the association.</span><br><span class="line"> * @param key The key for the association.</span><br><span class="line"> * @param value The value to associate with the key key for object. Pass nil to clear an existing association.</span><br><span class="line"> * @param policy The policy for the association. For possible values, see “Associative Object Behaviors.”</span><br><span class="line"> * </span><br><span class="line"> * @see objc_setAssociatedObject</span><br><span class="line"> * @see objc_removeAssociatedObjects</span><br><span class="line"> */</span><br><span class="line">OBJC_EXPORT void objc_setAssociatedObject(id object, const void *key, id value, objc_AssociationPolicy policy)</span><br><span class="line">    OBJC_AVAILABLE(10.6, 3.1, 9.0, 1.0);</span><br><span class="line"></span><br><span class="line">/** </span><br><span class="line"> * Returns the value associated with a given object for a given key.</span><br><span class="line"> * </span><br><span class="line"> * @param object The source object for the association.</span><br><span class="line"> * @param key The key for the association.</span><br><span class="line"> * </span><br><span class="line"> * @return The value associated with the key \e key for \e object.</span><br><span class="line"> * </span><br><span class="line"> * @see objc_setAssociatedObject</span><br><span class="line"> */</span><br><span class="line">OBJC_EXPORT id objc_getAssociatedObject(id object, const void *key)</span><br><span class="line">    OBJC_AVAILABLE(10.6, 3.1, 9.0, 1.0);</span><br><span class="line"></span><br><span class="line">/** </span><br><span class="line"> * Removes all associations for a given object.</span><br><span class="line"> * </span><br><span class="line"> * @param object An object that maintains associated objects.</span><br><span class="line"> * </span><br><span class="line"> * @note The main purpose of this function is to make it easy to return an object </span><br><span class="line"> *  to a &quot;pristine state”. You should not use this function for general removal of</span><br><span class="line"> *  associations from objects, since it also removes associations that other clients</span><br><span class="line"> *  may have added to the object. Typically you should use \c objc_setAssociatedObject </span><br><span class="line"> *  with a nil value to clear an association.</span><br><span class="line"> * </span><br><span class="line"> * @see objc_setAssociatedObject</span><br><span class="line"> * @see objc_getAssociatedObject</span><br><span class="line"> */</span><br><span class="line">OBJC_EXPORT void objc_removeAssociatedObjects(id object)</span><br><span class="line">    OBJC_AVAILABLE(10.6, 3.1, 9.0, 1.0);</span><br></pre></td></tr></table></figure>
-<p>以及枚举类型的引用策略：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Policies related to associative references.</span><br><span class="line"> * These are options to objc_setAssociatedObject()</span><br><span class="line"> */</span><br><span class="line">typedef OBJC_ENUM(uintptr_t, objc_AssociationPolicy) &#123;</span><br><span class="line">    OBJC_ASSOCIATION_ASSIGN = 0,           /**&lt; Specifies a weak reference to the associated object. */</span><br><span class="line">    OBJC_ASSOCIATION_RETAIN_NONATOMIC = 1, /**&lt; Specifies a strong reference to the associated object. </span><br><span class="line">                                            *   The association is not made atomically. */</span><br><span class="line">    OBJC_ASSOCIATION_COPY_NONATOMIC = 3,   /**&lt; Specifies that the associated object is copied. </span><br><span class="line">                                            *   The association is not made atomically. */</span><br><span class="line">    OBJC_ASSOCIATION_RETAIN = 01401,       /**&lt; Specifies a strong reference to the associated object.</span><br><span class="line">                                            *   The association is made atomically. */</span><br><span class="line">    OBJC_ASSOCIATION_COPY = 01403          /**&lt; Specifies that the associated object is copied.</span><br><span class="line">                                            *   The association is made atomically. */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="API解析"><a href="#API解析" class="headerlink" title="API解析"></a>API解析</h2><p><code>void objc_setAssociatedObject(id object, const void *key, id value, objc_AssociationPolicy policy)</code> API可以为两个对象建立起关联</p>
-<ul>
-<li><strong>id object</strong> ：关联者</li>
-<li><strong>id value</strong> :    被关联者</li>
-<li><strong>const void *key</strong> : 被关联者的key，可以通过该key获取该关联者</li>
-<li><strong>objc_AssociationPolicy policy</strong> ：表示被关联者的引用策略，也就是内存管理，通过上面的枚举来设置。</li>
-</ul>
-<p><code>id objc_getAssociatedObject(id object, const void *key)</code> API可以通过事先设置的Key获取被关联对象</p>
-<ul>
-<li><strong>id object</strong> ：关联者</li>
-<li><strong>const void *key</strong> : 被关联者的key</li>
-</ul>
-<p><code>void objc_removeAssociatedObjects(id object)</code> 该 API 可以移除一个 关联者 对象所有的 被关联者。当需要移除特定的对象时，我们可以使用<code>objc_setAssociatedObject</code>方法并指定 <code>id value</code> 参数对象为空即可。</p>
-<h2 id="为category添加属性"><a href="#为category添加属性" class="headerlink" title="为category添加属性"></a>为category添加属性</h2><p>当我们使用@property声明属性时，编译器会自动帮我们生成以”_”开头的成员变量，以及该变量的setter和getter方法。但是在Category中，我们无法用@property来添加属性，可以看下面的demo。</p>
-<p>这里我们创建一个<code>Person</code>类和它的分类<code>Person + Ext</code>，然后在分类中声明一个属性，如下图</p>
-<p><img src="http://www.chendongnan.com/markdown/associatedObject/Person.png" alt="Person"></p>
-<p>编译一下，会发现如下警告</p>
-<p><img src="http://www.chendongnan.com/markdown/associatedObject/warning.png" alt="warning"></p>
-<p>这个警告的意思就是让我们手动去实现name的存取方法。这是由于分类是在运行时绑定方法的功能，而类属性需要在编译期确定，所以我们无法直接为category添加属性。不过通过AssoiatedObejct，我们可以间接实现这个需求。</p>
-<h4 id="Person-Ext-h"><a href="#Person-Ext-h" class="headerlink" title="Person+Ext.h"></a>Person+Ext.h</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;Person.h&quot;</span><br><span class="line"></span><br><span class="line">@interface Person (Ext)</span><br><span class="line">@property (nonatomic, copy) NSString *name;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
-<h4 id="Person-Ext-m"><a href="#Person-Ext-m" class="headerlink" title="Person+Ext.m"></a>Person+Ext.m</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;Person+Ext.h&quot;</span><br><span class="line">#import &lt;objc/runtime.h&gt;</span><br><span class="line"></span><br><span class="line">@implementation Person (Ext)</span><br><span class="line">-(void)setName:(NSString *)name &#123;</span><br><span class="line">    objc_setAssociatedObject(self, @&quot;name&quot;, name, OBJC_ASSOCIATION_COPY);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(NSString *)name &#123;</span><br><span class="line">    return objc_getAssociatedObject(self, @&quot;name&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用了<code>objc_setAssociatedObject</code>以及 <code>objc_setAssociatedObject</code> 来实现<code>property</code>的存取方法，而使用关联对象模拟实例变量，从而达到为category添加属性的效果。</p>
-<h2 id="实际场景"><a href="#实际场景" class="headerlink" title="实际场景"></a>实际场景</h2><p><img src="http://www.chendongnan.com/markdown/associatedObject/maxlength.png" alt="warning"></p>
-<p>项目中我们用associatedObject为UITextField添加了max_length属性，可以直接使用max_length来实现限制输入字符的效果，而不必每次都在UITextField的代理中写一大段代码来实现。</p>
-<p><img src="http://www.chendongnan.com/markdown/associatedObject/dzn.png" alt="warning"></p>
-<p>在DZNEmptyDataSet中，使用了setAssociatedObject，对scrollView的分类添加了<code>EmptyDataSetSource</code>的属性，在属性的setter方法中给<code>reloadData</code>注入了自己实现的<code>dzn-reloadData</code>，实现了无感知替换。</p>
+<p>在初学OC的时候，只知道方法调用是<code>[Object  Method]</code>(实例方法)或者<code>[Class  Method]</code>（类方法）的形式（其实类也是一种对象-类对象，在后文会提到）。在OC中，方法调用也被称为消息发送，这是因为</p>
+<p><code>[Object Method]</code>在运行时会被编译器转换成<code>objc_msgSend(receiver, selector)</code>,如果方法含有参数，则是<code>objc_msgSend(receiver, selector, arg1, arg2, …)</code>的形式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// Person 类</span><br><span class="line">@interface MyClass: NSObject</span><br><span class="line">- (void)run;</span><br><span class="line">@end</span><br><span class="line">@implementation Person</span><br><span class="line">- (void)run &#123;</span><br><span class="line">	NSLog(@&quot;person run&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">Person *person = [[Person alloc] init];</span><br><span class="line">[person run];</span><br><span class="line"></span><br><span class="line">// 输出： person run</span><br></pre></td></tr></table></figure>
+<p>以上述代码为例，<code>[person run]</code>可以写成<code>((void (*)(id, SEL))(void *) objc_msgSend)(person, @selector(run));</code></p>
+<p><code>id objc_msgSend(id self, SEL op, …);</code>就是msgSend方法了，其中<code>self</code>指消息的接受者，<code>op</code> 指消息的方法名，<code>...</code>指参数列表</p>
+<p>到这里就已经大致了解了OC方法调用的底层表现，接下来需要进一步探究runtime如何实现msgSend。</p>
+<h2 id="方法寻找过程"><a href="#方法寻找过程" class="headerlink" title="方法寻找过程"></a>方法寻找过程</h2><p>Objective-C是一门面向对象的语言，我们平时接触最多的也就是类和对象，而对象又被分为实例对象，类对象、元类对象以及根元类对象，他们通过<code>isa</code>指针互相关联起来，下面是一张它们的关系图。</p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/objc_class.png" alt="object_class"></p>
+<p>上图各种对象的关系总结如下</p>
+<blockquote>
+<p>实例对象通过<code>isa</code>指针，找到类对象<code>Class</code>; 类对象通过<code>isa</code>指针，找到元类对象；元类对象通过<code>isa</code>指针，找到根元类对象；根元类的<code>isa</code>指针指向自己。</p>
+<p>类对象通过<code>super_class</code>指针找到它的父类对象，父类对象通过<code>super_class</code>指针找到根类对象，根类对象的父类是nil；元类对象通过<code>super class</code>指针找到父元类，父元类对象通过<code>super class</code>指针找到根元类对象，根元类对象的<code>supe class</code>指针指向根类对象。</p>
+</blockquote>
+<p>在<code>NSObject.h</code>中，我们可以看到NSObject的类定义如下</p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/NSObject.png" alt="NSObject"></p>
+<p>可以看到，NSObject拥有一个<code>Class</code>类型的变量<code>isa</code></p>
+<p>在<code>objc4-680</code>源码的<code>objc-private.h</code>中，可以看到如下定义</p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/objc-private.png" alt="NSObject"></p>
+<p>可以看出，OC的Class其实就是 <code>struct objc_class</code>, 而OC的对象实际上就是<code>struct objc_object</code></p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;typedef struct objc_object *id;</span><br><span class="line">&gt;</span><br><span class="line">&gt;struct objc_object &#123;</span><br><span class="line">&gt;	Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</span><br><span class="line">&gt;&#125;;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">struct objc_class &#123;</span><br><span class="line">	Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</span><br><span class="line">#if !__OBJC2__</span><br><span class="line">	Class _Nullable super_class  OBJC2_UNAVAILABLE;</span><br><span class="line">	const char * _Nonnull name OBJC2_UNAVAILABLE;</span><br><span class="line">	long version OBJC2_UNAVAILABLE;</span><br><span class="line">	long info  OBJC2_UNAVAILABLE;</span><br><span class="line">	long instance_size OBJC2_UNAVAILABLE;</span><br><span class="line">	struct objc_ivar_list * _Nullable ivars  OBJC2_UNAVAILABLE;</span><br><span class="line">	struct objc_method_list * _Nullable * _Nullable methodLists  		OBJC2_UNAVAILABLE;</span><br><span class="line">	struct objc_cache * _Nonnull cache OBJC2_UNAVAILABLE;</span><br><span class="line">	struct objc_protocol_list * _Nullable protocols  OBJC2_UNAVAILABLE;</span><br><span class="line">#endif</span><br><span class="line">&#125; OBJC2_UNAVAILABLE;</span><br></pre></td></tr></table></figure>
+<p>可以看到obje_class中也有一个isa指针，说明类本身也是一个对象。</p>
+<p>这里我们不详细展开每个属性的含义是什么，只关注和方法相关的属性，可以看到在objc_class的结构体中，有一个<code>objc_method_list</code> 结构体，在<code>objc_method_list</code>中有一个<code>objc_mehtod</code>结构体。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">struct objc_method_list &#123;</span><br><span class="line">	struct objc_method_list * _Nullable obsolete OBJC2_UNAVAILABLE;</span><br><span class="line">	</span><br><span class="line">	int method_count OBJC2_UNAVAILABLE;</span><br><span class="line">#ifdef __LP64__</span><br><span class="line">	int space  OBJC2_UNAVAILABLE;</span><br><span class="line">#endif</span><br><span class="line">	/* variable length structure */</span><br><span class="line">	struct objc_method method_list[1]  OBJC2_UNAVAILABLE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Method</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">struct objc_method &#123;</span><br><span class="line">	SEL _Nonnull method_name OBJC2_UNAVAILABLE;  //方法名称</span><br><span class="line">	char * _Nullable method_types  OBJC2_UNAVAILABLE;  //参数和返回类型的描述</span><br><span class="line">	IMP _Nonnull method_imp  OBJC2_UNAVAILABLE;		// 方法具体实现的指针</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Mehtod代表类中某个方法的类型，它存储了方法名、参数和返回类型以及方法实现的指针</p>
+<p>这里的method_types可以参考苹果runtime的文档</p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/typeEncodings.png" alt="typeEncodings"></p>
+<p><strong>SEL</strong> &amp; <strong>IMP</strong></p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/SELIMP.png" alt="NSObject"></p>
+<p>IMP是一个函数指针，由编译器生成，当发出一个OC消息时，最终执行的代码就是由这个函数指针来指定的，而IMP这个函数指针就指向了这个方法的实现。</p>
+<p>IMP指向的方法与objc_methodSend函数类型相同，参数都包含id和SEL类型。每个方法名都对应一个SEL类型的选择子，通过一组id和SEL参数就能确定唯一的方法实现地址。</p>
+<p><strong>Cache</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">struct objc_cache &#123;</span><br><span class="line"></span><br><span class="line">    unsigned int mask /* total = mask + 1 */                 OBJC2_UNAVAILABLE;</span><br><span class="line"></span><br><span class="line">    unsigned int occupied                                    OBJC2_UNAVAILABLE;</span><br><span class="line"></span><br><span class="line">    Method buckets[1]                                        OBJC2_UNAVAILABLE;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>Cache为方法调用的性能进行优化，每当对象接收到一个消息时，它不会在isa指针指向的类的方法列表中遍历查找能够响应的方法，而是优先在Cache中查找。Runtime会把被调用过的方法存到Cache中。</p>
+<p>方法是通过<code>isa</code>指针，查找到<code>Class</code>的<code>methodLists</code>。如果子类没能实现对应的方法实现，会追溯到其父类查找。</p>
+<p>到这里，我们就能明白对象调用方法的基本逻辑了,以上文的<code>Person run</code>为例</p>
+<ol>
+<li>方法调用先被编译成<code>(void (*)(id, SEL))(void *) objc_msgSend)(person, @selector(run))</code></li>
+<li>根据<code>person</code>的<code>isa</code>指针, 找到<code>person</code>的类对象<code>Person</code></li>
+<li>在<code>Person</code>的方法缓存中查找，如果找到了就返回该IMP</li>
+<li>如果没有找到，就到它的方法列表中查找，如果找到了，则将IMP返回，并将它加入cache中缓存起来。</li>
+<li>如果在该类的方法列表中也没有找到，那就通过super_class指针去其父类的方法列表中查找，直到在某个父类方法列表中找到对应的IMP并返回，并加入chche中。</li>
+<li>如果在自身以及父类的方法列表中都没哟刟对应的IMP，则进入下面要讲到的消息转发流程。</li>
+<li>如果是调用类方法，那么一开始会通过类对象的<code>isa</code>指针找到元类对象，类方法就保存在元类对象中，之后的步骤也和调用实例对象方法一样。</li>
+</ol>
+<h2 id="消息转发"><a href="#消息转发" class="headerlink" title="消息转发"></a>消息转发</h2><p>那么回到文章开头的问题，<code>unrecognized selector sent to instance</code>报错，用消息转发来解释的话就是消息接收者找不到对应的selector</p>
+<p>当在methodList中找不到对应的selector后，就会走消息转发流程，系统会给我们三次补救的机会。</p>
+<p><strong>第一次</strong></p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; + (BOOL)resolveInstanceMethod:(SEL)sel &#123;&#125; </span><br><span class="line">&gt; + (BOOL)resolveClassMethod:(SEL)sel &#123;&#125;  </span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>上述一个对应实例方法，一个对应类方法</p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/resolveInstanceMehtod.png" alt="resolveInstanceMehtod"></p>
+<p>官方文档已经讲的很清楚了，可以在该方法内，通过<code>class_addMethod</code>动态地添加selector的实现。</p>
+<p><strong>第二次</strong></p>
+<p>如果上述方法返回值为NO，那么会执行</p>
+<blockquote>
+<p><code>(id)forwardingTargetForSelector:(SEL)aSelector {}</code></p>
+</blockquote>
+<p><img src="http://www.chendongnan.com/markdown/runtime/forwardingTargetForSelector.png" alt="forwardingTargetForSelector"></p>
+<p>如果这个方法返回一个非空并且非自己本身的对象，那么会把这个对象作为新的消息接收者，由该对象去处理消息。</p>
+<p><strong>第三次</strong></p>
+<p>如果上述方法返回nil，那么就会执行到最后一步，也是代价最大的一步。</p>
+<blockquote>
+<p><code>(NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {}</code></p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/methodSignature.png" alt="methodSignature"></p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/methodSignatureDiscussion.png" alt="methodSignatureDis"></p>
+<p><code>(void)forwardInvocation:(NSInvocation *)anInvocation {}</code></p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/forwardInvocation.png" alt="forwardInvocation"></p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/forwardInvocationDiscussion.png" alt="forwardInvocationDiscussion"></p>
+</blockquote>
+<p>第一个方法要求返回一个方法签名，第二个方法转发具体的方法实现，两者相互依赖，只有返回了正确的方法签名才会执行第二个方法。</p>
+<p>用一张图来总结一下整个消息转发流程</p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/消息转发流程.png" alt="转发流程"></p>
+<h2 id="实例验证"><a href="#实例验证" class="headerlink" title="实例验证"></a>实例验证</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">@interface RuntimeObject : NSObject</span><br><span class="line"></span><br><span class="line">- (void)test;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>在<code>RuntimeObject</code>类的.h文件中，声明一个<code>test</code>方法，但是在.m文件中不实现</p>
+<p>然后在<code>Appdelegate</code>的<code>didFinishLaunchingWithOptions</code>中调用<code>test</code>方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions &#123;</span><br><span class="line">    // Override point for customization after application launch.</span><br><span class="line">    </span><br><span class="line">    RuntimeObject *obj = [[RuntimeObject alloc] init];</span><br><span class="line">    [obj test];</span><br><span class="line">    </span><br><span class="line">    return YES;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>毫无疑问，这样的结果就是会造成程序崩溃，崩溃原因就是</p>
+<p><code>Terminating app due to uncaught exception &#39;NSInvalidArgumentException&#39;, reason: &#39;-[RuntimeObject test]: unrecognized selector sent to instance 0x600002254240&#39;**</code></p>
+<p>现在我们按照消息转发的流程来处理这个未被实现的实现的selector。</p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/resolveInstanceMethodTest.png" alt="resolveInstanceMethodTest"></p>
+<p>这里添加了一个<code>testImp</code>来作为test的实现，运行之后打印</p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/resolveInstanceMethodPrint.png" alt="resolveInstanceMethodPrint"></p>
+<p>可以看到<code>resolveInstanceMethod</code>成功得为test方法提供了实现,使得程序不再崩溃。</p>
+<p>然后再看<code>(id)forwardingTargetForSelector:(SEL)aSelector {}</code>方法，为了验证该方法，要把<code>resolveInstanceMethod</code>的返回值改为NO，然后新建一个<code>Account</code>类, 在该类的.m文件中实现test方法。</p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/account.png" alt="account.m"></p>
+<p>然后修改<code>RuntimeObject.m</code>的代码</p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/forwardingTargetForSelectorTest1.png" alt="forwardingTargetForSelectorTest"></p>
+<p>运行之后，打印结果为</p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/forwardingTargetForSelectorPrint.png" alt="forwardingTargetForSelectorPrint"></p>
+<p>可以看到消息被成功转发给了Account，并且执行了。</p>
+<p>最后，验证下消息转发的第三部</p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/forwardInvocationTest.png" alt="forwardInvocationTest"></p>
+<p>在<code>forwadingTargetForSelector</code>中返回nil, 在<code>methodSignatureForSelector</code>中返回对应的方法签名，最终在<code>forwardInvocation</code>中完成消息转发。</p>
+<p><img src="http://www.chendongnan.com/markdown/runtime/forwardInvocationPrint.png" alt="forwardInvocationPrint"></p>
+<p>打印结果也验证了转发消息成功。</p>
+<p>以上就是Runtime消息转发机制的相关学习总结。</p>
 
       
     </div>
@@ -431,8 +519,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="../../16/编程与王者荣耀/" rel="next" title="编程与王者荣耀">
-                <i class="fa fa-chevron-left"></i> 编程与王者荣耀
+              <a href="../../../10/05/runtime之associatedObject/" rel="next" title="runtime之AssosiatedObject">
+                <i class="fa fa-chevron-left"></i> runtime之AssosiatedObject
               </a>
             
           </div>
@@ -441,8 +529,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="../../../03/18/runtime之methodSwizzling/" rel="prev" title="runtime之methodSwizzling">
-                runtime之methodSwizzling <i class="fa fa-chevron-right"></i>
+              <a href="../../../../2017/02/05/UI-Test/" rel="prev" title="UI Test">
+                UI Test <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -522,7 +610,7 @@
               
                 <a href="../../../../archives">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -577,7 +665,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#API解析"><span class="nav-number">1.</span> <span class="nav-text">API解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为category添加属性"><span class="nav-number">2.</span> <span class="nav-text">为category添加属性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Person-Ext-h"><span class="nav-number">2.0.1.</span> <span class="nav-text">Person+Ext.h</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Person-Ext-m"><span class="nav-number">2.0.2.</span> <span class="nav-text">Person+Ext.m</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#实际场景"><span class="nav-number">3.</span> <span class="nav-text">实际场景</span></a></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#方法寻找过程"><span class="nav-number">1.</span> <span class="nav-text">方法寻找过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消息转发"><span class="nav-number">2.</span> <span class="nav-text">消息转发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例验证"><span class="nav-number">3.</span> <span class="nav-text">实例验证</span></a></li></ol></div>
             
 
           </div>
