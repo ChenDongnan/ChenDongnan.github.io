@@ -40,7 +40,7 @@
 
   
   
-  <link href="../../../../lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="../../lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -48,29 +48,27 @@
 
 
 
-<link href="../../../../lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="../../lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="../../../../css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="../../../../images/apple-touch-icon-next.png?v=5.1.4">
+<link href="../../css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="../../../../favicon.ico?v=5.1.4">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../images/apple-touch-icon-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="../../../../favicon.ico?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon.ico?v=5.1.4">
 
 
-  <link rel="mask-icon" href="../../../../images/logo.svg?v=5.1.4" color="#222">
+  <link rel="icon" type="image/png" sizes="16x16" href="../../favicon.ico?v=5.1.4">
 
 
+  <link rel="mask-icon" href="../../images/logo.svg?v=5.1.4" color="#222">
 
 
 
-  <meta name="keywords" content="iOS,">
 
 
+  <meta name="keywords" content="Hexo, NexT">
 
 
 
@@ -79,21 +77,18 @@
 
 
 
-<meta name="description" content="SDWebImage是很多项目中都会用到的三方库。这篇文章用来记录下学习SDWebImage图片缓存机制的心得。">
-<meta name="keywords" content="iOS">
-<meta property="og:type" content="article">
-<meta property="og:title" content="SDWebImage Cache Mechanism">
-<meta property="og:url" content="http://blog.chendongnan.com/2017/04/19/SDWebImage-Cache-Mechanism/index.html">
+
+
+<meta name="description" content="陈栋楠的个人Blog，主要记录开发中的一些经验和心得">
+<meta property="og:type" content="website">
+<meta property="og:title" content="陈栋楠的Blog">
+<meta property="og:url" content="http://blog.chendongnan.com/categories/项目优化/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="SDWebImage是很多项目中都会用到的三方库。这篇文章用来记录下学习SDWebImage图片缓存机制的心得。">
+<meta property="og:description" content="陈栋楠的个人Blog，主要记录开发中的一些经验和心得">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/SDWebImage/SDWebImageCache结构.png">
-<meta property="og:image" content="http://www.chendongnan.com/markdown/SDWebImage/SDWebImageCache结构2.png">
-<meta property="og:updated_time" content="2018-12-04T06:14:26.988Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SDWebImage Cache Mechanism">
-<meta name="twitter:description" content="SDWebImage是很多项目中都会用到的三方库。这篇文章用来记录下学习SDWebImage图片缓存机制的心得。">
-<meta name="twitter:image" content="http://www.chendongnan.com/markdown/SDWebImage/SDWebImageCache结构.png">
+<meta name="twitter:title" content="陈栋楠的Blog">
+<meta name="twitter:description" content="陈栋楠的个人Blog，主要记录开发中的一些经验和心得">
 
 
 
@@ -123,13 +118,13 @@
 
 
 
-  <link rel="canonical" href="http://blog.chendongnan.com/2017/04/19/SDWebImage-Cache-Mechanism/">
+  <link rel="canonical" href="http://blog.chendongnan.com/categories/项目优化/">
 
 
 
 
 
-  <title>SDWebImage Cache Mechanism | 陈栋楠的Blog</title>
+  <title>分类: 项目优化 | 陈栋楠的Blog</title>
   
 
 
@@ -148,7 +143,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -264,169 +259,53 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
+  
+  
+  
+  <div class="post-block category">
 
-  
+    <div id="posts" class="posts-collapse">
+      <div class="collection-title">
+        <h1>项目优化<small>分类</small>
+        </h1>
+      </div>
 
-  
-  
-  
+      
+        
 
   <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.chendongnan.com">
+    <header class="post-header">
 
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="陈栋楠">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="../../../../uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="陈栋楠的Blog">
-    </span>
-
-    
-      <header class="post-header">
-
+      <h2 class="post-title">
         
-        
-          <h1 class="post-title" itemprop="name headline">SDWebImage Cache Mechanism</h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
+            <a class="post-title-link" href="../../2017/12/22/start-time/" itemprop="url">
               
-                <span class="post-meta-item-text">发表于</span>
+                <span itemprop="name">未命名</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-19T09:57:59+08:00">
-                2017-04-19
-              </time>
-            
+            </a>
+        
+      </h2>
 
-            
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2017-12-22T11:47:51+08:00" content="2017-12-22">
+          12-22
+        </time>
+      </div>
 
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>SDWebImage是很多项目中都会用到的三方库。这篇文章用来记录下学习SDWebImage图片缓存机制的心得。</p>
-<a id="more"></a>
-<p><img src="http://www.chendongnan.com/markdown/SDWebImage/SDWebImageCache结构.png" alt="SDWebImageCache结构"></p>
-<p><img src="http://www.chendongnan.com/markdown/SDWebImage/SDWebImageCache结构2.png" alt="SDWebImageCache结构"></p>
-<p><strong>SDWebImageCacheConfig</strong>，正如其名，主要缓存策略的配置选项，比如最大缓存容量、缓存过期时间，读取缓存选项等，比较简单。</p>
-<p><strong>SDWebImageCache</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">typedef NS_ENUM(NSInteger, SDImageCacheType) &#123;</span><br><span class="line">    /**</span><br><span class="line">     * The image wasn&apos;t available the SDWebImage caches, but was downloaded from the web.</span><br><span class="line">     */</span><br><span class="line">    SDImageCacheTypeNone,</span><br><span class="line">    /**</span><br><span class="line">     * The image was obtained from the disk cache.</span><br><span class="line">     */</span><br><span class="line">    SDImageCacheTypeDisk,</span><br><span class="line">    /**</span><br><span class="line">     * The image was obtained from the memory cache.</span><br><span class="line">     */</span><br><span class="line">    SDImageCacheTypeMemory</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>在SDWebImageCache头文件里，可以看到有三种缓存策略,<code>SDImageCacheTypeNone</code>，<code>SDImageCacheTypeDisk</code>，<code>SDImageCacheTypeMemory</code></p>
-<p>分别是不使用缓存，硬盘缓存和内存缓存。</p>
-<p>当我们使用SDImage加载图片是，往往会用到SDWebImage的扩展</p>
-<p><code>[imageView sd_setImageWithURL:[NSURL URLWithString:@&quot;https://pic.tugou.com/material/1476243549_0622559.jpg&quot;]];</code>,</p>
-<p>这个方法会调用<em>SDWebImageManager</em>的<code>downloadImageWithURL</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id &lt;SDWebImageOperation&gt; operation = [SDWebImageManager.sharedManager downloadImageWithURL:url options:options progress:progressBlock completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) &#123;</span><br><span class="line">  </span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
-<p>SDWebImageManager 内部的 <code>downloadImageWithURL</code>方法会先使用我们前面提到的 SDImageCache 类的 <code>queryDiskCacheForKey</code> 方法，查询图片缓存：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">operation.cacheOperation = [self.imageCache queryDiskCacheForKey:key done:^(UIImage *image, SDImageCacheType cacheType) &#123;</span><br><span class="line">	...</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
-<p><code>queryDiskCacheForKey</code> 方法会先查询是否存在<em>Memory cahce</em></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- (UIImage *)imageFromMemoryCacheForKey:(NSString *)key &#123;</span><br><span class="line">    return [self.memCache objectForKey:key];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">- (UIImage *)imageFromDiskCacheForKey:(NSString *)key &#123;</span><br><span class="line">    // First check the in-memory cache...</span><br><span class="line">    UIImage *image = [self imageFromMemoryCacheForKey:key];</span><br><span class="line">    if (image) &#123;</span><br><span class="line">        return image;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Second check the disk cache...</span><br><span class="line">    UIImage *diskImage = [self diskImageForKey:key];</span><br><span class="line">    if (diskImage) &#123;</span><br><span class="line">        NSUInteger cost = SDCacheCostForImage(diskImage);</span><br><span class="line">        [self.memCache setObject:diskImage forKey:key cost:cost];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return diskImage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>LRU算法</strong></p>
-
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="../../../../tags/iOS/" rel="tag"># iOS</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="../../../03/22/Dictionary-to-Model/" rel="next" title="Dictionary to Model">
-                <i class="fa fa-chevron-left"></i> Dictionary to Model
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="../../../05/23/理解UIView的绘制-转/" rel="prev" title="理解UIView的绘制(转)">
-                理解UIView的绘制(转) <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
+    </header>
   </article>
 
 
-
-    <div class="post-spread">
       
     </div>
+
   </div>
+  
+  
+  
+
+  
+
 
 
           </div>
@@ -434,10 +313,6 @@
 
 
           
-
-  
-
-
 
         </div>
         
@@ -463,7 +338,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image" src="../../../../uploads/avatar.jpg" alt="陈栋楠">
+              <img class="site-author-image" itemprop="image" src="../../uploads/avatar.jpg" alt="陈栋楠">
             
               <p class="site-author-name" itemprop="name">陈栋楠</p>
               <p class="site-description motion-element" itemprop="description">陈栋楠的个人Blog，主要记录开发中的一些经验和心得</p>
@@ -474,7 +349,7 @@
             
               <div class="site-state-item site-state-posts">
               
-                <a href="../../../../archives">
+                <a href="../../archives">
               
                   <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">日志</span>
@@ -486,7 +361,7 @@
               
               
               <div class="site-state-item site-state-categories">
-                <a href="../../../../categories/index.html">
+                <a href="../index.html">
                   <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
@@ -497,7 +372,7 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="../../../../tags/index.html">
+                <a href="../../tags/index.html">
                   <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
@@ -612,57 +487,53 @@
 
   
   
-    <script type="text/javascript" src="../../../../lib/jquery/index.js?v=2.1.3"></script>
+    <script type="text/javascript" src="../../lib/jquery/index.js?v=2.1.3"></script>
   
 
   
   
-    <script type="text/javascript" src="../../../../lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+    <script type="text/javascript" src="../../lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
   
 
   
   
-    <script type="text/javascript" src="../../../../lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+    <script type="text/javascript" src="../../lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
   
 
   
   
-    <script type="text/javascript" src="../../../../lib/velocity/velocity.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="../../lib/velocity/velocity.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="../../../../lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="../../lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="../../../../lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+    <script type="text/javascript" src="../../lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
   
-
-
-  
-
-
-  <script type="text/javascript" src="../../../../js/src/utils.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="../../../../js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-  
-  <script type="text/javascript" src="../../../../js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="../../../../js/src/post-details.js?v=5.1.4"></script>
-
 
 
   
 
 
-  <script type="text/javascript" src="../../../../js/src/bootstrap.js?v=5.1.4"></script>
+  <script type="text/javascript" src="../../js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="../../js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="../../js/src/bootstrap.js?v=5.1.4"></script>
 
 
 
