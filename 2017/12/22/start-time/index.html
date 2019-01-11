@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="App的启动时间是影响用户体验的一大因素，整理了一些关于App启动时间优化的方法，并结合我们自己的项目实践，记录在这里。 App启动过程首先需要知道当我们点击手机屏幕上App的图标，到App的首页呈现在面前，系统经历了怎样的过程。这里以main函数为分界，将启动过程分成main函数前和main函数后两个阶段,，这两部分的时间分别用T1和T2来表示。  T1所包含的时间 ####加载可执行文件（.o">
+<meta name="description" content="App的启动时间是影响用户体验的一大因素，整理了一些关于App启动时间优化的方法，并结合我们自己的项目实践，记录在这里。 App启动过程首先需要知道当我们点击手机屏幕上App的图标，到App的首页呈现在面前，系统经历了怎样的过程。这里以main函数为分界，将启动过程分成main函数前和main函数后两个阶段,，这两部分的时间分别用T1和T2来表示。">
 <meta name="keywords" content="iOS开发">
 <meta property="og:type" content="article">
-<meta property="og:title" content="陈栋楠的Blog">
+<meta property="og:title" content="项目启动时间优化">
 <meta property="og:url" content="http://blog.chendongnan.com/2017/12/22/start-time/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="App的启动时间是影响用户体验的一大因素，整理了一些关于App启动时间优化的方法，并结合我们自己的项目实践，记录在这里。 App启动过程首先需要知道当我们点击手机屏幕上App的图标，到App的首页呈现在面前，系统经历了怎样的过程。这里以main函数为分界，将启动过程分成main函数前和main函数后两个阶段,，这两部分的时间分别用T1和T2来表示。  T1所包含的时间 ####加载可执行文件（.o">
+<meta property="og:description" content="App的启动时间是影响用户体验的一大因素，整理了一些关于App启动时间优化的方法，并结合我们自己的项目实践，记录在这里。 App启动过程首先需要知道当我们点击手机屏幕上App的图标，到App的首页呈现在面前，系统经历了怎样的过程。这里以main函数为分界，将启动过程分成main函数前和main函数后两个阶段,，这两部分的时间分别用T1和T2来表示。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/startup/t1t2new.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/startup/mach-o.png">
@@ -101,10 +101,10 @@
 <meta property="og:image" content="http://www.chendongnan.com/markdown/startup/UIStructure.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/startup/steps1.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/startup/steps2.png">
-<meta property="og:updated_time" content="2019-01-11T10:03:18.754Z">
+<meta property="og:updated_time" content="2019-01-11T11:27:50.065Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="陈栋楠的Blog">
-<meta name="twitter:description" content="App的启动时间是影响用户体验的一大因素，整理了一些关于App启动时间优化的方法，并结合我们自己的项目实践，记录在这里。 App启动过程首先需要知道当我们点击手机屏幕上App的图标，到App的首页呈现在面前，系统经历了怎样的过程。这里以main函数为分界，将启动过程分成main函数前和main函数后两个阶段,，这两部分的时间分别用T1和T2来表示。  T1所包含的时间 ####加载可执行文件（.o">
+<meta name="twitter:title" content="项目启动时间优化">
+<meta name="twitter:description" content="App的启动时间是影响用户体验的一大因素，整理了一些关于App启动时间优化的方法，并结合我们自己的项目实践，记录在这里。 App启动过程首先需要知道当我们点击手机屏幕上App的图标，到App的首页呈现在面前，系统经历了怎样的过程。这里以main函数为分界，将启动过程分成main函数前和main函数后两个阶段,，这两部分的时间分别用T1和T2来表示。">
 <meta name="twitter:image" content="http://www.chendongnan.com/markdown/startup/t1t2new.png">
 
 
@@ -141,7 +141,7 @@
 
 
 
-  <title> | 陈栋楠的Blog</title>
+  <title>项目启动时间优化 | 陈栋楠的Blog</title>
   
 
 
@@ -307,7 +307,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">项目启动时间优化</h1>
         
 
         <div class="post-meta">
@@ -381,6 +381,7 @@
       
         <p>App的启动时间是影响用户体验的一大因素，整理了一些关于App启动时间优化的方法，并结合我们自己的项目实践，记录在这里。</p>
 <h2 id="App启动过程"><a href="#App启动过程" class="headerlink" title="App启动过程"></a>App启动过程</h2><p>首先需要知道当我们点击手机屏幕上App的图标，到App的首页呈现在面前，系统经历了怎样的过程。这里以main函数为分界，将启动过程分成main函数前和main函数后两个阶段,，这两部分的时间分别用T1和T2来表示。</p>
+<a id="more"></a>
 <p><img src="http://www.chendongnan.com/markdown/startup/t1t2new.png" alt=""></p>
 <p><strong>T1所包含的时间</strong></p>
 <p>####加载可执行文件（.o文件）####</p>
@@ -649,7 +650,7 @@
               
                 <a href="../../../../archives">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
