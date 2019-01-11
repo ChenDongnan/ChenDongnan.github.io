@@ -98,7 +98,10 @@
 <meta property="og:image" content="http://www.chendongnan.com/markdown/startup/cost2.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/startup/cost1.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/startup/didFinishLauchWithOptions.png">
-<meta property="og:updated_time" content="2019-01-10T13:22:14.526Z">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/startup/UIStructure.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/startup/steps1.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/startup/steps2.png">
+<meta property="og:updated_time" content="2019-01-11T10:03:18.754Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="陈栋楠的Blog">
 <meta name="twitter:description" content="App的启动时间是影响用户体验的一大因素，整理了一些关于App启动时间优化的方法，并结合我们自己的项目实践，记录在这里。 App启动过程首先需要知道当我们点击手机屏幕上App的图标，到App的首页呈现在面前，系统经历了怎样的过程。这里以main函数为分界，将启动过程分成main函数前和main函数后两个阶段,，这两部分的时间分别用T1和T2来表示。  T1所包含的时间 ####加载可执行文件（.o">
@@ -458,7 +461,7 @@
 <ul>
 <li>合并已经存在的dylibs</li>
 <li>减少非系统库的依赖</li>
-<li>使用静态资源</li>
+<li>如果可以的话，把动态库改造为静态库</li>
 </ul>
 </li>
 <li><p>Rebase/Bind</p>
@@ -474,13 +477,20 @@
 </li>
 <li><p>Initializers</p>
 <p>将不必须在<code>+load</code>方法中做的事情延迟到<code>+initialize</code>中</p>
-<p>​</p>
+<p>这是因为<code>+load</code>方法是在app启动的时候就被调用，而<code>+initialize</code>方法则是在Class第一次使用的时候才调用，相当于是懒加载了。可以把<code>+load</code>中的代码移到<code>initialize</code>中，并结合<code>dispatch_once</code>来防止重复调用。</p>
+<p>不过我们项目中只有在使用<code>method swizzling</code>的时候会在<code>+load</code>中调用方法。所以这一点也没什么好优化的。</p>
 </li>
 </ol>
 <p><img src="http://www.chendongnan.com/markdown/startup/pre_mainafter.png" alt=""></p>
 <p>可以看到优化后，启动时间缩短为359.94ms, 已经达到了苹果的推荐值。</p>
 <p>###对于T2的优化###</p>
-<p>首先是对于<code>didFinishLauchingWithOptions</code>这部分，经过测算发现在这个函数中比较耗时的有两个操作，这里把具体函数名隐去了</p>
+<p>影响T2的因素有以下两个</p>
+<ul>
+<li>执行didFinishLauchingWithOptions的耗时</li>
+<li>rootViewController及其childViewController的加载、view及其subviews的加载</li>
+</ul>
+<p>####优化didFinishLauchingWithOptions</p>
+<p>对于<code>didFinishLauchingWithOptions</code>这部分，经过测算发现在这个函数中比较耗时的有两个操作，这里把具体函数名隐去了</p>
 <p><img src="http://www.chendongnan.com/markdown/startup/cost2.png" alt=""></p>
 <p><img src="http://www.chendongnan.com/markdown/startup/cost1.png" alt=""></p>
 <p>在<code>didFinishLauchingWithOptions</code>这个方法中，主要处理的就是一些三方的初始化已经项目的基本配置。</p>
@@ -503,10 +513,20 @@
 <li>初始化键盘管理</li>
 <li>获取服务城市列表</li>
 </ul>
+<p><strong>项目配置相关的多个网络请求合并为一个请求</strong></p>
 <p>通过上述方案，<code>didFinishLaunchingWithOptions</code>的执行时间缩短为1.7s左右</p>
 <p><img src="http://www.chendongnan.com/markdown/startup/didFinishLauchWithOptions.png" alt=""></p>
-<p>经过优化，App的启动时间由4.9秒缩短到2.06秒</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>整个流程下来后，得到的不光是app启动速度的提升，也让自己对app启动的原理有了更加深刻的理解。苹果的WWDC Session 真的是非常好的学习资料，没有谁能比得上苹果自家工程师对iOS的了解，以后要好好利用起来。</p>
+<h4 id="优化rootViewController加载"><a href="#优化rootViewController加载" class="headerlink" title="优化rootViewController加载"></a>优化rootViewController加载</h4><p>我们项目中的UI总体架构如下图所示</p>
+<p><img src="http://www.chendongnan.com/markdown/startup/UIStructure.png" alt=""></p>
+<p>然后在AppDelegate中进行rootViewController的设置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions &#123;</span><br><span class="line">    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];</span><br><span class="line">    self.window.backgroundColor = [UIColor whiteColor];</span><br><span class="line">    TGMainViewController *root = [[TGMainViewController alloc] init];;</span><br><span class="line">    self.window.rootViewController = root;</span><br><span class="line">    [self.window makeKeyAndVisible];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后在<code>TGMainViewController</code>的<code>viewDidLoad</code>中进行它的viewControllers设置，然后再进入到具体的每个viewController的<code>viewDidLoad</code>方法中进行各自的初始化操作。按照常规思路来讲，整个UI初始化的过程应该是</p>
+<p><img src="http://www.chendongnan.com/markdown/startup/steps1.png" alt=""></p>
+<p>这边的<code>TGHomeViewController</code>是tabBarController的viewControllers的其中一个。但实际上，这样的前提是我们不在<code>TGMainViewController</code>中去操作<code>TGHomeViewController</code>的view，如果操作了的话，调用顺序会变为</p>
+<p><img src="http://www.chendongnan.com/markdown/startup/steps2.png" alt=""></p>
+<p>因为一般我们都把界面的初始化、网络请求、数据解析、视图渲染等操作放在 <code>viewDidLoad</code> 方法里，这样一来每次启动 APP 的时候，在用户看到首页之前，需要把这些事件全部都处理完，才会进入到视图渲染阶段。这大大延长了T2。</p>
+<p>为了解决这个问题，我们把App的闪屏页作为了App的rootViewController，在展示闪屏页的同时进行首页UI的构建。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>经过优化，App的启动时间由4.9秒缩短到2.06秒。整个流程下来后，得到的不光是app启动速度的提升，也让自己对app启动的原理有了更加深刻的理解。苹果的WWDC Session 真的是非常好的学习资料，没有谁能比得上苹果自家工程师对iOS的了解，以后要好好利用起来。</p>
 <p><strong>参考资料</strong></p>
 
       
@@ -684,7 +704,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#App启动过程"><span class="nav-number">1.</span> <span class="nav-text">App启动过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Load-dylibs"><span class="nav-number">1.0.1.</span> <span class="nav-text">Load dylibs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Fix-ups"><span class="nav-number">1.0.2.</span> <span class="nav-text">Fix-ups</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Rebasing-amp-Binding"><span class="nav-number">1.0.3.</span> <span class="nav-text">Rebasing&amp;Binding</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#启动时间测量"><span class="nav-number">2.</span> <span class="nav-text">启动时间测量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目中的优化实践"><span class="nav-number">3.</span> <span class="nav-text">项目中的优化实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#T1的优化"><span class="nav-number">3.1.</span> <span class="nav-text">T1的优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#App启动过程"><span class="nav-number">1.</span> <span class="nav-text">App启动过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Load-dylibs"><span class="nav-number">1.0.1.</span> <span class="nav-text">Load dylibs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Fix-ups"><span class="nav-number">1.0.2.</span> <span class="nav-text">Fix-ups</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Rebasing-amp-Binding"><span class="nav-number">1.0.3.</span> <span class="nav-text">Rebasing&amp;Binding</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#启动时间测量"><span class="nav-number">2.</span> <span class="nav-text">启动时间测量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目中的优化实践"><span class="nav-number">3.</span> <span class="nav-text">项目中的优化实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#T1的优化"><span class="nav-number">3.1.</span> <span class="nav-text">T1的优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#优化rootViewController加载"><span class="nav-number">3.1.1.</span> <span class="nav-text">优化rootViewController加载</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></div>
             
 
           </div>
