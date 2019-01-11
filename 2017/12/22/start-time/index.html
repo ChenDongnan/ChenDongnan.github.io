@@ -101,7 +101,7 @@
 <meta property="og:image" content="http://www.chendongnan.com/markdown/startup/UIStructure.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/startup/steps1.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/startup/steps2.png">
-<meta property="og:updated_time" content="2019-01-11T11:27:50.065Z">
+<meta property="og:updated_time" content="2019-01-11T13:11:05.635Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="项目启动时间优化">
 <meta name="twitter:description" content="App的启动时间是影响用户体验的一大因素，整理了一些关于App启动时间优化的方法，并结合我们自己的项目实践，记录在这里。 App启动过程首先需要知道当我们点击手机屏幕上App的图标，到App的首页呈现在面前，系统经历了怎样的过程。这里以main函数为分界，将启动过程分成main函数前和main函数后两个阶段,，这两部分的时间分别用T1和T2来表示。">
@@ -529,6 +529,9 @@
 <p>为了解决这个问题，我们把App的闪屏页作为了App的rootViewController，在展示闪屏页的同时进行首页UI的构建。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>经过优化，App的启动时间由4.9秒缩短到2.06秒。整个流程下来后，得到的不光是app启动速度的提升，也让自己对app启动的原理有了更加深刻的理解。苹果的WWDC Session 真的是非常好的学习资料，没有谁能比得上苹果自家工程师对iOS的了解，以后要好好利用起来。</p>
 <p><strong>参考资料</strong></p>
+<p><a href="https://developer.apple.com/videos/play/wwdc2016/406/" target="_blank" rel="noopener">WWDC 2016 Optimizing App Startup Time</a></p>
+<p><a href="https://techblog.toutiao.com/2017/01/17/iosspeed/" target="_blank" rel="noopener">今日头条iOS客户端启动速度优化</a></p>
+<p><a href="https://mp.weixin.qq.com/s/zeWfmAi0YnoQowcPpFhHUA" target="_blank" rel="noopener">iOS启动时间优化</a></p>
 
       
     </div>
@@ -559,8 +562,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="../../../07/19/facebook-chisel/" rel="next" title="facebook/chisel">
-                <i class="fa fa-chevron-left"></i> facebook/chisel
+              <a href="../../../05/23/理解UIView的绘制-转/" rel="next" title="理解UIView的绘制(转)">
+                <i class="fa fa-chevron-left"></i> 理解UIView的绘制(转)
               </a>
             
           </div>
