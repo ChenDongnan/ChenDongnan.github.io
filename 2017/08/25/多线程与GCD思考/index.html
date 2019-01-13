@@ -79,24 +79,38 @@
 
 
 
-<meta name="description" content="本文转自 http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/ 理解UIView的绘制UIView是如何显示到Screen上的 也许要先从Runloop开始说，iOS的mainRunloop是一个60fps的回调，也就是说每16.7ms会绘制一次屏幕，这个时间段内要完成view的缓冲区创建，view内容的绘制（如果重写了drawRe">
+<meta name="description" content="最近在阅读『程序员的自我修养—链接、装载与库』一书，第一章就提到了多线程的相关知识。作为计算机里一个非常重要的概念，多线程在iOS开发中也有着非常重要的地位，而线程安全也是在开发中要十分注意的地方，稍不留心就会产生意想不到的bug。这篇文章主要记录在项目中使用GCD的相关思考。  试验多线程涉及到了队列，异步/同步，串行/并行等概念，而当这些概念和GCD结合时，很容易搞不清楚会产生怎样的结果，这里">
 <meta name="keywords" content="iOS">
 <meta property="og:type" content="article">
-<meta property="og:title" content="理解UIView的绘制(转)">
-<meta property="og:url" content="http://blog.chendongnan.com/2017/05/23/理解UIView的绘制-转/index.html">
+<meta property="og:title" content="多线程与GCD思考">
+<meta property="og:url" content="http://blog.chendongnan.com/2017/08/25/多线程与GCD思考/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="本文转自 http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/ 理解UIView的绘制UIView是如何显示到Screen上的 也许要先从Runloop开始说，iOS的mainRunloop是一个60fps的回调，也就是说每16.7ms会绘制一次屏幕，这个时间段内要完成view的缓冲区创建，view内容的绘制（如果重写了drawRe">
+<meta property="og:description" content="最近在阅读『程序员的自我修养—链接、装载与库』一书，第一章就提到了多线程的相关知识。作为计算机里一个非常重要的概念，多线程在iOS开发中也有着非常重要的地位，而线程安全也是在开发中要十分注意的地方，稍不留心就会产生意想不到的bug。这篇文章主要记录在项目中使用GCD的相关思考。  试验多线程涉及到了队列，异步/同步，串行/并行等概念，而当这些概念和GCD结合时，很容易搞不清楚会产生怎样的结果，这里">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://vizlabxt.github.io/images/2013/11/QQ20131123-1.png">
-<meta property="og:image" content="http://vizlabxt.github.io/images/2013/11/QQ20131123-2.png">
-<meta property="og:image" content="http://vizlabxt.github.io/images/2013/11/QQ20131123-3.png">
-<meta property="og:image" content="http://vizlabxt.github.io/images/2013/11/QQ20131123-4.png">
-<meta property="og:image" content="http://vizlabxt.github.io/images/2013/11/QQ20131123-6.png">
-<meta property="og:updated_time" content="2017-05-23T03:54:31.000Z">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/syncconcurrent.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/syncconcurrentresult.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/asyncconcurrent.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/asyncconcurrentresult.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/syncserial.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/syncserialresult.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/asyncserial.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/asyncserialresult.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/syncmain.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/othersyncmain.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/othersyncmainresult.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/asyncmain.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/asyncmainresult.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/barrierasync.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/barrierasyncresult.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/notsafe.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/notsaferesult.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/safe.png">
+<meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/saferesult.png">
+<meta property="og:updated_time" content="2019-01-13T15:11:39.082Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="理解UIView的绘制(转)">
-<meta name="twitter:description" content="本文转自 http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/ 理解UIView的绘制UIView是如何显示到Screen上的 也许要先从Runloop开始说，iOS的mainRunloop是一个60fps的回调，也就是说每16.7ms会绘制一次屏幕，这个时间段内要完成view的缓冲区创建，view内容的绘制（如果重写了drawRe">
-<meta name="twitter:image" content="http://vizlabxt.github.io/images/2013/11/QQ20131123-1.png">
+<meta name="twitter:title" content="多线程与GCD思考">
+<meta name="twitter:description" content="最近在阅读『程序员的自我修养—链接、装载与库』一书，第一章就提到了多线程的相关知识。作为计算机里一个非常重要的概念，多线程在iOS开发中也有着非常重要的地位，而线程安全也是在开发中要十分注意的地方，稍不留心就会产生意想不到的bug。这篇文章主要记录在项目中使用GCD的相关思考。  试验多线程涉及到了队列，异步/同步，串行/并行等概念，而当这些概念和GCD结合时，很容易搞不清楚会产生怎样的结果，这里">
+<meta name="twitter:image" content="http://www.chendongnan.com/markdown/GCD/syncconcurrent.png">
 
 
 
@@ -126,13 +140,13 @@
 
 
 
-  <link rel="canonical" href="http://blog.chendongnan.com/2017/05/23/理解UIView的绘制-转/">
+  <link rel="canonical" href="http://blog.chendongnan.com/2017/08/25/多线程与GCD思考/">
 
 
 
 
 
-  <title>理解UIView的绘制(转) | 陈栋楠的Blog</title>
+  <title>多线程与GCD思考 | 陈栋楠的Blog</title>
   
 
 
@@ -298,7 +312,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">理解UIView的绘制(转)</h1>
+          <h1 class="post-title" itemprop="name headline">多线程与GCD思考</h1>
         
 
         <div class="post-meta">
@@ -310,8 +324,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-23T11:48:18+08:00">
-                2017-05-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-25T11:04:30+08:00">
+                2017-08-25
               </time>
             
 
@@ -320,6 +334,28 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="../../../../categories/多线程/" itemprop="url" rel="index">
+                    <span itemprop="name">多线程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -348,86 +384,137 @@
       
 
       
-        <p>本文转自 <a href="http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/" target="_blank" rel="noopener">http://vizlabxt.github.io/blog/2012/10/22/UIView-Rendering/</a></p>
-<h1 id="理解UIView的绘制"><a href="#理解UIView的绘制" class="headerlink" title="理解UIView的绘制"></a>理解UIView的绘制</h1><p><code>UIView</code>是如何显示到Screen上的</p>
-<p>也许要先从<code>Runloop</code>开始说，iOS的main<code>Runloop</code>是一个60fps的回调，也就是说每16.7ms会绘制一次屏幕，这个时间段内要完成view的缓冲区创建，view内容的绘制（如果重写了<code>drawRect</code>），这些CPU的工作。然后将这个缓冲区交给GPU渲染，这个过程又包括多个view的拼接(compositing)，纹理的渲染（Texture）等，最终显示在屏幕上。因此，如果在16.7ms内完不成这些操作，比如，CPU做了太多的工作，或者view层次过于多，图片过于大，导致GPU压力太大，就会导致“卡”的现象，也就是丢帧。</p>
-<p>苹果官方给出的最佳帧率是：60fps，也就是1帧不丢，当然这是理想中的绝佳的体验。</p>
-<p>这个60fps改怎么理解呢？一般来说如果帧率达到25+fps，人眼就基本感觉不到停顿了，因此，如果你能让你ios程序稳定的保持在30fps已经很不错了，注意，是“稳定”在30fps，而不是，10fps，40fps，20fps这样的跳动，如果帧频不稳就会有卡的感觉。60fps真的很难达到，尤其在iphone4，4s上。</p>
-<a id="more"></a>
-<p>总的来说，<code>UIView</code>从绘制到Render的过程有如下几步：</p>
+        <p>最近在阅读『程序员的自我修养—链接、装载与库』一书，第一章就提到了多线程的相关知识。作为计算机里一个非常重要的概念，多线程在iOS开发中也有着非常重要的地位，而线程安全也是在开发中要十分注意的地方，稍不留心就会产生意想不到的bug。这篇文章主要记录在项目中使用GCD的相关思考。</p>
+<!--mroe-->
+<h2 id="试验"><a href="#试验" class="headerlink" title="试验"></a>试验</h2><p>多线程涉及到了队列，异步/同步，串行/并行等概念，而当这些概念和GCD结合时，很容易搞不清楚会产生怎样的结果，这里就用实例来验证一下</p>
 <ul>
-<li>每一个<code>UIView</code>都有一个<code>layer</code>，每一个<code>layer</code>都有个<code>content</code>，这个<code>content</code>指向的是一块缓存，叫做backing store。</li>
-<li><code>UIView</code>的绘制和渲染是两个过程，当<code>UIView</code>被绘制时，CPU执行<code>drawRect</code>，通过context将数据写入backing store</li>
-<li>当backing store写完后，通过render server交给GPU去渲染，将backing store中的bitmap数据显示在屏幕上</li>
+<li><strong>同步并发</strong></li>
 </ul>
-<p>上面提到的从CPU到GPU的过程可用下图表示：</p>
-<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-1.png" target="_blank" rel="noopener"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-1.png" alt="UIView Rendering"></a></p>
-<p>下面具体来讨论下这个过程</p>
-<h3 id="CPU-bound："><a href="#CPU-bound：" class="headerlink" title="CPU bound："></a>CPU bound：</h3><p>假设我们创建一个<code>UILabel</code>：</p>
-<p><code>UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(10, 50, 300, 14)];label.backgroundColor = [UIColor whiteColor];label.font = [UIFont systemFontOfSize:14.0f];label.text = @&quot;test&quot;;[self.view addSubview:label];</code></p>
-<p>这个时候不会发生任何操作，由于<code>UILabel</code>重写了<code>drawRect</code>，因此，这个view会被marked as “dirty”：</p>
-<p>类似这个样子：</p>
-<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-2.png" target="_blank" rel="noopener"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-2.png" alt="img"></a></p>
-<p>然后一个新的<code>Runloop</code>到来，上面说道在这个<code>Runloop</code>中需要将界面渲染上去，对于UIKit的渲染，Apple用的是它的Core Animation。</p>
-<p>做法是在<code>Runloop</code>开始的时候调用：</p>
-<p><code>[CATransaction begin]</code></p>
-<p>在<code>Runloop</code>结束的时候调用</p>
-<p><code>[CATransaction commit]</code></p>
-<p>在begin和commit之间做的事情是将view增加到view hierarchy中，这个时候也不会发生任何绘制的操作。</p>
-<p>当<code>[CATransaction commit]</code>执行完后，CPU开始绘制这个view：</p>
-<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-3.png" target="_blank" rel="noopener"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-3.png" alt="img"></a></p>
+<p><img src="http://www.chendongnan.com/markdown/GCD/syncconcurrent.png" alt=""></p>
+<p>执行结果如下,任务在当前线程中串行执行，不会开启新线程。</p>
+<p><img src="http://www.chendongnan.com/markdown/GCD/syncconcurrentresult.png" alt=""></p>
 <ul>
-<li>首先CPU会为layer分配一块内存用来绘制bitmap，叫做backing store</li>
-<li>创建指向这块bitmap缓冲区的指针，叫做CGContextRef</li>
-<li>通过Core Graphic的api，也叫Quartz2D，绘制bitmap</li>
-<li>将layer的content指向生成的bitmap</li>
-<li>清空dirty flag标记</li>
+<li><strong>异步并发</strong></li>
 </ul>
-<p>这样CPU的绘制基本上就完成了。</p>
-<p>通过time profiler 可以完整的看到个过程：</p>
-<p><code>Running Time Self Symbol Name2.0ms 1.2% 0.0 +[CATransaction flush]2.0ms 1.2% 0.0 CA::Transaction::commit()2.0ms 1.2% 0.0 CA::Context::commit_transaction(CA::Transaction*)1.0ms 0.6% 0.0 CA::Layer::layout_and_display_if_needed(CA::Transaction*)1.0ms 0.6% 0.0 CA::Layer::display_if_needed(CA::Transaction*)1.0ms 0.6% 0.0 -[CALayer display]1.0ms 0.6% 0.0 CA::Layer::display()1.0ms 0.6% 0.0 -[CALayer _display]1.0ms 0.6% 0.0 CA::Layer::display_()1.0ms 0.6% 0.0 CABackingStoreUpdate_1.0ms 0.6% 0.0 backing_callback(CGContext*, void*)1.0ms 0.6% 0.0 -[CALayer drawInContext:]1.0ms 0.6% 0.0 -[UIView(CALayerDelegate) drawLayer:inContext:]1.0ms 0.6% 0.0 -[UILabel drawRect:]1.0ms 0.6% 0.0 -[UILabel drawTextInRect:]</code></p>
-<p>假如某个时刻修改了label的text：</p>
-<p><code>label.text = @&quot;hello world&quot;;</code></p>
-<p>由于内容变了，layer的content的bitmap的尺寸也要变化，因此这个时候当新的<code>Runloop</code>到来时，CPU要为layer重新创建一个backing store，重新绘制bitmap。</p>
-<p>CPU这一块最耗时的地方往往在Core Graphic的绘制上，关于Core Graphic的性能优化是另一个话题了，又会牵扯到很多东西，就不在这里讨论了。</p>
-<h3 id="GPU-bound："><a href="#GPU-bound：" class="headerlink" title="GPU bound："></a>GPU bound：</h3><p>CPU完成了它的任务：将view变成了bitmap，然后就是GPU的工作了，GPU处理的单位是Texture。</p>
-<p>基本上我们控制GPU都是通过OpenGL来完成的，但是从bitmap到Texture之间需要一座桥梁，Core Animation正好充当了这个角色：</p>
-<p>Core Animation对OpenGL的api有一层封装，当我们的要渲染的layer已经有了bitmap content的时候，这个content一般来说是一个CGImageRef，CoreAnimation会创建一个OpenGL的Texture并将CGImageRef（bitmap）和这个Texture绑定，通过TextureID来标识。</p>
-<p>这个对应关系建立起来之后，剩下的任务就是GPU如何将Texture渲染到屏幕上了。</p>
-<p>GPU大致的工作模式如下：</p>
-<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-4.png" target="_blank" rel="noopener"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-4.png" alt="`UIView` rendering-03"></a></p>
-<p>整个过程也就是一件事：CPU将准备好的bitmap放到RAM里，GPU去搬这快内存到VRAM中处理。</p>
-<p>而这个过程GPU所能承受的极限大概在16.7ms完成一帧的处理，所以最开始提到的60fps其实就是GPU能处理的最高频率。</p>
-<p>因此，GPU的挑战有两个：</p>
+<p><img src="http://www.chendongnan.com/markdown/GCD/asyncconcurrent.png" alt=""></p>
+<p>执行结果如下,开启了新线程，任务交替/同时执行的。</p>
+<p><img src="http://www.chendongnan.com/markdown/GCD/asyncconcurrentresult.png" alt=""></p>
 <ul>
-<li>将数据从RAM搬到VRAM中</li>
-<li>将Texture渲染到屏幕上</li>
+<li>同步串行</li>
 </ul>
-<p>这两个中瓶颈基本在第二点上。渲染Texture基本要处理这么几个问题：</p>
-<h3 id="Compositing："><a href="#Compositing：" class="headerlink" title="Compositing："></a>Compositing：</h3><p>Compositing是指将多个纹理拼到一起的过程，对应UIKit，是指处理多个view合到一起的情况，如</p>
-<p><code>[self.view addsubview : subview]。</code></p>
-<p>如果view之间没有叠加，那么GPU只需要做普通渲染即可。 如果多个view之间有叠加部分，GPU需要做blending。</p>
-<p>加入两个view大小相同，一个叠加在另一个上面，那么计算公式如下：</p>
-<p><code>R = S+D*(1-Sa)</code></p>
-<p><code>R</code>: 为最终的像素值</p>
-<p><code>S</code>: 代表 上面的Texture（Top Texture）</p>
-<p><code>D</code>: 代表下面的Texture(lower Texture)</p>
-<p>其中S,D都已经pre-multiplied各自的alpha值。</p>
-<p><code>Sa</code>代表Texture的alpha值。</p>
-<p>假如Top Texture（上层view）的alpha值为<code>1</code>，即不透明。那么它会遮住下层的Texture。即,<code>R = S</code>。是合理的。 假如Top Texture（上层view）的alpha值为<code>0.5</code>，<code>S</code> 为 <code>(1,0,0</code>)，乘以alpha后为<code>(0.5,0,0）</code>。D为<code>(0，0，1)</code>。 得到的R为<code>（0.5，0，0.5）</code>。</p>
-<p>基本上每个像素点都需要这么计算一次。</p>
-<p>因此，view的层级很复杂，或者view都是半透明的（alpha值不为1）都会带来GPU额外的计算工作。</p>
-<h3 id="Size"><a href="#Size" class="headerlink" title="Size"></a>Size</h3><p>这个问题，主要是处理image带来的，假如内存里有一张400x400的图片，要放到100x100的imageview里，如果不做任何处理，直接丢进去，问题就大了，这意味着，GPU需要对大图进行缩放到小的区域显示，需要做像素点的sampling，这种smapling的代价很高，又需要兼顾pixel alignment。计算量会飙升。</p>
-<h3 id="Offscreen-Rendering-And-Mask"><a href="#Offscreen-Rendering-And-Mask" class="headerlink" title="Offscreen Rendering And Mask"></a>Offscreen Rendering And Mask</h3><p>如果我们对layer做这样的操作：</p>
-<p><code>label.layer.cornerRadius = 5.0f;label.layer.masksToBounds = YES;</code></p>
-<p>会产生offscreen rendering,它带来的最大的问题是，当渲染这样的layer的时候，需要额外开辟内存，绘制好radius，mask，然后再将绘制好的bitmap重新赋值给layer。</p>
-<p>因此继续性能的考虑，Quartz提供了优化的api：</p>
-<p><code>label.layer.cornerRadius = 5.0f;label.layer.masksToBounds = YES;label.layer.shouldRasterize = YES;label.layer.rasterizationScale = label.layer.contentsScale;</code></p>
-<p>简单的说，这是一种cache机制。</p>
-<p>同样GPU的性能也可以通过instrument去衡量：</p>
-<p><a href="http://vizlabxt.github.io/images/2013/11/QQ20131123-6.png" target="_blank" rel="noopener"><img src="http://vizlabxt.github.io/images/2013/11/QQ20131123-6.png" alt="QQ20131123-6"></a></p>
-<p>红色代表GPU需要做额外的工作来渲染View，绿色代表GPU无需做额外的工作来处理bitmap。</p>
-<p>That’s all</p>
+<p><img src="http://www.chendongnan.com/markdown/GCD/syncserial.png" alt=""></p>
+<p>执行结果如下，不会开启新线程，任务串行执行</p>
+<p><img src="http://www.chendongnan.com/markdown/GCD/syncserialresult.png" alt=""></p>
+<ul>
+<li><strong>异步串行</strong></li>
+</ul>
+<p><img src="http://www.chendongnan.com/markdown/GCD/asyncserial.png" alt=""></p>
+<p>执行结果如下，会开启一条新线程，任务串行执行</p>
+<p><img src="http://www.chendongnan.com/markdown/GCD/asyncserialresult.png" alt=""></p>
+<ul>
+<li><strong>主线程同步主队列</strong></li>
+</ul>
+<p><img src="http://www.chendongnan.com/markdown/GCD/syncmain.png" alt=""></p>
+<p>执行结果是互相等待造成死锁。</p>
+<ul>
+<li><p><strong>其他线程中调用同步主队列</strong></p>
+<p><img src="http://www.chendongnan.com/markdown/GCD/othersyncmain.png" alt=""></p>
+<p>通过<code>detachNewThread</code>方法创建线程并在创建的线程中执行<code>syncMain</code>方法。执行结果如下，不会开启新线程，任务串行执行。</p>
+<p><img src="http://www.chendongnan.com/markdown/GCD/othersyncmainresult.png" alt=""></p>
+<p>在这种情况下不会阻塞的原因是因为<code>syncMain</code>被放到了其他线程中，而任务都被追加到了主队列中，任务会在主线程中执行。<code>syncMain</code> 任务在其他线程中执行添加<code>任务1</code>到主队列中，因为主队列现在没有正在执行的任务，所以，会直接执行主队列的<code>任务1</code>，等<code>任务1</code>执行完毕，再接着执行<code>任务2</code>、<code>任务3</code>。所以这里不会阻塞线程。</p>
+</li>
+<li><p><strong>异步主队列</strong></p>
+</li>
+</ul>
+<p><img src="http://www.chendongnan.com/markdown/GCD/asyncmain.png" alt=""></p>
+<p>执行结果如下，没有开启新线程，任务串行执行</p>
+<p><img src="http://www.chendongnan.com/markdown/GCD/asyncmainresult.png" alt=""></p>
+<p>总结一下各种情况</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>并发队列</th>
+<th>串行队列</th>
+<th>主队列</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>同步</td>
+<td>不会开启新线程，串行执行任务</td>
+<td>不会开启新线程，串行执行任务</td>
+<td>主线程调用：<br>造成死锁</td>
+</tr>
+<tr>
+<td>异步</td>
+<td>会开启新线程，并发执行任务</td>
+<td>会开启新线程，串行执行任务</td>
+<td>不会开启新线程，串行执行任务。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="GCD的使用场景"><a href="#GCD的使用场景" class="headerlink" title="GCD的使用场景"></a>GCD的使用场景</h2><p>GCD作为一种轻量级的多线程解决方案，在我们项目中的使用频率是相当高的。下面就列举一下</p>
+<p><strong>耗时操作</strong></p>
+<p>这是项目里最常见的应用场景，在网络请求或者有其他耗时操作的时候，为了避免阻塞主线程，我们把这些耗时操作放在子线程里处理，然后在主线程使用处理结果并更新UI。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> dispatch_async(dispatch_get_global_queue(0, 0), ^&#123;</span><br><span class="line">    //耗时操作，如网络请求</span><br><span class="line">    //请求完成之后，回到主线程更新UI</span><br><span class="line">    dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        //更新UI操作   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>延时执行</strong></p>
+<p>在需要延时执行某个任务时，可以使用<code>dispatch_after</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^&#123;</span><br><span class="line">	//延时执行任务</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><strong>执行一次任务</strong></p>
+<p>这也是项目中最常用到的。在创建单例、或者有整个程序运行过程中只执行一次的代码时会用到 GCD 的 <code>dispatch_once</code> 函数。使用<code>dispatch_once</code> 函数能保证某段代码在程序运行过程中只被执行1次，并且即使在多线程的环境下，<code>dispatch_once</code>也可以保证线程安全。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (void)once &#123;</span><br><span class="line">    static dispatch_once_t onceToken;</span><br><span class="line">    dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">        // 只执行1次的代码(默认是线程安全的)</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>时序管理</strong></p>
+<p>某个页面存在多个请求，任务X需要在这多个请求都结束后再进行。一般情况下为了省事可能就会把B请求放在A请求的成功回调中发起，但是这样做会有几个潜在的问题：</p>
+<ul>
+<li>请求过多时需要写多层嵌套</li>
+<li>如果某个请求失败了，就不会执行下去</li>
+<li>请求同步进行，在网络不好的情况下会造成长时间等待</li>
+</ul>
+<p>这时候就可以考虑使用<code>dispatch_group</code>来实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">dispatch_group_t group = dispatch_group_create();</span><br><span class="line">dispatch_queue_t queue = dispatch_get_global_queue(0, 0);</span><br><span class="line">dispatch_group_enter(group);</span><br><span class="line">dispatch_group_async(group, queue, ^&#123;</span><br><span class="line">   //请求A,在A的完成回调中调用leave</span><br><span class="line">    dispatch_group_leave(group);</span><br><span class="line">&#125;);</span><br><span class="line">dispatch_group_enter(group);</span><br><span class="line">dispatch_group_async(group, queue, ^&#123;</span><br><span class="line">    //请求B,在B的完成回调中调用leave</span><br><span class="line">    dispatch_group_leave(group);</span><br><span class="line">&#125;);</span><br><span class="line">dispatch_group_enter(group);</span><br><span class="line">dispatch_group_async(group, queue, ^&#123;</span><br><span class="line">    //请求C,在C的完成回调中调用leave</span><br><span class="line">    dispatch_group_leave(group);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br><span class="line">dispatch_group_notify(group, dispatch_get_main_queue, ^&#123;</span><br><span class="line">    //网络请求完成，刷新界面</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>或者使用<code>dispatch_barrier_async</code>，也可以实现同样的效果</p>
+<p><img src="http://www.chendongnan.com/markdown/GCD/barrierasync.png" alt=""></p>
+<p><img src="http://www.chendongnan.com/markdown/GCD/barrierasyncresult.png" alt=""></p>
+<p><strong>定时器</strong></p>
+<p>由于NSTimer对Target是强引用，使用不当很容易造成内存泄漏。此外，NSTimer 的运行依赖于 Runloop，在 Runloop 的一次循环中，NSTimer 也只会执行一次，这使得在 Runloop 负担比较重时，可能会跳过NSTimer的执行，因此，在用到定时器的地方，可以用 GCD 的 TimerSource代替，YYKit中也使用了该方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">- (instancetype)initWithFireTime:(NSTimeInterval)start</span><br><span class="line">                        interval:(NSTimeInterval)interval</span><br><span class="line">                          target:(id)aTarget</span><br><span class="line">                        selector:(SEL)aSelector</span><br><span class="line">                         repeats:(BOOL)repeats &#123;</span><br><span class="line">    self = [super init];</span><br><span class="line">    _repeats = repeats;</span><br><span class="line">    _timeInterval = interval;</span><br><span class="line">    _valid = YES;</span><br><span class="line">    _target = aTarget;</span><br><span class="line">    _selector = aSelector;</span><br><span class="line">    </span><br><span class="line">    __weak typeof (self) weakSelf = self;</span><br><span class="line">    _lock = dispatch_semaphore_create(1);</span><br><span class="line">    _source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());</span><br><span class="line">    dispatch_source_set_timer(_source, dispatch_time(DISPATCH_TIME_NOW, (start * NSEC_PER_SEC)), (interval * NSEC_PER_SEC), 0);</span><br><span class="line">    dispatch_source_set_event_handler(_source, ^&#123;</span><br><span class="line">        [self fire];</span><br><span class="line">    &#125;);</span><br><span class="line">    dispatch_resume(_source);</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>线程安全</strong></p>
+<p>一个非常经典的多线程问题—火车站卖票。</p>
+<p><img src="http://www.chendongnan.com/markdown/GCD/notsafe.png" alt=""></p>
+<p>运行的结果为</p>
+<p><img src="http://www.chendongnan.com/markdown/GCD/notsaferesult.png" alt=""></p>
+<p>可以看到剩余的票数是乱的。这种时候就可以考虑使用<code>semaphore</code>来对线程进行加锁操作。</p>
+<p><img src="http://www.chendongnan.com/markdown/GCD/safe.png" alt=""></p>
+<p><img src="http://www.chendongnan.com/markdown/GCD/saferesult.png" alt=""></p>
+<p>可以看到使用<code>semaphore</code>加锁之后，结果就是正确的。</p>
+<h2 id="GCD的坑"><a href="#GCD的坑" class="headerlink" title="GCD的坑"></a>GCD的坑</h2><p>GCD给我们的开发带来了非常多的便利，但如果使用不当也会造成很多问题，下面记录下GCD使用过程中容易产生问题的点。</p>
+<ul>
+<li><strong>dispatch_sync导致死锁</strong></li>
+</ul>
+<p>这个问题在上文中已经提到过。再比如下面这段代码也会造成死锁。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- (void)test1 &#123;</span><br><span class="line">    dispatch_sync(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        //造成死锁</span><br><span class="line">        [self test2];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line">- (void)test2 &#123;</span><br><span class="line">    dispatch_sync(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        NSLog(@&quot;test2&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以在使用dispatch_sync时一定要慎重。</p>
+<ul>
+<li><p><strong>dispatch_once_t必须是全局或static变量</strong></p>
+<p>在实现单例时正确的写法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">static dispatch_once_t onceToken;</span><br><span class="line">dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">   //实现单例代码 </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>如果dispatch_once_t变量不是static或者全局的，就无法保证它只有一份实例，很可能造成不好排查的bug。</p>
+</li>
+<li><p><strong>dispatch_after是延迟提交，不是延迟运行</strong></p>
+</li>
+</ul>
+<p>官方文档对dispatch_after的解释如下</p>
+<blockquote>
+<p>Enqueue a block for execution at the specified time.</p>
+</blockquote>
+<p>它是指在指定的延时后，把一段block加入到指定队列中，而不是立刻执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (void)dispatchAfterTest &#123;</span><br><span class="line">    //创建串行队列</span><br><span class="line">    dispatch_queue_t queue = dispatch_queue_create(&quot;com.chendongnan.testQueue&quot;, DISPATCH_QUEUE_SERIAL);</span><br><span class="line">    //提交一个block</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        [NSThread sleepForTimeInterval:5];</span><br><span class="line">        NSLog(@&quot;第一个block执行完毕&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">    //3 秒以后提交block</span><br><span class="line">    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), queue, ^&#123;</span><br><span class="line">        NSLog(@&quot;第二个block执行&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码的执行后，先输出<code>第一个block执行完毕</code>, 再输出<code>第二个block执行</code>。所以在使用dispatch_after的时候要注意这点。</p>
+<ul>
+<li><strong>dispatch_barrier_async只对<code>dispatch_queue_create(label, attr)</code>创建的队列有效</strong></li>
+</ul>
+<p><code>dispatch_barrier_async</code>对<code>dispatch_get_global_queue</code>得到的全局队列是无效的。</p>
 
       
     </div>
@@ -458,8 +545,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="../../../04/19/facebook-chisel/" rel="next" title="facebook/chisel">
-                <i class="fa fa-chevron-left"></i> facebook/chisel
+              <a href="../../../05/23/理解UIView的绘制-转/" rel="next" title="理解UIView的绘制(转)">
+                <i class="fa fa-chevron-left"></i> 理解UIView的绘制(转)
               </a>
             
           </div>
@@ -468,8 +555,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="../../../08/25/多线程与GCD思考/" rel="prev" title="多线程与GCD思考">
-                多线程与GCD思考 <i class="fa fa-chevron-right"></i>
+              <a href="../../../10/06/runloop/" rel="prev" title="runloop">
+                runloop <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -604,7 +691,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#理解UIView的绘制"><span class="nav-number">1.</span> <span class="nav-text">理解UIView的绘制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU-bound："><span class="nav-number">1.0.1.</span> <span class="nav-text">CPU bound：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GPU-bound："><span class="nav-number">1.0.2.</span> <span class="nav-text">GPU bound：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Compositing："><span class="nav-number">1.0.3.</span> <span class="nav-text">Compositing：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Size"><span class="nav-number">1.0.4.</span> <span class="nav-text">Size</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Offscreen-Rendering-And-Mask"><span class="nav-number">1.0.5.</span> <span class="nav-text">Offscreen Rendering And Mask</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#试验"><span class="nav-number">1.</span> <span class="nav-text">试验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GCD的使用场景"><span class="nav-number">2.</span> <span class="nav-text">GCD的使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GCD的坑"><span class="nav-number">3.</span> <span class="nav-text">GCD的坑</span></a></li></ol></div>
             
 
           </div>
