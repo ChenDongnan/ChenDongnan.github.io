@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="最近在阅读『程序员的自我修养—链接、装载与库』一书，第一章就提到了多线程的相关知识。作为计算机里一个非常重要的概念，多线程在iOS开发中也有着非常重要的地位，而线程安全也是在开发中要十分注意的地方，稍不留心就会产生意想不到的bug。这篇文章主要记录在项目中使用GCD的相关思考。  试验多线程涉及到了队列，异步/同步，串行/并行等概念，而当这些概念和GCD结合时，很容易搞不清楚会产生怎样的结果，这里">
+<meta name="description" content="最近在阅读『程序员的自我修养—链接、装载与库』一书，第一章就提到了多线程的相关知识。作为计算机里一个非常重要的概念，多线程在iOS开发中也有着非常重要的地位，而线程安全也是在开发中要十分注意的地方，稍不留心就会产生意想不到的bug。这篇文章主要记录在项目中使用GCD的相关思考。">
 <meta name="keywords" content="iOS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="多线程与GCD思考">
 <meta property="og:url" content="http://blog.chendongnan.com/2017/08/25/多线程与GCD思考/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="最近在阅读『程序员的自我修养—链接、装载与库』一书，第一章就提到了多线程的相关知识。作为计算机里一个非常重要的概念，多线程在iOS开发中也有着非常重要的地位，而线程安全也是在开发中要十分注意的地方，稍不留心就会产生意想不到的bug。这篇文章主要记录在项目中使用GCD的相关思考。  试验多线程涉及到了队列，异步/同步，串行/并行等概念，而当这些概念和GCD结合时，很容易搞不清楚会产生怎样的结果，这里">
+<meta property="og:description" content="最近在阅读『程序员的自我修养—链接、装载与库』一书，第一章就提到了多线程的相关知识。作为计算机里一个非常重要的概念，多线程在iOS开发中也有着非常重要的地位，而线程安全也是在开发中要十分注意的地方，稍不留心就会产生意想不到的bug。这篇文章主要记录在项目中使用GCD的相关思考。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/syncconcurrent.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/syncconcurrentresult.png">
@@ -106,10 +106,10 @@
 <meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/notsaferesult.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/safe.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/GCD/saferesult.png">
-<meta property="og:updated_time" content="2019-01-13T15:11:39.082Z">
+<meta property="og:updated_time" content="2019-01-13T15:16:58.744Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="多线程与GCD思考">
-<meta name="twitter:description" content="最近在阅读『程序员的自我修养—链接、装载与库』一书，第一章就提到了多线程的相关知识。作为计算机里一个非常重要的概念，多线程在iOS开发中也有着非常重要的地位，而线程安全也是在开发中要十分注意的地方，稍不留心就会产生意想不到的bug。这篇文章主要记录在项目中使用GCD的相关思考。  试验多线程涉及到了队列，异步/同步，串行/并行等概念，而当这些概念和GCD结合时，很容易搞不清楚会产生怎样的结果，这里">
+<meta name="twitter:description" content="最近在阅读『程序员的自我修养—链接、装载与库』一书，第一章就提到了多线程的相关知识。作为计算机里一个非常重要的概念，多线程在iOS开发中也有着非常重要的地位，而线程安全也是在开发中要十分注意的地方，稍不留心就会产生意想不到的bug。这篇文章主要记录在项目中使用GCD的相关思考。">
 <meta name="twitter:image" content="http://www.chendongnan.com/markdown/GCD/syncconcurrent.png">
 
 
@@ -385,7 +385,7 @@
 
       
         <p>最近在阅读『程序员的自我修养—链接、装载与库』一书，第一章就提到了多线程的相关知识。作为计算机里一个非常重要的概念，多线程在iOS开发中也有着非常重要的地位，而线程安全也是在开发中要十分注意的地方，稍不留心就会产生意想不到的bug。这篇文章主要记录在项目中使用GCD的相关思考。</p>
-<!--mroe-->
+<a id="more"></a>
 <h2 id="试验"><a href="#试验" class="headerlink" title="试验"></a>试验</h2><p>多线程涉及到了队列，异步/同步，串行/并行等概念，而当这些概念和GCD结合时，很容易搞不清楚会产生怎样的结果，这里就用实例来验证一下</p>
 <ul>
 <li><strong>同步并发</strong></li>
