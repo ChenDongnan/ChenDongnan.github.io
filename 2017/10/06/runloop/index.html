@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Runloop学习最为一个iOS萌新，一直想弄明白RunLoop这个偏底层的知识点，之前只是大致了解过，但也没搞太明白。最近看了一些讲解RunLoop的文章和视频，在这里作点记录，加深理解。">
+<meta name="description" content="Runloop作为iOS面试题中的常客，经常被用来考察iOS开发者的基本功。由于项目中很少直接用到这块知识，所以对其也是一知半解。这次全面梳理了一下runloop的相关知识要点，希望能够把它掌握并熟练运用起来。 什么是Runloop一般来说，一个线程只能执行一个任务，执行完就会退出，如果我们需要一种机制，让线程能随时处理事件但并不退出，那么 RunLoop 就是这样的一个机制。Runloop是事件">
 <meta name="keywords" content="iOS">
 <meta property="og:type" content="article">
-<meta property="og:title" content="runloop">
+<meta property="og:title" content="Runloop理解与应用">
 <meta property="og:url" content="http://blog.chendongnan.com/2017/10/06/runloop/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="Runloop学习最为一个iOS萌新，一直想弄明白RunLoop这个偏底层的知识点，之前只是大致了解过，但也没搞太明白。最近看了一些讲解RunLoop的文章和视频，在这里作点记录，加深理解。">
+<meta property="og:description" content="Runloop作为iOS面试题中的常客，经常被用来考察iOS开发者的基本功。由于项目中很少直接用到这块知识，所以对其也是一知半解。这次全面梳理了一下runloop的相关知识要点，希望能够把它掌握并熟练运用起来。 什么是Runloop一般来说，一个线程只能执行一个任务，执行完就会退出，如果我们需要一种机制，让线程能随时处理事件但并不退出，那么 RunLoop 就是这样的一个机制。Runloop是事件">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-11T13:35:22.692Z">
+<meta property="og:updated_time" content="2019-01-14T03:37:30.534Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="runloop">
-<meta name="twitter:description" content="Runloop学习最为一个iOS萌新，一直想弄明白RunLoop这个偏底层的知识点，之前只是大致了解过，但也没搞太明白。最近看了一些讲解RunLoop的文章和视频，在这里作点记录，加深理解。">
+<meta name="twitter:title" content="Runloop理解与应用">
+<meta name="twitter:description" content="Runloop作为iOS面试题中的常客，经常被用来考察iOS开发者的基本功。由于项目中很少直接用到这块知识，所以对其也是一知半解。这次全面梳理了一下runloop的相关知识要点，希望能够把它掌握并熟练运用起来。 什么是Runloop一般来说，一个线程只能执行一个任务，执行完就会退出，如果我们需要一种机制，让线程能随时处理事件但并不退出，那么 RunLoop 就是这样的一个机制。Runloop是事件">
 
 
 
@@ -126,7 +126,7 @@
 
 
 
-  <title>runloop | 陈栋楠的Blog</title>
+  <title>Runloop理解与应用 | 陈栋楠的Blog</title>
   
 
 
@@ -292,7 +292,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">runloop</h1>
+          <h1 class="post-title" itemprop="name headline">Runloop理解与应用</h1>
         
 
         <div class="post-meta">
@@ -314,6 +314,28 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="../../../../categories/runloop/" itemprop="url" rel="index">
+                    <span itemprop="name">runloop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -342,10 +364,10 @@
       
 
       
-        <h1 id="Runloop学习"><a href="#Runloop学习" class="headerlink" title="Runloop学习"></a>Runloop学习</h1><p>最为一个iOS萌新，一直想弄明白RunLoop这个偏底层的知识点，之前只是大致了解过，但也没搞太明白。最近看了一些讲解RunLoop的文章和视频，在这里作点记录，加深理解。</p>
-<a id="more"></a>
-<h3 id="什么是RunLoop"><a href="#什么是RunLoop" class="headerlink" title="什么是RunLoop"></a>什么是RunLoop</h3><p>一般来说，一个线程只能执行一个任务，执行完就会退出，如果我们需要一种机制，让线程能随时处理事件但并不退出，那么 RunLoop 就是这样的一个机制。Runloop是事件接收和分发机制的一个实现, 它并不是iOS特有的机制，在</p>
+        <p>Runloop作为iOS面试题中的常客，经常被用来考察iOS开发者的基本功。由于项目中很少直接用到这块知识，所以对其也是一知半解。这次全面梳理了一下runloop的相关知识要点，希望能够把它掌握并熟练运用起来。</p>
+<h2 id="什么是Runloop"><a href="#什么是Runloop" class="headerlink" title="什么是Runloop"></a>什么是Runloop</h2><p>一般来说，一个线程只能执行一个任务，执行完就会退出，如果我们需要一种机制，让线程能随时处理事件但并不退出，那么 RunLoop 就是这样的一个机制。Runloop是事件接收和分发机制的一个实现, 它并不是iOS特有的机制，在</p>
 <p>RunLoop实际上是一个对象，这个对象在循环中用来处理程序运行过程中出现的各种事件（比如说触摸事件、UI刷新事件、定时器事件、Selector事件），从而保持程序的持续运行；而且在没有事件处理的时候，会进入睡眠模式，从而节省CPU资源，提高程序性能。</p>
+<a id="more"></a>
 <p>###RunLoopMode###</p>
 <p>runLoopMode可以说是runloop的核心内容，共有4种：source0,source1,observer,timers</p>
 <p><strong>CFRunLoopTimer</strong></p>
@@ -529,7 +551,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="../../../../categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -573,7 +595,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop学习"><span class="nav-number">1.</span> <span class="nav-text">Runloop学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是RunLoop"><span class="nav-number">1.0.1.</span> <span class="nav-text">什么是RunLoop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Runloog的应用"><span class="nav-number">1.0.2.</span> <span class="nav-text">Runloog的应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AutoReleasePool"><span class="nav-number">1.0.3.</span> <span class="nav-text">AutoReleasePool</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件响应"><span class="nav-number">1.0.4.</span> <span class="nav-text">事件响应</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#手势识别"><span class="nav-number">1.0.5.</span> <span class="nav-text">手势识别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#界面更新"><span class="nav-number">1.0.6.</span> <span class="nav-text">界面更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定时器"><span class="nav-number">1.0.7.</span> <span class="nav-text">定时器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PerformSelecter"><span class="nav-number">1.0.8.</span> <span class="nav-text">PerformSelecter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于GCD"><span class="nav-number">1.0.9.</span> <span class="nav-text">关于GCD</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Runloop"><span class="nav-number">1.</span> <span class="nav-text">什么是Runloop</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Runloog的应用"><span class="nav-number">1.1.</span> <span class="nav-text">Runloog的应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AutoReleasePool"><span class="nav-number">1.2.</span> <span class="nav-text">AutoReleasePool</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件响应"><span class="nav-number">1.3.</span> <span class="nav-text">事件响应</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#手势识别"><span class="nav-number">1.4.</span> <span class="nav-text">手势识别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#界面更新"><span class="nav-number">1.5.</span> <span class="nav-text">界面更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定时器"><span class="nav-number">1.6.</span> <span class="nav-text">定时器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PerformSelecter"><span class="nav-number">1.7.</span> <span class="nav-text">PerformSelecter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于GCD"><span class="nav-number">1.8.</span> <span class="nav-text">关于GCD</span></a></li></ol></li></ol></div>
             
 
           </div>

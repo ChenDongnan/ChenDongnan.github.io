@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="趁着项目的短暂的空闲期，把最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。 基础知识其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced technique">
+<meta name="description" content="趁着项目的短暂的空闲期，把最近关于iOS界面渲染优化的一些方法和经验记录在这里，算是一个学习和实践的总结。 基础知识其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced techniques这本书，阅读之后受益匪浅。">
 <meta name="keywords" content="iOS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS UI性能调优">
 <meta property="og:url" content="http://blog.chendongnan.com/2018/11/21/iOS UI性能优化/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="趁着项目的短暂的空闲期，把最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。 基础知识其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced technique">
+<meta property="og:description" content="趁着项目的短暂的空闲期，把最近关于iOS界面渲染优化的一些方法和经验记录在这里，算是一个学习和实践的总结。 基础知识其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced techniques这本书，阅读之后受益匪浅。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/instrument-coreAnimation.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/instrument-fps2.png">
@@ -94,10 +94,10 @@
 <meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/iOS9离屏渲染.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/iOS11离屏渲染.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/Rendering/shadowPath.png">
-<meta property="og:updated_time" content="2019-01-11T11:23:22.080Z">
+<meta property="og:updated_time" content="2019-01-14T03:38:52.319Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS UI性能调优">
-<meta name="twitter:description" content="趁着项目的短暂的空闲期，把最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。 基础知识其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced technique">
+<meta name="twitter:description" content="趁着项目的短暂的空闲期，把最近关于iOS界面渲染优化的一些方法和经验记录在这里，算是一个学习和实践的总结。 基础知识其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐iOS Core Animation advanced techniques这本书，阅读之后受益匪浅。">
 <meta name="twitter:image" content="http://www.chendongnan.com/markdown/Rendering/instrument-coreAnimation.png">
 
 
@@ -372,7 +372,7 @@
       
 
       
-        <p>趁着项目的短暂的空闲期，把最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。</p>
+        <p>趁着项目的短暂的空闲期，把最近关于iOS界面渲染优化的一些方法和经验记录在这里，算是一个学习和实践的总结。</p>
 <h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><p>其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐<code>iOS Core Animation advanced techniques</code>这本书，阅读之后受益匪浅。</p>
 <p><strong><em>iOS 开发：绘制像素到屏幕</em></strong><br><a href="https://segmentfault.com/a/1190000000390012" target="_blank" rel="noopener">https://segmentfault.com/a/1190000000390012</a></p>
 <p><strong><em>深入理解 iOS Rendering Process</em></strong><br> <a href="https://juejin.im/post/5ad3f1cc6fb9a028d9379c5f?utm_source=gold_browser_extension" target="_blank" rel="noopener">https://juejin.im/post/5ad3f1cc6fb9a028d9379c5f?utm_source=gold_browser_extension</a></p>
@@ -436,7 +436,6 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">imageView.layer.shadowColor = [UIColor grayColor].CGColor;</span><br><span class="line">imageView.layer.shadowOpacity = 1.0;</span><br><span class="line">imageView.layer.shadowRadius = 2.0;</span><br><span class="line">UIBezierPath *path = [UIBezierPath bezierPathWithRect:imageView.frame];</span><br><span class="line">imageView.layer.shadowPath = path.CGPath;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<p>以上就是对于UI的一些性能优化方法。 </p>
 
       
     </div>
@@ -565,7 +564,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="../../../../categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>

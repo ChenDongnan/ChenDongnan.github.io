@@ -366,7 +366,7 @@
 
       
         
-          <p>趁着项目的短暂的空闲期，把最近关于iOS图形渲染优化的一些方法和经验记录在这里，也算是一个学习的总结，如果有帮助到读者的话就再好不过了。</p>
+          <p>趁着项目的短暂的空闲期，把最近关于iOS界面渲染优化的一些方法和经验记录在这里，算是一个学习和实践的总结。</p>
 <h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><p>其实网上关于iOS渲染机制的文章也是数不胜数，这里推荐几篇大牛的文章给大家参考学习，相信大家在看完后会对iOS渲染机制有更加深刻的理解，本文也就不再赘述这方面的知识。同时也非常推荐<code>iOS Core Animation advanced techniques</code>这本书，阅读之后受益匪浅。</p>
 <p><strong><em>iOS 开发：绘制像素到屏幕</em></strong><br><a href="https://segmentfault.com/a/1190000000390012" target="_blank" rel="noopener">https://segmentfault.com/a/1190000000390012</a></p>
 <p><strong><em>深入理解 iOS Rendering Process</em></strong><br> <a href="https://juejin.im/post/5ad3f1cc6fb9a028d9379c5f?utm_source=gold_browser_extension" target="_blank" rel="noopener">https://juejin.im/post/5ad3f1cc6fb9a028d9379c5f?utm_source=gold_browser_extension</a></p>
@@ -589,7 +589,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="2017/10/06/runloop/" itemprop="url">runloop</a></h1>
+                <a class="post-title-link" href="2017/10/06/runloop/" itemprop="url">Runloop理解与应用</a></h1>
         
 
         <div class="post-meta">
@@ -611,6 +611,28 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="categories/runloop/" itemprop="url" rel="index">
+                    <span itemprop="name">runloop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -640,7 +662,9 @@
 
       
         
-          <h1 id="Runloop学习"><a href="#Runloop学习" class="headerlink" title="Runloop学习"></a>Runloop学习</h1><p>最为一个iOS萌新，一直想弄明白RunLoop这个偏底层的知识点，之前只是大致了解过，但也没搞太明白。最近看了一些讲解RunLoop的文章和视频，在这里作点记录，加深理解。</p>
+          <p>Runloop作为iOS面试题中的常客，经常被用来考察iOS开发者的基本功。由于项目中很少直接用到这块知识，所以对其也是一知半解。这次全面梳理了一下runloop的相关知识要点，希望能够把它掌握并熟练运用起来。</p>
+<h2 id="什么是Runloop"><a href="#什么是Runloop" class="headerlink" title="什么是Runloop"></a>什么是Runloop</h2><p>一般来说，一个线程只能执行一个任务，执行完就会退出，如果我们需要一种机制，让线程能随时处理事件但并不退出，那么 RunLoop 就是这样的一个机制。Runloop是事件接收和分发机制的一个实现, 它并不是iOS特有的机制，在</p>
+<p>RunLoop实际上是一个对象，这个对象在循环中用来处理程序运行过程中出现的各种事件（比如说触摸事件、UI刷新事件、定时器事件、Selector事件），从而保持程序的持续运行；而且在没有事件处理的时候，会进入睡眠模式，从而节省CPU资源，提高程序性能。</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="2017/10/06/runloop/#more" rel="contents">
@@ -1679,7 +1703,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
