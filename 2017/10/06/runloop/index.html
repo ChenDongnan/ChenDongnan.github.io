@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="陈栋楠的Blog">
 <meta property="og:description" content="Runloop作为iOS面试题中的常客，经常被用来考察iOS开发者的基本功。由于项目中很少直接用到这块知识，所以对其也是一知半解。这次全面梳理了一下runloop的相关知识要点，希望能够把它掌握并熟练运用起来。 什么是Runloop一般来说，一个线程只能执行一个任务，执行完就会退出，如果我们需要一种机制，让线程能随时处理事件但并不退出，那么 RunLoop 就是这样的一个机制。Runloop是事件">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-14T03:37:30.534Z">
+<meta property="og:updated_time" content="2019-01-14T15:18:56.267Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Runloop理解与应用">
 <meta name="twitter:description" content="Runloop作为iOS面试题中的常客，经常被用来考察iOS开发者的基本功。由于项目中很少直接用到这块知识，所以对其也是一知半解。这次全面梳理了一下runloop的相关知识要点，希望能够把它掌握并熟练运用起来。 什么是Runloop一般来说，一个线程只能执行一个任务，执行完就会退出，如果我们需要一种机制，让线程能随时处理事件但并不退出，那么 RunLoop 就是这样的一个机制。Runloop是事件">
@@ -365,11 +365,15 @@
 
       
         <p>Runloop作为iOS面试题中的常客，经常被用来考察iOS开发者的基本功。由于项目中很少直接用到这块知识，所以对其也是一知半解。这次全面梳理了一下runloop的相关知识要点，希望能够把它掌握并熟练运用起来。</p>
-<h2 id="什么是Runloop"><a href="#什么是Runloop" class="headerlink" title="什么是Runloop"></a>什么是Runloop</h2><p>一般来说，一个线程只能执行一个任务，执行完就会退出，如果我们需要一种机制，让线程能随时处理事件但并不退出，那么 RunLoop 就是这样的一个机制。Runloop是事件接收和分发机制的一个实现, 它并不是iOS特有的机制，在</p>
-<p>RunLoop实际上是一个对象，这个对象在循环中用来处理程序运行过程中出现的各种事件（比如说触摸事件、UI刷新事件、定时器事件、Selector事件），从而保持程序的持续运行；而且在没有事件处理的时候，会进入睡眠模式，从而节省CPU资源，提高程序性能。</p>
+<h2 id="什么是Runloop"><a href="#什么是Runloop" class="headerlink" title="什么是Runloop"></a>什么是Runloop</h2><p>一般来说，一个线程只能执行一个任务，执行完就会退出，如果我们需要一种机制，让线程能随时处理事件但并不退出，那么 RunLoop 就是这样的一个机制。Runloop是事件接收和分发机制的实现, 它并不是iOS特有的机制。</p>
+<p>其实说白了Runloop主要就干了两件事：</p>
+<ul>
+<li>在事件发生前保持等待（睡眠）</li>
+<li>在事件发生后被唤醒，把事件交给它的接收者处理</li>
+</ul>
 <a id="more"></a>
-<p>###RunLoopMode###</p>
-<p>runLoopMode可以说是runloop的核心内容，共有4种：source0,source1,observer,timers</p>
+<p>在iOS中，有NSRunLoop和CFRunLoop提供runloop相关API，其中CFRunLoopRef是在CoreFoundation框架内，它的代码是开源的，可以在<a href="http://opensource.apple.com/tarballs/CF/" target="_blank" rel="noopener">http://opensource.apple.com/tarballs/CF/</a>下载，提供纯C函数的API，并且是线程安全的。而NSRunLoop是对CFRunLoopRef的封装，提供了面向对象的API，但它们不是线程安全的。</p>
+<h2 id="RunLoopMode"><a href="#RunLoopMode" class="headerlink" title="RunLoopMode"></a>RunLoopMode</h2><p>runLoopMode可以说是runloop的核心内容，共有4种：source0,source1,observer,timers</p>
 <p><strong>CFRunLoopTimer</strong></p>
 <p>NSTimer</p>
 <p><strong>CFRunLoopSource</strong></p>
@@ -387,7 +391,7 @@
 </li>
 </ul>
 <p>UIKit通过RunLoopObserver在RunLoop两次Sleep间对·AutoReleasePool进行Pop和Push，将这次Loop中产生的Autorelease对象释放。</p>
-<h3 id="Runloog的应用"><a href="#Runloog的应用" class="headerlink" title="Runloog的应用"></a>Runloog的应用</h3><h3 id="AutoReleasePool"><a href="#AutoReleasePool" class="headerlink" title="AutoReleasePool"></a>AutoReleasePool</h3><p>App启动后，苹果在主线程 RunLoop 里注册了两个 Observer，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler()。</p>
+<h2 id="RunLoop与线程的关系"><a href="#RunLoop与线程的关系" class="headerlink" title="RunLoop与线程的关系"></a>RunLoop与线程的关系</h2><h2 id="Runloop的应用"><a href="#Runloop的应用" class="headerlink" title="Runloop的应用"></a>Runloop的应用</h2><h3 id="AutoReleasePool"><a href="#AutoReleasePool" class="headerlink" title="AutoReleasePool"></a>AutoReleasePool</h3><p>App启动后，苹果在主线程 RunLoop 里注册了两个 Observer，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler()。</p>
 <p>第一个 Observer 监视的事件是 Entry(即将进入Loop)，其回调内会调用 _objc_autoreleasePoolPush() 创建自动释放池。其 order 是-2147483647，优先级最高，保证创建释放池发生在其他所有回调之前。</p>
 <p>第二个 Observer 监视了两个事件： BeforeWaiting(准备进入休眠) 时调用_objc_autoreleasePoolPop() 和 _objc_autoreleasePoolPush() 释放旧的池并创建新池；Exit(即将退出Loop) 时调用 _objc_autoreleasePoolPop() 来释放自动释放池。这个 Observer 的 order 是 2147483647，优先级最低，保证其释放池子发生在其他所有回调之后。</p>
 <p>在主线程执行的代码，通常是写在诸如事件回调、Timer回调内的。这些回调会被 RunLoop 创建好的 AutoreleasePool 环绕着，所以不会出现内存泄漏，开发者也不必显示创建 Pool 了。</p>
@@ -595,7 +599,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Runloop"><span class="nav-number">1.</span> <span class="nav-text">什么是Runloop</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Runloog的应用"><span class="nav-number">1.1.</span> <span class="nav-text">Runloog的应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AutoReleasePool"><span class="nav-number">1.2.</span> <span class="nav-text">AutoReleasePool</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件响应"><span class="nav-number">1.3.</span> <span class="nav-text">事件响应</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#手势识别"><span class="nav-number">1.4.</span> <span class="nav-text">手势识别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#界面更新"><span class="nav-number">1.5.</span> <span class="nav-text">界面更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定时器"><span class="nav-number">1.6.</span> <span class="nav-text">定时器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PerformSelecter"><span class="nav-number">1.7.</span> <span class="nav-text">PerformSelecter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于GCD"><span class="nav-number">1.8.</span> <span class="nav-text">关于GCD</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Runloop"><span class="nav-number">1.</span> <span class="nav-text">什么是Runloop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RunLoopMode"><span class="nav-number">2.</span> <span class="nav-text">RunLoopMode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RunLoop与线程的关系"><span class="nav-number">3.</span> <span class="nav-text">RunLoop与线程的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Runloop的应用"><span class="nav-number">4.</span> <span class="nav-text">Runloop的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AutoReleasePool"><span class="nav-number">4.1.</span> <span class="nav-text">AutoReleasePool</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件响应"><span class="nav-number">4.2.</span> <span class="nav-text">事件响应</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#手势识别"><span class="nav-number">4.3.</span> <span class="nav-text">手势识别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#界面更新"><span class="nav-number">4.4.</span> <span class="nav-text">界面更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定时器"><span class="nav-number">4.5.</span> <span class="nav-text">定时器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PerformSelecter"><span class="nav-number">4.6.</span> <span class="nav-text">PerformSelecter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于GCD"><span class="nav-number">4.7.</span> <span class="nav-text">关于GCD</span></a></li></ol></li></ol></div>
             
 
           </div>

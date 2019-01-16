@@ -663,8 +663,12 @@
       
         
           <p>Runloop作为iOS面试题中的常客，经常被用来考察iOS开发者的基本功。由于项目中很少直接用到这块知识，所以对其也是一知半解。这次全面梳理了一下runloop的相关知识要点，希望能够把它掌握并熟练运用起来。</p>
-<h2 id="什么是Runloop"><a href="#什么是Runloop" class="headerlink" title="什么是Runloop"></a>什么是Runloop</h2><p>一般来说，一个线程只能执行一个任务，执行完就会退出，如果我们需要一种机制，让线程能随时处理事件但并不退出，那么 RunLoop 就是这样的一个机制。Runloop是事件接收和分发机制的一个实现, 它并不是iOS特有的机制，在</p>
-<p>RunLoop实际上是一个对象，这个对象在循环中用来处理程序运行过程中出现的各种事件（比如说触摸事件、UI刷新事件、定时器事件、Selector事件），从而保持程序的持续运行；而且在没有事件处理的时候，会进入睡眠模式，从而节省CPU资源，提高程序性能。</p>
+<h2 id="什么是Runloop"><a href="#什么是Runloop" class="headerlink" title="什么是Runloop"></a>什么是Runloop</h2><p>一般来说，一个线程只能执行一个任务，执行完就会退出，如果我们需要一种机制，让线程能随时处理事件但并不退出，那么 RunLoop 就是这样的一个机制。Runloop是事件接收和分发机制的实现, 它并不是iOS特有的机制。</p>
+<p>其实说白了Runloop主要就干了两件事：</p>
+<ul>
+<li>在事件发生前保持等待（睡眠）</li>
+<li>在事件发生后被唤醒，把事件交给它的接收者处理</li>
+</ul>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="2017/10/06/runloop/#more" rel="contents">
@@ -1135,7 +1139,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="2017/04/19/SDWebImage-Cache-Mechanism/" itemprop="url">SDWebImage Cache Mechanism</a></h1>
+                <a class="post-title-link" href="2017/04/19/SDWebImage-Cache-Mechanism/" itemprop="url">SDWebImage缓存机制学习</a></h1>
         
 
         <div class="post-meta">
