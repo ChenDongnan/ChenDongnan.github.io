@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="iOS,">
+  <meta name="keywords" content="Hexo, NexT">
 
 
 
@@ -79,18 +79,19 @@
 
 
 
-<meta name="description" content="iOS正则表达式的运用前言：在大部分app表单填写场景中，都会去校验用户输入的合法性，如果输入有误就提示错误信息并阻止上传到服务器。而这种功能就是由强大的正则表达式来实现的。">
-<meta name="keywords" content="iOS">
+<meta name="description" content="最近在做国际版项目，需要根据不同的分享平台来定制文案，导致无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。 Facebook facebook最新的文档上还写着LinkShareContent拥有url,t">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于正则表达式">
-<meta property="og:url" content="http://blog.chendongnan.com/2016/01/25/regex/index.html">
+<meta property="og:title" content="国外社交平台分享总结">
+<meta property="og:url" content="http://blog.chendongnan.com/2019/11/24/国外社交平台分享总结/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="iOS正则表达式的运用前言：在大部分app表单填写场景中，都会去校验用户输入的合法性，如果输入有误就提示错误信息并阻止上传到服务器。而这种功能就是由强大的正则表达式来实现的。">
+<meta property="og:description" content="最近在做国际版项目，需要根据不同的分享平台来定制文案，导致无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。 Facebook facebook最新的文档上还写着LinkShareContent拥有url,t">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-12-26T01:39:03.365Z">
+<meta property="og:image" content="http://blog.chendongnan.com/2019/11/24/国外社交平台分享总结/chendongnan/Documents/Blog/source/_posts/国外社交平台分享总结/facebook-linksharecontent.png">
+<meta property="og:updated_time" content="2019-11-25T01:22:06.176Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于正则表达式">
-<meta name="twitter:description" content="iOS正则表达式的运用前言：在大部分app表单填写场景中，都会去校验用户输入的合法性，如果输入有误就提示错误信息并阻止上传到服务器。而这种功能就是由强大的正则表达式来实现的。">
+<meta name="twitter:title" content="国外社交平台分享总结">
+<meta name="twitter:description" content="最近在做国际版项目，需要根据不同的分享平台来定制文案，导致无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。 Facebook facebook最新的文档上还写着LinkShareContent拥有url,t">
+<meta name="twitter:image" content="http://blog.chendongnan.com/2019/11/24/国外社交平台分享总结/chendongnan/Documents/Blog/source/_posts/国外社交平台分享总结/facebook-linksharecontent.png">
 
 
 
@@ -120,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://blog.chendongnan.com/2016/01/25/regex/">
+  <link rel="canonical" href="http://blog.chendongnan.com/2019/11/24/国外社交平台分享总结/">
 
 
 
 
 
-  <title>关于正则表达式 | 陈栋楠的Blog</title>
+  <title>国外社交平台分享总结 | 陈栋楠的Blog</title>
   
 
 
@@ -292,7 +293,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">关于正则表达式</h1>
+          <h1 class="post-title" itemprop="name headline">国外社交平台分享总结</h1>
         
 
         <div class="post-meta">
@@ -304,8 +305,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-25T21:06:12+08:00">
-                2016-01-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-24T21:43:52+08:00">
+                2019-11-24
               </time>
             
 
@@ -342,109 +343,15 @@
       
 
       
-        <h2 id="iOS正则表达式的运用"><a href="#iOS正则表达式的运用" class="headerlink" title="iOS正则表达式的运用"></a>iOS正则表达式的运用</h2><p>前言：在大部分app表单填写场景中，都会去校验用户输入的合法性，如果输入有误就提示错误信息并阻止上传到服务器。而这种功能就是由强大的正则表达式来实现的。</p>
-<a id="more"></a>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">正则表达式，又称正规表示式、正规表示法、正规表达式、规则表达式、常规表示法（英语：Regular Expression，在代码中常简写为regex、regexp或RE），计算机科学的一个概念。正则表达式使用单个字符串来描述、匹配一系列匹配某个句法规则的字符串。在很多文本编辑器里，正则表达式通常被用来检索、替换那些匹配某个模式的文本。</span><br></pre></td></tr></table></figure>
-<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><p>正则表达式是由两种基本字符组成：普通字符（例如字符 a 到 z）以及特殊字符（称为”元字符” — metacharacter）所组成的<strong>描述文本规则的代码</strong>。规则用来描述在搜索文本时要匹配的一个或多个字符串。正则表达式作为文本规则，将某个文本规则与所搜索的字符串进行匹配。</p>
-<blockquote>
-<p><strong>元字符</strong><br>元字符就是指那些在正则表达式中具有特殊意义的专用字符，用来规定其前导字符（位于元字符前面的字符）在目标对象中的出现规则，一个元字符可以用来匹配一个或者多个字符。</p>
-</blockquote>
-<p><strong>总结</strong>：元字符就是<strong>正则表达式</strong>中用来描述一个文本规则的专用字符。<br><strong>举例</strong>：精确查找“ab”在未使用正则表达式之前，查找ab，我们可能会得到以下结果</p>
-<p>表一：常用的元字符</p>
-<table>
-<thead>
-<tr>
-<th>元字符</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>.</td>
-<td>匹配除换行符以外的任意字符</td>
-</tr>
-<tr>
-<td>\w</td>
-<td>匹配字母或数字或下划线或汉字</td>
-</tr>
-<tr>
-<td>\s</td>
-<td>任意的空白符，包括空格，制表符(Tab)，换行符，中文全角空格等</td>
-</tr>
-<tr>
-<td>\d</td>
-<td>匹配数字(0-9)</td>
-</tr>
-<tr>
-<td>\b</td>
-<td>匹配单词的开始或结束</td>
-</tr>
-<tr>
-<td>^</td>
-<td>匹配字符串的开始</td>
-</tr>
-<tr>
-<td>$</td>
-<td>匹配字符串的结束</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<h3 id="限定符"><a href="#限定符" class="headerlink" title="限定符"></a>限定符</h3><p><strong>正则表达式</strong>中提供了有一类用于<strong>限定字符数量</strong>的符号，称为 <strong>限定符</strong>。并且限定符分为两种 ：</p>
-<ul>
-<li>贪婪的：尝试尽可能多的匹配元素</li>
-<li>惰性（非贪婪）的：尽可能的少的匹配元素</li>
-</ul>
-<p>通过添加问号即 ？可以将贪婪限定符转为惰性限定符。<br>从前面的综合例子中，大概已经知道了限定字符数量的字符 例如 ：* ，+，{2}…</p>
-</blockquote>
-<p>表2 常用的限定符</p>
-<table>
-<thead>
-<tr>
-<th>贪婪限定符</th>
-<th>惰性限定符</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>*</td>
-<td>*?</td>
-<td>重复零次或更多次</td>
-</tr>
-<tr>
-<td>+</td>
-<td>*+</td>
-<td>重复一次或更多次</td>
-</tr>
-<tr>
-<td>?</td>
-<td>??</td>
-<td>重复零次或一次</td>
-</tr>
-<tr>
-<td>{n}</td>
-<td>{n}?</td>
-<td>重复n次</td>
-</tr>
-<tr>
-<td>{n,}</td>
-<td>{n,}?</td>
-<td>重复n次或更多次</td>
-</tr>
-<tr>
-<td>{n,m}</td>
-<td>{n,m}?</td>
-<td>重复n到m次</td>
-</tr>
-</tbody>
-</table>
-<h3 id="正则表达式在iOS中的应用"><a href="#正则表达式在iOS中的应用" class="headerlink" title="正则表达式在iOS中的应用"></a>正则表达式在iOS中的应用</h3><p><strong>1.NSString的方法</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (NSRange)rangeOfString:(NSString *)aString options:(NSStringCompareOptions)mask&#123;</span><br><span class="line">NSString *searchText = @&quot;rangeOfString&quot;;</span><br><span class="line">NSRange range = [searchText rangeOfString:@&quot;^[0-9]+$&quot; options:NSRegularExpressionSearch];</span><br><span class="line">if (range.location != NSNotFound) &#123; </span><br><span class="line">NSLog(@&quot;range ：%@&quot;, [searchText substringWithRange:range]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>2.NSPredicate</strong><br>Cocoa框架中的<strong>NSPredicate</strong>用于查询，原理和用法都类似于SQL中的where，作用相当于数据库的过滤取。 我们可以编写简单的谓词语句，就可以从数组中过滤出我们想要的数据。 代码示例:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+ (BOOL)validateEmail:(NSString *)email&#123; </span><br><span class="line">NSString *emailRegex = @&quot;[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]&#123;2,4&#125;&quot;;</span><br><span class="line"> NSPredicate *emailTest = [NSPredicate predicateWithFormat:@&quot;SELF MATCHES %@&quot;, emailRegex]; </span><br><span class="line">return [emailTest evaluateWithObject:email];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>3.NSRegularExpression</strong><br><strong>NSRegularExpression</strong>这个类是苹果专门封装的一个用来处理<strong>正则表达式</strong>的类。<br>代码示例:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">objectivecNSString *searchText = @&quot;you want to match&quot;; </span><br><span class="line">NSError *error = NULL;</span><br><span class="line">NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@&quot;^[0-9]+$&quot; options:NSRegularExpressionCaseInsensitive error:&amp;error];</span><br><span class="line">NSTextCheckingResult *result = [regex firstMatchInString:searchText options:0 range:NSMakeRange(0, [searchText length])];</span><br><span class="line">if (result) &#123;</span><br><span class="line"> NSLog(@&quot;%@&quot;, [searchText substringWithRange:result.range]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p>最近在做国际版项目，需要根据不同的分享平台来定制文案，导致无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。</p>
+<h3 id="Facebook"><a href="#Facebook" class="headerlink" title="Facebook"></a>Facebook</h3><p><img src="/2019/11/24/国外社交平台分享总结/chendongnan/Documents/Blog/source/_posts/国外社交平台分享总结/facebook-linksharecontent.png" alt="facebook-linksharecontent"></p>
+<p>facebook最新的文档上还写着LinkShareContent拥有<code>url,title,imageURL,description</code>这四个属性，看上去很方便很美好的样子。真正使用的时候发现，这几个属性早已在v2.9版本的sdk中被声明为</p>
+<p>[facebook-changeLog-V2.9]<a href="https://developers.facebook.com/docs/graph-api/changelog/archive#gapi-deprecate-v2-9" target="_blank" rel="noopener">https://developers.facebook.com/docs/graph-api/changelog/archive#gapi-deprecate-v2-9</a></p>
+<h3 id="Messenger"><a href="#Messenger" class="headerlink" title="Messenger"></a>Messenger</h3><h3 id="Twitter"><a href="#Twitter" class="headerlink" title="Twitter"></a>Twitter</h3><h3 id="whatsApp"><a href="#whatsApp" class="headerlink" title="whatsApp"></a>whatsApp</h3><p>###Snapchat###</p>
+<p>Snapchat没有官方的分享sdk，只能通过</p>
+<h3 id="Instagram"><a href="#Instagram" class="headerlink" title="Instagram"></a>Instagram</h3><h3 id="Pinterest"><a href="#Pinterest" class="headerlink" title="Pinterest"></a>Pinterest</h3><p>Pinterest是有官方sdk的，但是没有swift版本的文档，不过问题不大。集成的时候除了需要 <code>pod PinteestSDK</code>还需要依赖一个<code>SAMKeychain</code></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pod '<span class="type">SAMKeychain'</span>, :git =&gt; 'https:<span class="comment">//github.com/soffes/SAMKeychain.git'</span></span><br><span class="line">pod '<span class="type">PinterestSDK'</span>, :git =&gt; 'https:<span class="comment">//github.com/pinterest/ios-pdk.git'</span></span><br></pre></td></tr></table></figure>
+
       
     </div>
     
@@ -459,12 +366,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="../../../../tags/iOS/" rel="tag"># iOS</a>
-          
-        </div>
-      
 
       
       
@@ -474,8 +375,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="../../../../2015/12/21/Linux-Command/" rel="next" title="Linux 常用命令">
-                <i class="fa fa-chevron-left"></i> Linux 常用命令
+              <a href="../../../02/19/项目的MVVM改造/" rel="next" title="项目的MVVM改造">
+                <i class="fa fa-chevron-left"></i> 项目的MVVM改造
               </a>
             
           </div>
@@ -483,10 +384,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="../../../03/23/placeholder/" rel="prev" title="iOS列表页无数据占位图">
-                iOS列表页无数据占位图 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -620,7 +517,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS正则表达式的运用"><span class="nav-number">1.</span> <span class="nav-text">iOS正则表达式的运用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#语法"><span class="nav-number">1.1.</span> <span class="nav-text">语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#限定符"><span class="nav-number">1.2.</span> <span class="nav-text">限定符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正则表达式在iOS中的应用"><span class="nav-number">1.3.</span> <span class="nav-text">正则表达式在iOS中的应用</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Facebook"><span class="nav-number">1.</span> <span class="nav-text">Facebook</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Messenger"><span class="nav-number">2.</span> <span class="nav-text">Messenger</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Twitter"><span class="nav-number">3.</span> <span class="nav-text">Twitter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#whatsApp"><span class="nav-number">4.</span> <span class="nav-text">whatsApp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Instagram"><span class="nav-number">5.</span> <span class="nav-text">Instagram</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pinterest"><span class="nav-number">6.</span> <span class="nav-text">Pinterest</span></a></li></ol></div>
             
 
           </div>
