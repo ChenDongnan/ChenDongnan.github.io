@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="最近在做国际版项目，需要根据不同的分享平台来定制文案，导致无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。 Facebook facebook最新的文档上还写着LinkShareContent拥有url,t">
+<meta name="description" content="最近在做国际版项目，需要根据不同的分享平台来定制文案，所以无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。 Facebook首先就是一步步按照官方文档集成 sdk，也没什么问题。差不多就是按照 facebo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="国外社交平台分享总结">
 <meta property="og:url" content="http://blog.chendongnan.com/2019/11/24/国外社交平台分享总结/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="最近在做国际版项目，需要根据不同的分享平台来定制文案，导致无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。 Facebook facebook最新的文档上还写着LinkShareContent拥有url,t">
+<meta property="og:description" content="最近在做国际版项目，需要根据不同的分享平台来定制文案，所以无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。 Facebook首先就是一步步按照官方文档集成 sdk，也没什么问题。差不多就是按照 facebo">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://blog.chendongnan.com/2019/11/24/国外社交平台分享总结/chendongnan/Documents/Blog/source/_posts/国外社交平台分享总结/facebook-linksharecontent.png">
-<meta property="og:updated_time" content="2019-11-25T01:22:06.176Z">
+<meta property="og:updated_time" content="2019-12-30T13:55:00.219Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="国外社交平台分享总结">
-<meta name="twitter:description" content="最近在做国际版项目，需要根据不同的分享平台来定制文案，导致无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。 Facebook facebook最新的文档上还写着LinkShareContent拥有url,t">
+<meta name="twitter:description" content="最近在做国际版项目，需要根据不同的分享平台来定制文案，所以无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。 Facebook首先就是一步步按照官方文档集成 sdk，也没什么问题。差不多就是按照 facebo">
 <meta name="twitter:image" content="http://blog.chendongnan.com/2019/11/24/国外社交平台分享总结/chendongnan/Documents/Blog/source/_posts/国外社交平台分享总结/facebook-linksharecontent.png">
 
 
@@ -343,14 +343,71 @@
       
 
       
-        <p>最近在做国际版项目，需要根据不同的分享平台来定制文案，导致无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。</p>
-<h3 id="Facebook"><a href="#Facebook" class="headerlink" title="Facebook"></a>Facebook</h3><p><img src="/2019/11/24/国外社交平台分享总结/chendongnan/Documents/Blog/source/_posts/国外社交平台分享总结/facebook-linksharecontent.png" alt="facebook-linksharecontent"></p>
-<p>facebook最新的文档上还写着LinkShareContent拥有<code>url,title,imageURL,description</code>这四个属性，看上去很方便很美好的样子。真正使用的时候发现，这几个属性早已在v2.9版本的sdk中被声明为</p>
+        <p>最近在做国际版项目，需要根据不同的分享平台来定制文案，所以无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。</p>
+<h3 id="Facebook"><a href="#Facebook" class="headerlink" title="Facebook"></a>Facebook</h3><p>首先就是一步步按照官方文档集成 sdk，也没什么问题。差不多就是按照 facebook 官方给的实例代码来写</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> FacebookShare</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">showShareDialog</span>&lt;Content: SharingContent&gt;<span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="number">_</span> content: C, </span></span></span><br><span class="line"><span class="function"><span class="params">    mode: ShareDialog.Mode = .automatic</span></span></span><br><span class="line"><span class="function"><span class="params">    )</span></span> &#123;    </span><br><span class="line">    <span class="keyword">let</span> dialog = <span class="type">ShareDialog</span>(</span><br><span class="line">        fromViewController: <span class="keyword">self</span>, </span><br><span class="line">        content: content, </span><br><span class="line">        delegate: <span class="keyword">self</span></span><br><span class="line">    )</span><br><span class="line">    dialog.mode = mode</span><br><span class="line">    dialog.show()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是产品希望我们分享出去的面板不仅仅带有一个链接，而是带有缩略图的。Facebook 最新的文档上写着 <code>LinkShareContent</code> 拥有 <code>url,title,imageURL,description</code> 这四个属性。真正使用的时候发现，这几个属性早已在v2.9版本的sdk中被声明为<code>deprecate</code></p>
+<p><img src="/2019/11/24/国外社交平台分享总结/chendongnan/Documents/Blog/source/_posts/国外社交平台分享总结/facebook-linksharecontent.png" alt="facebook-linksharecontent"></p>
 <p>[facebook-changeLog-V2.9]<a href="https://developers.facebook.com/docs/graph-api/changelog/archive#gapi-deprecate-v2-9" target="_blank" rel="noopener">https://developers.facebook.com/docs/graph-api/changelog/archive#gapi-deprecate-v2-9</a></p>
-<h3 id="Messenger"><a href="#Messenger" class="headerlink" title="Messenger"></a>Messenger</h3><h3 id="Twitter"><a href="#Twitter" class="headerlink" title="Twitter"></a>Twitter</h3><h3 id="whatsApp"><a href="#whatsApp" class="headerlink" title="whatsApp"></a>whatsApp</h3><p>###Snapchat###</p>
-<p>Snapchat没有官方的分享sdk，只能通过</p>
-<h3 id="Instagram"><a href="#Instagram" class="headerlink" title="Instagram"></a>Instagram</h3><h3 id="Pinterest"><a href="#Pinterest" class="headerlink" title="Pinterest"></a>Pinterest</h3><p>Pinterest是有官方sdk的，但是没有swift版本的文档，不过问题不大。集成的时候除了需要 <code>pod PinteestSDK</code>还需要依赖一个<code>SAMKeychain</code></p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pod '<span class="type">SAMKeychain'</span>, :git =&gt; 'https:<span class="comment">//github.com/soffes/SAMKeychain.git'</span></span><br><span class="line">pod '<span class="type">PinterestSDK'</span>, :git =&gt; 'https:<span class="comment">//github.com/pinterest/ios-pdk.git'</span></span><br></pre></td></tr></table></figure>
+<p>最后这个功能只能由前端同学在h5页面里加上SEO信息来完成。</p>
+<h3 id="Messenger"><a href="#Messenger" class="headerlink" title="Messenger"></a>Messenger</h3><p>Messenger 是 facebook 旗下的，所以 api 也基本一样</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> content = <span class="type">ShareLinkContent</span>()</span><br><span class="line">content.contentURL = url</span><br><span class="line"><span class="keyword">let</span> dialog = <span class="type">MessageDialog</span> (content: content, delegate: <span class="keyword">self</span>)</span><br><span class="line"><span class="keyword">guard</span> dialog.canShow <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="comment">//这里可以提示未安装messenger</span></span><br><span class="line">       <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line">dialog.show()</span><br></pre></td></tr></table></figure>
+<h3 id="Twitter"><a href="#Twitter" class="headerlink" title="Twitter"></a>Twitter</h3><p>Twitter 分享本来是要集成 sdk 的，但是由于公司在 twitter 平台上注册的应用迟迟没能审核通过，后来采用了 <code>SLComposeViewController</code> 来实现分享到 twitter 的功能，实现也很简单，代码如下。看到有资料说 <code>SLComposeViewControler</code> 在 iOS 11 之后就被 <code>deprecated</code>了，但是实际使用下来还是可以实现功能并上架的，但这也只是权宜之计，等到平台上的审核通过了肯定还是要接入 sdk的。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">guard</span> <span class="keyword">let</span> composeVc = <span class="type">SLComposeViewController</span>.<span class="keyword">init</span>(forServiceType: <span class="type">SLServiceTypeTwitter</span>) <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line">composeVc.add(<span class="type">URL</span>(string: url ?? <span class="string">""</span>))</span><br><span class="line">composeVc.setInitialText(text)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>国行版本的手机在 iOS 11 之后就不再支持分享到 facebook 或者 twitter</p>
+</blockquote>
+<h3 id="whatsApp"><a href="#whatsApp" class="headerlink" title="whatsApp"></a>whatsApp</h3><p>没有官方分享 sdk,通过 <code>UIApplication.shared.openURL</code> ，使用 <code>whatsapp://send?text=</code> 这个 scheme 来进行分享</p>
+<p>需要在 <code>info.plist</code> 的 <code>LSApplicationQueriesSchemes</code> 添加</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;string&gt;whatsapp&lt;/string&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="Instagram"><a href="#Instagram" class="headerlink" title="Instagram"></a>Instagram</h3><p>没有官方分享 sdk，通过  <code>UIApplication.shared.openURL</code> ， 使用下列 url 可以跳转到 Instagram 应用并执行特定的操作。</p>
+<p>需要在 <code>info.plist</code> 的 <code>LSApplicationQueriesSchemes</code> 添加</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;string&gt;instagram&lt;/string&gt;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>URL</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>intagram://app</td>
+<td>启动 instagram</td>
+</tr>
+<tr>
+<td>intagram://camera</td>
+<td>启动 Instagram 并打开摄像头，没有摄像头的话会打开</td>
+</tr>
+<tr>
+<td>intagram://media?id=</td>
+<td>启动 Instagram 应用并加载与所提供编号值 (<code>int</code>) 相匹配的帖子</td>
+</tr>
+<tr>
+<td>user?username=</td>
+<td>启动 Instagram 应用并加载与所提供帐号值 (<code>string</code>) 相匹配的 Instagram 用户。</td>
+</tr>
+<tr>
+<td>location?id=</td>
+<td>启动 Instagram 应用并加载与所提供编号值 (<code>int</code>) 相匹配的位置信息库。</td>
+</tr>
+<tr>
+<td>tag?name=</td>
+<td>启动 Instagram 应用并加载与所提供名称值 (<code>string</code>) 相匹配的话题标签页面。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>在分享过程中发现，如果分享的内容仅为一段文本，是无法打开 instagram 进行分享的，必须要有图片才可以。包括使用系统原生的 UIActivityController，仅文本时是不会有 Instagram 图标的。</p>
+</blockquote>
+<h3 id="Pinterest"><a href="#Pinterest" class="headerlink" title="Pinterest"></a>Pinterest</h3><p>Pinterest是有官方sdk的，但是没有swift版本的文档，不过问题不大。集成的时候除了需要 <code>PinteestSDK</code>还需要依赖一个<code>SAMKeychain</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pod &apos;SAMKeychain&apos;, :git =&gt; &apos;https://github.com/soffes/SAMKeychain.git&apos;</span><br><span class="line">pod &apos;PinterestSDK&apos;, :git =&gt; &apos;https://github.com/pinterest/ios-pdk.git&apos;</span><br></pre></td></tr></table></figure>
+<p>其他的基本就是按照官方文档的来了，附上官方文档地址 <a href="https://developers.pinterest.com/docs/sdks/ios/" target="_blank" rel="noopener">https://developers.pinterest.com/docs/sdks/ios/</a></p>
+<h3 id="短信-邮件分享"><a href="#短信-邮件分享" class="headerlink" title="短信/邮件分享"></a>短信/邮件分享</h3><p>国外使用短信和邮件的比例还是比较高的，这里分别是用 <code>MFMessageComposeViewController</code>，  <code>MFMailComposeViewController</code> 来实现相应功能，开发过程中发现有两个需要注意的点</p>
+<ol>
+<li>如果用户的 iOS 默认邮件 app 没有登录邮箱，是无法被调起的</li>
+<li><code>messageComposeDelegate</code> 和 <code>mailComposeDelegate</code> 必须是 <code>UIViewController</code>，否则会发生 crash。</li>
+</ol>
 
       
     </div>
@@ -375,8 +432,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="../../../02/19/项目的MVVM改造/" rel="next" title="项目的MVVM改造">
-                <i class="fa fa-chevron-left"></i> 项目的MVVM改造
+              <a href="../../../06/30/WWDC2019-session-411-译文/" rel="next" title="WWDC2019 session 411 译文">
+                <i class="fa fa-chevron-left"></i> WWDC2019 session 411 译文
               </a>
             
           </div>
@@ -384,6 +441,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="../../../12/12/UISearchController在项目中的使用/" rel="prev" title="UISearchController在项目中的使用">
+                UISearchController在项目中的使用 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -462,7 +523,7 @@
               
                 <a href="../../../../archives">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -484,7 +545,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="../../../../tags/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -517,7 +578,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Facebook"><span class="nav-number">1.</span> <span class="nav-text">Facebook</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Messenger"><span class="nav-number">2.</span> <span class="nav-text">Messenger</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Twitter"><span class="nav-number">3.</span> <span class="nav-text">Twitter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#whatsApp"><span class="nav-number">4.</span> <span class="nav-text">whatsApp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Instagram"><span class="nav-number">5.</span> <span class="nav-text">Instagram</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pinterest"><span class="nav-number">6.</span> <span class="nav-text">Pinterest</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Facebook"><span class="nav-number">1.</span> <span class="nav-text">Facebook</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Messenger"><span class="nav-number">2.</span> <span class="nav-text">Messenger</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Twitter"><span class="nav-number">3.</span> <span class="nav-text">Twitter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#whatsApp"><span class="nav-number">4.</span> <span class="nav-text">whatsApp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Instagram"><span class="nav-number">5.</span> <span class="nav-text">Instagram</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pinterest"><span class="nav-number">6.</span> <span class="nav-text">Pinterest</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#短信-邮件分享"><span class="nav-number">7.</span> <span class="nav-text">短信/邮件分享</span></a></li></ol></div>
             
 
           </div>
