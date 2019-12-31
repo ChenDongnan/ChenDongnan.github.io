@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="最近在做国际版项目，需要根据不同的分享平台来定制文案，所以无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。 Facebook首先就是一步步按照官方文档集成 sdk，也没什么问题。差不多就是按照 facebo">
+<meta name="description" content="最近在做国际版项目，需要根据不同的分享平台来定制文案，所以无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="国外社交平台分享总结">
 <meta property="og:url" content="http://blog.chendongnan.com/2019/11/24/国外社交平台分享总结/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="最近在做国际版项目，需要根据不同的分享平台来定制文案，所以无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。 Facebook首先就是一步步按照官方文档集成 sdk，也没什么问题。差不多就是按照 facebo">
+<meta property="og:description" content="最近在做国际版项目，需要根据不同的分享平台来定制文案，所以无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/socialshare/facebook-linksharecontent.png">
-<meta property="og:updated_time" content="2019-12-30T15:14:53.616Z">
+<meta property="og:updated_time" content="2019-12-30T15:17:01.407Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="国外社交平台分享总结">
-<meta name="twitter:description" content="最近在做国际版项目，需要根据不同的分享平台来定制文案，所以无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。 Facebook首先就是一步步按照官方文档集成 sdk，也没什么问题。差不多就是按照 facebo">
+<meta name="twitter:description" content="最近在做国际版项目，需要根据不同的分享平台来定制文案，所以无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。">
 <meta name="twitter:image" content="http://www.chendongnan.com/markdown/socialshare/facebook-linksharecontent.png">
 
 
@@ -344,6 +344,7 @@
 
       
         <p>最近在做国际版项目，需要根据不同的分享平台来定制文案，所以无法使用系统的UIActivity来实现（其实系统的UIActivity真的是方便又好用。天真地以为集成各个平台就是无脑的按照文档copy + paste就可以了，结果被现实无情打脸，遇到各种问题，这里把集成过程中遇到的一些坑点经验记录下来。</p>
+<a id="more"></a>
 <h3 id="Facebook"><a href="#Facebook" class="headerlink" title="Facebook"></a>Facebook</h3><p>首先就是一步步按照官方文档集成 sdk，也没什么问题。差不多就是按照 facebook 官方给的实例代码来写</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> FacebookShare</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">showShareDialog</span>&lt;Content: SharingContent&gt;<span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="number">_</span> content: C, </span></span></span><br><span class="line"><span class="function"><span class="params">    mode: ShareDialog.Mode = .automatic</span></span></span><br><span class="line"><span class="function"><span class="params">    )</span></span> &#123;    </span><br><span class="line">    <span class="keyword">let</span> dialog = <span class="type">ShareDialog</span>(</span><br><span class="line">        fromViewController: <span class="keyword">self</span>, </span><br><span class="line">        content: content, </span><br><span class="line">        delegate: <span class="keyword">self</span></span><br><span class="line">    )</span><br><span class="line">    dialog.mode = mode</span><br><span class="line">    dialog.show()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>但是产品希望我们分享出去的面板不仅仅带有一个链接，而是带有缩略图的。Facebook 最新的文档上写着 <code>LinkShareContent</code> 拥有 <code>url,title,imageURL,description</code> 这四个属性。真正使用的时候发现，这几个属性早已在v2.9版本的sdk中被声明为<code>deprecate</code></p>
