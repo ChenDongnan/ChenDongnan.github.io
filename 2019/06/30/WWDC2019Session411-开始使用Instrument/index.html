@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="开始使用 Instruments  该 session 介绍了如何使用 Instruments 来衡量 app 的运行表现，通过它来找到 app 性能瓶颈并进行相应优化，通过 Demo 演示了如何使用 time profiler 和 signposts 这两个工具来观察 app 的详细运行情况。 该 session 主要分为三个部分 ：  Instument 简介 使用 Time Profiler">
+<meta name="description" content="该 session 介绍了如何使用 Instruments 来衡量 app 的运行表现，通过它来找到 app 性能瓶颈并进行相应优化，通过 Demo 演示了如何使用 time profiler 和 signposts 这两个工具来观察 app 的详细运行情况。 该 session 主要分为三个部分 ：  Instument 简介 使用 Time Profiler 分析应用 使用 Signpost">
 <meta name="keywords" content="iOS开发">
 <meta property="og:type" content="article">
 <meta property="og:title" content="开始使用Instrument">
 <meta property="og:url" content="http://blog.chendongnan.com/2019/06/30/WWDC2019Session411-开始使用Instrument/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="开始使用 Instruments  该 session 介绍了如何使用 Instruments 来衡量 app 的运行表现，通过它来找到 app 性能瓶颈并进行相应优化，通过 Demo 演示了如何使用 time profiler 和 signposts 这两个工具来观察 app 的详细运行情况。 该 session 主要分为三个部分 ：  Instument 简介 使用 Time Profiler">
+<meta property="og:description" content="该 session 介绍了如何使用 Instruments 来衡量 app 的运行表现，通过它来找到 app 性能瓶颈并进行相应优化，通过 Demo 演示了如何使用 time profiler 和 signposts 这两个工具来观察 app 的详细运行情况。 该 session 主要分为三个部分 ：  Instument 简介 使用 Time Profiler 分析应用 使用 Signpost">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/WWDC2019/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-06-16%20%E4%B8%8B%E5%8D%881.51.04.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/WWDC2019/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-06-16%20%E4%B8%8A%E5%8D%8811.00.14.png">
@@ -116,10 +116,10 @@
 <meta property="og:image" content="http://www.chendongnan.com/markdown/WWDC2019/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-06-18%20%E4%B8%8B%E5%8D%8810.05.52.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/WWDC2019/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-06-18%20%E4%B8%8B%E5%8D%8810.15.24.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/WWDC2019/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-06-19%20%E4%B8%8A%E5%8D%881.22.14.png">
-<meta property="og:updated_time" content="2019-12-31T09:36:38.187Z">
+<meta property="og:updated_time" content="2019-12-31T09:39:35.289Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="开始使用Instrument">
-<meta name="twitter:description" content="开始使用 Instruments  该 session 介绍了如何使用 Instruments 来衡量 app 的运行表现，通过它来找到 app 性能瓶颈并进行相应优化，通过 Demo 演示了如何使用 time profiler 和 signposts 这两个工具来观察 app 的详细运行情况。 该 session 主要分为三个部分 ：  Instument 简介 使用 Time Profiler">
+<meta name="twitter:description" content="该 session 介绍了如何使用 Instruments 来衡量 app 的运行表现，通过它来找到 app 性能瓶颈并进行相应优化，通过 Demo 演示了如何使用 time profiler 和 signposts 这两个工具来观察 app 的详细运行情况。 该 session 主要分为三个部分 ：  Instument 简介 使用 Time Profiler 分析应用 使用 Signpost">
 <meta name="twitter:image" content="http://www.chendongnan.com/markdown/WWDC2019/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-06-16%20%E4%B8%8B%E5%8D%881.51.04.png">
 
 
@@ -334,7 +334,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-30T22:13:39+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-30T20:07:55+08:00">
                 2019-06-30
               </time>
             
@@ -394,9 +394,7 @@
       
 
       
-        <font size="16">开始使用 Instruments</font>
-
-<p>该 session 介绍了如何使用 Instruments 来衡量 app 的运行表现，通过它来找到 app 性能瓶颈并进行相应优化，通过 Demo 演示了如何使用 <code>time profiler</code> 和 <code>signposts</code> 这两个工具来观察 app 的详细运行情况。</p>
+        <p>该 session 介绍了如何使用 Instruments 来衡量 app 的运行表现，通过它来找到 app 性能瓶颈并进行相应优化，通过 Demo 演示了如何使用 <code>time profiler</code> 和 <code>signposts</code> 这两个工具来观察 app 的详细运行情况。</p>
 <p>该 session 主要分为三个部分 ：</p>
 <ul>
 <li>Instument 简介</li>
