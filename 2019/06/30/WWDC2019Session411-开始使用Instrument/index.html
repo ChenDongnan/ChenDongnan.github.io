@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="iOS开发,">
 
 
 
@@ -79,12 +79,13 @@
 
 
 
-<meta name="description" content="title:开始使用Instrumentdate:2019-6-30 22:13:39categories:翻译 tags:iOS开发开始使用 Instruments  该 session 介绍了如何使用 Instruments 来衡量 app 的运行表现，通过它来找到 app 性能瓶颈并进行相应优化，通过 Demo 演示了如何使用 time profiler 和 signposts 这两个工具">
+<meta name="description" content="开始使用 Instruments  该 session 介绍了如何使用 Instruments 来衡量 app 的运行表现，通过它来找到 app 性能瓶颈并进行相应优化，通过 Demo 演示了如何使用 time profiler 和 signposts 这两个工具来观察 app 的详细运行情况。 该 session 主要分为三个部分 ：  Instument 简介 使用 Time Profiler">
+<meta name="keywords" content="iOS开发">
 <meta property="og:type" content="article">
-<meta property="og:title" content="陈栋楠的Blog">
-<meta property="og:url" content="http://blog.chendongnan.com/2019/12/30/WWDC2019Session411-开始使用Instrument/index.html">
+<meta property="og:title" content="开始使用Instrument">
+<meta property="og:url" content="http://blog.chendongnan.com/2019/06/30/WWDC2019Session411-开始使用Instrument/index.html">
 <meta property="og:site_name" content="陈栋楠的Blog">
-<meta property="og:description" content="title:开始使用Instrumentdate:2019-6-30 22:13:39categories:翻译 tags:iOS开发开始使用 Instruments  该 session 介绍了如何使用 Instruments 来衡量 app 的运行表现，通过它来找到 app 性能瓶颈并进行相应优化，通过 Demo 演示了如何使用 time profiler 和 signposts 这两个工具">
+<meta property="og:description" content="开始使用 Instruments  该 session 介绍了如何使用 Instruments 来衡量 app 的运行表现，通过它来找到 app 性能瓶颈并进行相应优化，通过 Demo 演示了如何使用 time profiler 和 signposts 这两个工具来观察 app 的详细运行情况。 该 session 主要分为三个部分 ：  Instument 简介 使用 Time Profiler">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/WWDC2019/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-06-16%20%E4%B8%8B%E5%8D%881.51.04.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/WWDC2019/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-06-16%20%E4%B8%8A%E5%8D%8811.00.14.png">
@@ -115,10 +116,10 @@
 <meta property="og:image" content="http://www.chendongnan.com/markdown/WWDC2019/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-06-18%20%E4%B8%8B%E5%8D%8810.05.52.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/WWDC2019/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-06-18%20%E4%B8%8B%E5%8D%8810.15.24.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/WWDC2019/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-06-19%20%E4%B8%8A%E5%8D%881.22.14.png">
-<meta property="og:updated_time" content="2019-12-31T09:33:17.154Z">
+<meta property="og:updated_time" content="2019-12-31T09:36:38.187Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="陈栋楠的Blog">
-<meta name="twitter:description" content="title:开始使用Instrumentdate:2019-6-30 22:13:39categories:翻译 tags:iOS开发开始使用 Instruments  该 session 介绍了如何使用 Instruments 来衡量 app 的运行表现，通过它来找到 app 性能瓶颈并进行相应优化，通过 Demo 演示了如何使用 time profiler 和 signposts 这两个工具">
+<meta name="twitter:title" content="开始使用Instrument">
+<meta name="twitter:description" content="开始使用 Instruments  该 session 介绍了如何使用 Instruments 来衡量 app 的运行表现，通过它来找到 app 性能瓶颈并进行相应优化，通过 Demo 演示了如何使用 time profiler 和 signposts 这两个工具来观察 app 的详细运行情况。 该 session 主要分为三个部分 ：  Instument 简介 使用 Time Profiler">
 <meta name="twitter:image" content="http://www.chendongnan.com/markdown/WWDC2019/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-06-16%20%E4%B8%8B%E5%8D%881.51.04.png">
 
 
@@ -149,13 +150,13 @@
 
 
 
-  <link rel="canonical" href="http://blog.chendongnan.com/2019/12/30/WWDC2019Session411-开始使用Instrument/">
+  <link rel="canonical" href="http://blog.chendongnan.com/2019/06/30/WWDC2019Session411-开始使用Instrument/">
 
 
 
 
 
-  <title> | 陈栋楠的Blog</title>
+  <title>开始使用Instrument | 陈栋楠的Blog</title>
   
 
 
@@ -321,7 +322,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">开始使用Instrument</h1>
         
 
         <div class="post-meta">
@@ -333,8 +334,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-30T22:13:39+08:00">
-                2019-12-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-30T22:13:39+08:00">
+                2019-06-30
               </time>
             
 
@@ -343,6 +344,28 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="../../../../categories/翻译/" itemprop="url" rel="index">
+                    <span itemprop="name">翻译</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -371,9 +394,7 @@
       
 
       
-        <hr>
-<p>title:开始使用Instrument<br>date:2019-6-30 22:13:39<br>categories:翻译</p>
-<h2 id="tags-iOS开发"><a href="#tags-iOS开发" class="headerlink" title="tags:iOS开发"></a>tags:iOS开发</h2><font size="16">开始使用 Instruments</font>
+        <font size="16">开始使用 Instruments</font>
 
 <p>该 session 介绍了如何使用 Instruments 来衡量 app 的运行表现，通过它来找到 app 性能瓶颈并进行相应优化，通过 Demo 演示了如何使用 <code>time profiler</code> 和 <code>signposts</code> 这两个工具来观察 app 的详细运行情况。</p>
 <p>该 session 主要分为三个部分 ：</p>
@@ -535,6 +556,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="../../../../tags/iOS开发/" rel="tag"># iOS开发</a>
+          
+        </div>
+      
 
       
       
@@ -544,8 +571,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="../../../11/24/国外社交平台分享总结/" rel="next" title="国外社交平台分享总结">
-                <i class="fa fa-chevron-left"></i> 国外社交平台分享总结
+              <a href="../../../../2018/11/21/iOS UI性能优化/" rel="next" title="iOS UI性能调优">
+                <i class="fa fa-chevron-left"></i> iOS UI性能调优
               </a>
             
           </div>
@@ -553,6 +580,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="../../../11/24/国外社交平台分享总结/" rel="prev" title="国外社交平台分享总结">
+                国外社交平台分享总结 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -642,7 +673,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="../../../../categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -686,7 +717,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#tags-iOS开发"><span class="nav-number">1.</span> <span class="nav-text">tags:iOS开发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Instrument-简介"><span class="nav-number">2.</span> <span class="nav-text">Instrument 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#界面"><span class="nav-number">2.0.1.</span> <span class="nav-text">界面</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-Time-Profiler"><span class="nav-number">3.</span> <span class="nav-text">使用 Time Profiler</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Profiling-的技巧"><span class="nav-number">3.0.1.</span> <span class="nav-text">Profiling 的技巧</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-Signposts"><span class="nav-number">4.</span> <span class="nav-text">使用 Signposts</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#signpost的特点"><span class="nav-number">4.0.1.</span> <span class="nav-text">signpost的特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#举个例子"><span class="nav-number">4.0.2.</span> <span class="nav-text">举个例子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-Signpost-with-Point-of-Interest"><span class="nav-number">5.</span> <span class="nav-text">使用 Signpost with Point of Interest</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#小结"><span class="nav-number">5.0.1.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Instrument-的变化"><span class="nav-number">6.</span> <span class="nav-text">Instrument 的变化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">7.0.1.</span> <span class="nav-text">参考资料</span></a></li></ol></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Instrument-简介"><span class="nav-number">1.</span> <span class="nav-text">Instrument 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#界面"><span class="nav-number">1.0.1.</span> <span class="nav-text">界面</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-Time-Profiler"><span class="nav-number">2.</span> <span class="nav-text">使用 Time Profiler</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Profiling-的技巧"><span class="nav-number">2.0.1.</span> <span class="nav-text">Profiling 的技巧</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-Signposts"><span class="nav-number">3.</span> <span class="nav-text">使用 Signposts</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#signpost的特点"><span class="nav-number">3.0.1.</span> <span class="nav-text">signpost的特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#举个例子"><span class="nav-number">3.0.2.</span> <span class="nav-text">举个例子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-Signpost-with-Point-of-Interest"><span class="nav-number">4.</span> <span class="nav-text">使用 Signpost with Point of Interest</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#小结"><span class="nav-number">4.0.1.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Instrument-的变化"><span class="nav-number">5.</span> <span class="nav-text">Instrument 的变化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">6.0.1.</span> <span class="nav-text">参考资料</span></a></li></ol></li></div>
             
 
           </div>
