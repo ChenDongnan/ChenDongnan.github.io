@@ -106,7 +106,7 @@
 <meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/forwardingTargetForSelectorPrint.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/forwardInvocationTest.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/forwardInvocationPrint.png">
-<meta property="og:updated_time" content="2018-12-31T15:12:43.388Z">
+<meta property="og:updated_time" content="2020-01-03T03:40:16.216Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="runtime之消息转发">
 <meta name="twitter:description" content="runtime的第二篇文章，记录下消息转发相关知识 在项目开发中，一个很常见的报错是 Terminating app due to uncaught exception &amp;#39;NSInvalidArgumentException&amp;#39;, reason: &amp;#39;-[Person run]: unrecognized selector sent to instance，意思就是向实例发送了">
@@ -398,20 +398,20 @@
 <p>上图各种对象的关系总结如下</p>
 <blockquote>
 <p>实例对象通过<code>isa</code>指针，找到类对象<code>Class</code>; 类对象通过<code>isa</code>指针，找到元类对象；元类对象通过<code>isa</code>指针，找到根元类对象；根元类的<code>isa</code>指针指向自己。</p>
-<p>类对象通过<code>super_class</code>指针找到它的父类对象，父类对象通过<code>super_class</code>指针找到根类对象，根类对象的父类是nil；元类对象通过<code>super class</code>指针找到父元类，父元类对象通过<code>super class</code>指针找到根元类对象，根元类对象的<code>supe class</code>指针指向根类对象。</p>
+<p>类对象通过<code>super_class</code>指针找到它的父类对象，父类对象通过<code>super_class</code>指针找到根类对象，根类对象的父类是nil；元类对象通过<code>super class</code>指针找到父元类，父元类对象通过<code>super class</code>指针找到根元类对象，根元类对象的<code>super class</code>指针指向根类对象。</p>
 </blockquote>
 <p>在<code>NSObject.h</code>中，我们可以看到NSObject的类定义如下</p>
 <p><img src="http://www.chendongnan.com/markdown/runtime/NSObject.png" alt="NSObject"></p>
 <p>可以看到，NSObject拥有一个<code>Class</code>类型的变量<code>isa</code></p>
 <p>在<code>objc4-680</code>源码的<code>objc-private.h</code>中，可以看到如下定义</p>
 <p><img src="http://www.chendongnan.com/markdown/runtime/objc-private.png" alt="NSObject"></p>
-<p>可以看出，OC的Class其实就是 <code>struct objc_class</code>, 而OC的对象实际上就是<code>struct objc_object</code></p>
+<p>可以看出，OC 的 Class 其实就是 <code>struct objc_class</code>, 而 OC 的对象实际上就是 <code>struct objc_object</code></p>
 <blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;typedef struct objc_object *id;</span><br><span class="line">&gt;</span><br><span class="line">&gt;struct objc_object &#123;</span><br><span class="line">&gt;	Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</span><br><span class="line">&gt;&#125;;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">struct objc_class &#123;</span><br><span class="line">	Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</span><br><span class="line">#if !__OBJC2__</span><br><span class="line">	Class _Nullable super_class  OBJC2_UNAVAILABLE;</span><br><span class="line">	const char * _Nonnull name OBJC2_UNAVAILABLE;</span><br><span class="line">	long version OBJC2_UNAVAILABLE;</span><br><span class="line">	long info  OBJC2_UNAVAILABLE;</span><br><span class="line">	long instance_size OBJC2_UNAVAILABLE;</span><br><span class="line">	struct objc_ivar_list * _Nullable ivars  OBJC2_UNAVAILABLE;</span><br><span class="line">	struct objc_method_list * _Nullable * _Nullable methodLists  		OBJC2_UNAVAILABLE;</span><br><span class="line">	struct objc_cache * _Nonnull cache OBJC2_UNAVAILABLE;</span><br><span class="line">	struct objc_protocol_list * _Nullable protocols  OBJC2_UNAVAILABLE;</span><br><span class="line">#endif</span><br><span class="line">&#125; OBJC2_UNAVAILABLE;</span><br></pre></td></tr></table></figure>
-<p>可以看到obje_class中也有一个isa指针，说明类本身也是一个对象。</p>
-<p>这里我们不详细展开每个属性的含义是什么，只关注和方法相关的属性，可以看到在objc_class的结构体中，有一个<code>objc_method_list</code> 结构体，在<code>objc_method_list</code>中有一个<code>objc_mehtod</code>结构体。</p>
+<p>可以看到objc_class中也有一个isa指针，说明类本身也是一个对象。</p>
+<p>这里不详细展开每个属性的含义是什么，只关注和方法相关的属性，可以看到在objc_class的结构体中，有一个<code>objc_method_list</code> 结构体，在<code>objc_method_list</code>中有一个<code>objc_mehtod</code>结构体。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">struct objc_method_list &#123;</span><br><span class="line">	struct objc_method_list * _Nullable obsolete OBJC2_UNAVAILABLE;</span><br><span class="line">	</span><br><span class="line">	int method_count OBJC2_UNAVAILABLE;</span><br><span class="line">#ifdef __LP64__</span><br><span class="line">	int space  OBJC2_UNAVAILABLE;</span><br><span class="line">#endif</span><br><span class="line">	/* variable length structure */</span><br><span class="line">	struct objc_method method_list[1]  OBJC2_UNAVAILABLE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>Method</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">struct objc_method &#123;</span><br><span class="line">	SEL _Nonnull method_name OBJC2_UNAVAILABLE;  //方法名称</span><br><span class="line">	char * _Nullable method_types  OBJC2_UNAVAILABLE;  //参数和返回类型的描述</span><br><span class="line">	IMP _Nonnull method_imp  OBJC2_UNAVAILABLE;		// 方法具体实现的指针</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -685,7 +685,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
