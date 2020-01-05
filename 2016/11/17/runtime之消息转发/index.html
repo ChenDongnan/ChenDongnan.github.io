@@ -106,7 +106,7 @@
 <meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/forwardingTargetForSelectorPrint.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/forwardInvocationTest.png">
 <meta property="og:image" content="http://www.chendongnan.com/markdown/runtime/forwardInvocationPrint.png">
-<meta property="og:updated_time" content="2020-01-03T03:40:16.216Z">
+<meta property="og:updated_time" content="2020-01-03T07:13:22.403Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="runtime之消息转发">
 <meta name="twitter:description" content="runtime的第二篇文章，记录下消息转发相关知识 在项目开发中，一个很常见的报错是 Terminating app due to uncaught exception &amp;#39;NSInvalidArgumentException&amp;#39;, reason: &amp;#39;-[Person run]: unrecognized selector sent to instance，意思就是向实例发送了">
@@ -415,7 +415,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">struct objc_method_list &#123;</span><br><span class="line">	struct objc_method_list * _Nullable obsolete OBJC2_UNAVAILABLE;</span><br><span class="line">	</span><br><span class="line">	int method_count OBJC2_UNAVAILABLE;</span><br><span class="line">#ifdef __LP64__</span><br><span class="line">	int space  OBJC2_UNAVAILABLE;</span><br><span class="line">#endif</span><br><span class="line">	/* variable length structure */</span><br><span class="line">	struct objc_method method_list[1]  OBJC2_UNAVAILABLE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>Method</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">struct objc_method &#123;</span><br><span class="line">	SEL _Nonnull method_name OBJC2_UNAVAILABLE;  //方法名称</span><br><span class="line">	char * _Nullable method_types  OBJC2_UNAVAILABLE;  //参数和返回类型的描述</span><br><span class="line">	IMP _Nonnull method_imp  OBJC2_UNAVAILABLE;		// 方法具体实现的指针</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Mehtod代表类中某个方法的类型，它存储了方法名、参数和返回类型以及方法实现的指针</p>
+<p>Method代表类中某个方法的类型，它存储了方法名、参数和返回类型以及方法实现的指针</p>
 <p>这里的method_types可以参考苹果runtime的文档</p>
 <p><img src="http://www.chendongnan.com/markdown/runtime/typeEncodings.png" alt="typeEncodings"></p>
 <p><strong>SEL</strong> &amp; <strong>IMP</strong></p>
@@ -433,7 +433,7 @@
 <li>在<code>Person</code>的方法缓存中查找，如果找到了就返回该IMP</li>
 <li>如果没有找到，就到它的方法列表中查找，如果找到了，则将IMP返回，并将它加入cache中缓存起来。</li>
 <li>如果在该类的方法列表中也没有找到，那就通过super_class指针去其父类的方法列表中查找，直到在某个父类方法列表中找到对应的IMP并返回，并加入chche中。</li>
-<li>如果在自身以及父类的方法列表中都没哟刟对应的IMP，则进入下面要讲到的消息转发流程。</li>
+<li>如果在自身以及父类的方法列表中都没找到对应的IMP，则进入下面要讲到的消息转发流程。</li>
 <li>如果是调用类方法，那么一开始会通过类对象的<code>isa</code>指针找到元类对象，类方法就保存在元类对象中，之后的步骤也和调用实例对象方法一样。</li>
 </ol>
 <h2 id="消息转发"><a href="#消息转发" class="headerlink" title="消息转发"></a>消息转发</h2><p>那么回到文章开头的问题，<code>unrecognized selector sent to instance</code>报错，用消息转发来解释的话就是消息接收者找不到对应的selector</p>
