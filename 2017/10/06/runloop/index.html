@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="陈栋楠的Blog">
 <meta property="og:description" content="Runloop作为iOS面试题中的常客，经常被用来考察iOS开发者的基本功。由于项目中很少直接用到这块知识，所以对其也是一知半解。这次全面梳理了一下runloop的相关知识要点，希望能够把它掌握并熟练运用起来。 什么是Runloop一般来说，一个线程只能执行一个任务，执行完就会退出，如果我们需要一种机制，让线程能随时处理事件但并不退出，那么 RunLoop 就是这样的一个机制。Runloop是事件">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-01-05T05:14:53.647Z">
+<meta property="og:updated_time" content="2020-01-05T13:27:51.296Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Runloop理解与应用">
 <meta name="twitter:description" content="Runloop作为iOS面试题中的常客，经常被用来考察iOS开发者的基本功。由于项目中很少直接用到这块知识，所以对其也是一知半解。这次全面梳理了一下runloop的相关知识要点，希望能够把它掌握并熟练运用起来。 什么是Runloop一般来说，一个线程只能执行一个任务，执行完就会退出，如果我们需要一种机制，让线程能随时处理事件但并不退出，那么 RunLoop 就是这样的一个机制。Runloop是事件">
@@ -417,8 +417,6 @@
 <li><p>Source是RunLoopd的数据源抽象类（protocol）</p>
 </li>
 <li><p>RunLoop定义了两种Source，不基于端口的source0和基于端口的source1</p>
-</li>
-<li><p>​</p>
 <ol>
 <li><blockquote>
 <p>Source0只包含了一个回调(函数指针)，它并不能主动触发事件。使用时，需要先调用CFRunLoopSourceSignal(source)，将这个 Source 标记为待处理，然后手动调用 CFRunLoopWakeUp(runloop) 来唤醒 RunLoop，让其处理这个事件。</p>
@@ -437,7 +435,8 @@
 </li>
 </ul>
 <p>UIKit通过RunLoopObserver在RunLoop两次Sleep间对·AutoReleasePool进行Pop和Push，将这次Loop中产生的Autorelease对象释放。</p>
-<h2 id="RunLoop与线程的关系"><a href="#RunLoop与线程的关系" class="headerlink" title="RunLoop与线程的关系"></a>RunLoop与线程的关系</h2><h2 id="Runloop的应用"><a href="#Runloop的应用" class="headerlink" title="Runloop的应用"></a>Runloop的应用</h2><h3 id="AutoReleasePool"><a href="#AutoReleasePool" class="headerlink" title="AutoReleasePool"></a>AutoReleasePool</h3><p>App启动后，苹果在主线程 RunLoop 里注册了两个 Observer，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler()。</p>
+<h2 id="RunLoop与线程的关系"><a href="#RunLoop与线程的关系" class="headerlink" title="RunLoop与线程的关系"></a>RunLoop与线程的关系</h2><p>线程和 RunLoop 之间是一一对应的，其关系是保存在一个全局的 Dictionary 里。线程刚创建时并没有 RunLoop，如果你不主动获取，那它一直都不会有。RunLoop 的创建是发生在第一次获取时，RunLoop 的销毁是发生在线程结束时。你只能在一个线程的内部获取其 RunLoop（主线程除外）</p>
+<h2 id="Runloop的应用"><a href="#Runloop的应用" class="headerlink" title="Runloop的应用"></a>Runloop的应用</h2><h3 id="AutoReleasePool"><a href="#AutoReleasePool" class="headerlink" title="AutoReleasePool"></a>AutoReleasePool</h3><p>App启动后，苹果在主线程 RunLoop 里注册了两个 Observer，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler()。</p>
 <p>第一个 Observer 监视的事件是 Entry(即将进入Loop)，其回调内会调用 _objc_autoreleasePoolPush() 创建自动释放池。其 order 是-2147483647，优先级最高，保证创建释放池发生在其他所有回调之前。</p>
 <p>第二个 Observer 监视了两个事件： BeforeWaiting(准备进入休眠) 时调用_objc_autoreleasePoolPop() 和 _objc_autoreleasePoolPush() 释放旧的池并创建新池；Exit(即将退出Loop) 时调用 _objc_autoreleasePoolPop() 来释放自动释放池。这个 Observer 的 order 是 2147483647，优先级最低，保证其释放池子发生在其他所有回调之后。</p>
 <p>在主线程执行的代码，通常是写在诸如事件回调、Timer回调内的。这些回调会被 RunLoop 创建好的 AutoreleasePool 环绕着，所以不会出现内存泄漏，开发者也不必显示创建 Pool 了。</p>
